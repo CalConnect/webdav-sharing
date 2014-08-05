@@ -270,7 +270,7 @@
                             <artwork><![CDATA[
 <?xml version="1.0" encoding="UTF-8"?>
 <D:notification xmlns:D="DAV:">
-  <D:dtstamp>2011-12-09T11:12:53-05:00</D:dtstamp>
+  <D:dtstamp>2011-12-09T06:12:53Z</D:dtstamp>
   <D:systemstatus type="high">
     <D:href>http://example.com/emergency_shutdown.html</D:href>
     <D:description xml:lang='en_US'
