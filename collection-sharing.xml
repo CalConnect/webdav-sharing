@@ -76,7 +76,6 @@
         </abstract>
     </front>
     <middle>
-
         <section title='Introduction'>
 
             <t>
@@ -201,12 +200,7 @@
                 </t>
                 <t>
                     The notification contains information about the shared
-                    collection, the owner and how to respond to said invitation.
-                </t>
-                <t>
-                    The body of this notification is retrieved with a GET
-                    request. The root element of the notification MUST be
-                    <xref target="DAV:invite-notification">DAV:invite-notification</xref>.
+                    collection, the owner and how to respond to the invitation.
                 </t>
                 <section title="Example: An invite notification">
                     <t>
@@ -221,19 +215,22 @@ HTTP/1.1 200 OK
 Content-Type: application/davnotification+xml
 Content-Length: xxxx
 
-<D:invite-notification xmlns:D="DAV:">
-    <D:uid>I don't belong here</D:uid>
-    <D:principal>
-        <D:href>/principals/users/evert</D:href>
-    </D:principal>
-    <D:invite-accepted />
-    <D:href>/calendars/users/evert/offdays/</D:href>
-    <D:access><D:read-write /></D:access>
-    <D:prop>
-        <D:displayname>Vacation days!!</D:displayname>
-        <D:resourcetype><D:collection /></D:resourcetype>
-    </D:prop>
-</D:invite-notification>
+<D:notification xmlns:D="DAV:">
+    <D:dtstamp>2014-08-05T13:38:02Z</D:dtstamp>
+    <D:invite-notification>
+        <D:uid>I don't belong here</D:uid>
+        <D:principal>
+            <D:href>/principals/users/evert</D:href>
+        </D:principal>
+        <D:invite-accepted />
+        <D:href>/calendars/users/evert/offdays/</D:href>
+        <D:access><D:read-write /></D:access>
+        <D:prop>
+            <D:displayname>Vacation days!!</D:displayname>
+            <D:resourcetype><D:collection /></D:resourcetype>
+        </D:prop>
+    </D:invite-notification>
+</D:notifiation>
 ]]></artwork>
                     </figure>
                     </t>
@@ -241,8 +238,29 @@ Content-Length: xxxx
             </section>
             <section title="Invite Reply" anchor='invite-reply'>
                 <t>
-                    TODO
+                    After a sharee has accepted or declined an invitiation,
+                    the sharer receives an invite-reply in their notification
+                    collection.
                 </t>
+                <t>
+                    This notification contains information about which
+                    collection this relates to, and who responded to the
+                    invite.
+                </t>
+                <section title="Example: An invite reply">
+                    <t>
+                        This is an example of a response to a GET request on a
+                        correct invite notification. Note that several HTTP
+                        response headers have been removed for brevity.
+                    </t>
+                    <t>
+                    <figure>
+                        <artwork><![CDATA[
+TODO
+]]></artwork>
+                    </figure>
+                    </t>
+                </section>
             </section>
         </section>
 
