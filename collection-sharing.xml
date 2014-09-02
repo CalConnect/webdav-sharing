@@ -930,45 +930,12 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Name:">organizer</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Identifies the sharer of a shared collection.</t>
-                    <t hangText="Description:">Contains a single DAV:href element that identifies the URI of the sharer of a shared collection, and an optional DAV:displayname element that matches that user, and an optional DAV:first-name, DAV:last-name pair of elements that match that user. In some cases servers might have directory information that includes only the common name, or only the first or last name, and it is better to expose those directly to the client as-is rather than to try and split or combine the attributes to synthesize one set or the other.</t>
+                    <t hangText="Description:">Contains a single DAV:href element that identifies the URI of the sharer of a shared collection, and an optional DAV:displayname element that matches that user. In some cases servers might have directory information that includes only the common name.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
 <!ELEMENT organizer (href,
-                     displayname?,
-                     first-name, last-name)?)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:first-name" anchor="DAV:first-name">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">first-name</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">The first name of a sharer or sharee.</t>
-                    <t hangText="Description:">The first name is optionally included by the server when returning results for sharers or sharees and in notifications.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT first-name (#PCDATA)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:last-name" anchor="DAV:last-name">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">last-name</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">The last name of a sharer or sharee.</t>
-                    <t hangText="Description:">The last name is optionally included by the server when returning results for sharers or sharees and in notifications.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT last-name (#PCDATA)>]]></artwork>
+                     displayname?)>]]></artwork>
                       </figure>
                     </t>
                   </list>
