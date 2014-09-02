@@ -120,7 +120,6 @@
                 <list style="numbers">
                     <t>Replying to invites can't happen on the calendar home, suggest to reply using the resource URI of the notification being replied to.</t>
                     <t>Need mime-type for POST request xml bodies.</t>
-                    <t>DAV:common-name should probably DAV:displayname</t>
                     <t>Allow invite-deleted to also appear in DAV:user</t>
                     <t>Cleaning up notifications that have been replied to.</t>
                     <t>Get consensus on turning this into 'resource sharing'.</t>
@@ -454,7 +453,7 @@ Content-Length: xxxx
 <D:share xmlns:D="DAV:">
   <D:set>
     <D:href>mailto:eric@example.com</D:href>
-    <D:common-name>Eric York</D:common-name>
+    <D:displayname>Eric York</D:displayname>
     <D:description>Shared workspace</D:description>
     <D:read-write />
   </D:set>
@@ -735,7 +734,7 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT user (DAV:href, common-name?, (invite-noresponse |
+<!ELEMENT user (href, displayname?, (invite-noresponse |
                 invite-accepted | invite-declined | invite-invalid),
                 access, description?)>]]></artwork>
                       </figure>
@@ -931,29 +930,13 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Name:">organizer</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Identifies the sharer of a shared collection.</t>
-                    <t hangText="Description:">Contains a single DAV:href element that identifies the URI of the sharer of a shared collection, and an optional DAV:common-name element that matches that user, and an optional DAV:first-name, DAV:last-name pair of elements that match that user. In some cases servers might have directory information that includes only the common name, or only the first or last name, and it is better to expose those directly to the client as-is rather than to try and split or combine the attributes to synthesize one set or the other.</t>
+                    <t hangText="Description:">Contains a single DAV:href element that identifies the URI of the sharer of a shared collection, and an optional DAV:displayname element that matches that user, and an optional DAV:first-name, DAV:last-name pair of elements that match that user. In some cases servers might have directory information that includes only the common name, or only the first or last name, and it is better to expose those directly to the client as-is rather than to try and split or combine the attributes to synthesize one set or the other.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT organizer (DAV:href,
-                     DAV:common-name?,
-                     (DAV:first-name, DAV:last-name)?)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:common-name" anchor="DAV:common-name">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">common-name</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">The common name of a sharer or sharee.</t>
-                    <t hangText="Description:">The common name is optionally provided by a client when adding a sharee and optionally included (or modified) by the server when returning results for sharers or sharees and in notifications.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT common-name (#PCDATA)>]]></artwork>
+<!ELEMENT organizer (href,
+                     displayname?,
+                     first-name, last-name)?)>]]></artwork>
                       </figure>
                     </t>
                   </list>
@@ -1053,7 +1036,7 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT set (DAV:href, common-name?, description?,
+<!ELEMENT set (DAV:href, displayname?, description?,
                (read | read-write)>]]></artwork>
                       </figure>
                     </t>
