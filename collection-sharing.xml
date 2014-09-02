@@ -126,6 +126,7 @@
                     <t>Get consensus on turning this into 'resource sharing'.</t>
                     <t>invite-accepted / invite-declined in the 'invite-notification'. Is it a good name?</t>
                     <t>Differ element names for invite-reply when used as a POST body and as a notification.</t>
+                    <t>Shared-url property. Why does it exist?</t>
                  </list>
             </t>
         </section>
@@ -402,9 +403,12 @@ Content-Length: xxxx
                         from the shared collection. In each case the server MUST
                         send a notification message to any sharees whose status
                         is changed (added, modified or removed), indicating to
-                        them a change in status for the shared collection. The
-                        server SHOULD NOT send notification messages to sharees
-                        whose status is unchanged.
+                        them a change in status for the shared collection. This
+                        is accomplished by sending a
+                        <xref target="DAV:invite-notification">DAV:invite-notification</xref>
+                        notification to each sharee.
+                        The server SHOULD NOT send notification messages to
+                        sharees whose status is unchanged.
                     </t>
                     <t>
                         Sharees are identified via a DAV:href element whose
@@ -431,14 +435,6 @@ Content-Length: xxxx
                         add a DAV:displayname when it is able to match the
                         sharee with a known user, and a common name for that
                         user can be determined.
-                    </t>
-                    <t>
-                        When the sharee list on a shared collection is changed,
-                        the server MUST send notifications to each sharee to
-                        update them on their current sharing status. This is
-                        accomplished by sending a
-                        <xref target="DAV:invite-notification">DAV:invite-notification</xref>
-                        notification to each sharee.
                     </t>
                     <section title="Example: Successful Sharee Add Request">
 
