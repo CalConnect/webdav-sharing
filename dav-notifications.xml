@@ -77,14 +77,6 @@
            </t>
         </section>
 
-        <section title="Open Issues">
-            <t>
-                <list style="numbers">
-                    <t>None?</t>
-                 </list>
-            </t>
-        </section>
-
         <section title='Conventions Used in This Document'>
             <t>
                 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
