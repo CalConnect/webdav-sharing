@@ -166,12 +166,8 @@
                 and present them with the choice to accept or decline the
                 invitation to the shared collection. If the sharee chooses to
                 decline, then nothing changes for that sharee. If the sharee
-                chooses to accept, then the server automatically creates a new
-                collection resource in a location that is determined by the
-                server.
-                For example, if a <xref target='RFC4791'>CalDAV</xref> calendar
-                is shared, the server may create the new collection in the
-                sharee's calendar home.
+                chooses to accept, then a new collection is created at a
+                location that's accessible to the sharee.
                 The server enforces the appropriate access privileges for the
                 sharee.
             </t>
@@ -226,7 +222,7 @@ Content-Length: xxxx
     <D:dtstamp>2014-08-05T13:38:02Z</D:dtstamp>
     <D:invite-notification>
         <D:principal>
-            <D:href>/principals/users/evert</D:href>
+            <D:href>/principals/users/evert/</D:href>
         </D:principal>
         <D:invite-accepted />
         <D:href>/calendars/users/evert/offdays/</D:href>
