@@ -123,6 +123,8 @@
                     <t>DAV:common-name should probably DAV:displayname</t>
                     <t>Allow invite-deleted to also appear in DAV:user</t>
                     <t>Cleaning up notifications that have been replied to.</t>
+                    <t>invite-accepted / invite-declined in the 'invite-notification'. Is it a good name?</t>
+                    <t>Differ element names for invite-reply when used as a POST body and as a notification.</t>
                  </list>
             </t>
         </section>
