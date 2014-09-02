@@ -258,7 +258,21 @@ Content-Length: xxxx
                     <t>
                     <figure>
                         <artwork><![CDATA[
-TODO
+HTTP/1.1 200 OK
+Content-Type: application/davnotification+xml
+Content-Length: xxxx
+
+<D:notification xmlns:D="DAV:">
+    <D:dtstamp>2014-09-03T02:30:00Z</D:dtstamp>
+    <D:invite-reply>
+        <D:principal>
+            <D:href>mailto:john@example.org</D:href>
+        </D:principal>
+        <D:invite-declined />
+        <D:href>/calendars/users/evert/offdays/</D:href>
+        <D:description>Sorry, I'm not interested</D:description>
+    </D:invite-reply>
+</D:notification>
 ]]></artwork>
                     </figure>
                     </t>
