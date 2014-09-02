@@ -514,13 +514,19 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         body MUST also contain a <xref target="DAV:create-in">
                         DAV:create-in</xref> element. This element contains a
                         single DAV:href element, which content is a URI that
-                        will be used as the target collection, which will be
+                        will be used as the target collection This URI will be
                         used as a parent for the new shared resource.
                     </t>
                     <t>
+                        The client MAY also provide a <!--<xref target="DAV:slug">-->
+                            DAV:slug<!--</xref>--> property. The server MAY use the
+                        contents of this property to determine the name of
+                        the new resource.
+                    </t>
+                    <t>
                         All usual preconditions for creating a resource at the
-                        DAV:create-in target url need to be taken into
-                        considerations.
+                        DAV:create-in target collection need to be taken into
+                        consideration.
                     </t>
                     <t>
                         Note that some servers may restrict where certain types
@@ -530,9 +536,14 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         property.
                     </t>
                     <t>
-                        A successful response to this POST request should
-                        contain a 201 status code. It's response body is
-                        undefined.
+                        A successful response to an accepted invitation, SHOULD
+                        have a HTTP 201 status code, and MUST have a HTTP
+                        Location header, containing the full url to the newly
+                        created resource.
+                    </t>
+                    <t>
+                        A successful response to a declined invitation, SHOULD
+                        contain a 200 or 204 HTTP status code.
                     </t>
                     <t>
                         When the sharee replies to an invite, the server
