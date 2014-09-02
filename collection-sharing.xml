@@ -108,13 +108,17 @@
                 and replies, and WebDAV properties are used to expose the state
                 of shared collections.
             </t>
+            <t>
+                This specification uses WebDAV notifications to communicate to
+                users there are outstanding invitations, or responses to
+                invitations.
+            </t>
         </section>
 
         <section title="Open Issues">
             <t>
                 <list style="numbers">
                     <t>Replying to invites can't happen on the calendar home, suggest to reply using the resource URI of the notification being replied to.</t>
-                    <t>Consider removing DAV:href from in-reply-to as well. Should contain sharee, but seems unneeded.</t>
                     <t>Need mime-type for POST request xml bodies.</t>
                     <t>DAV:common-name should probably DAV:displayname</t>
                     <t>Allow invite-deleted to also appear in DAV:user</t>
@@ -357,10 +361,10 @@ TODO
                     </t>
                     <t>
                         To unshare a collection, the sharer simply removes all
-                        sharees to the CS:invite property of the collection as
+                        sharees from the DAV:invite property of the collection as
                         per <xref target="sharee"/>. The server MUST update the
                         DAV:resourcetype property on the calendar collection
-                        to ensure it does not contain a CS:shared-owner XML
+                        to ensure it does not contain a DAV:shared-owner XML
                         element to indicate the collection is not shared.
                     </t>
                 </section>
@@ -403,16 +407,15 @@ TODO
                         the <xref target="DAV:invite">DAV:invite property</xref>.
                     </t>
                     <t>
-                        The client MAY include a
-                        <xref target="DAV:common-name">DAV:common-name</xref>
-                        element in the <xref target="DAV:set">DAV:set</xref>
-                        element. When provided, the value represents the common
+                        The client MAY include a DAV:displayname element in
+                        the <xref target="DAV:set">DAV:set</xref> element.
+                        When provided, the value represents the common
                         name for the sharee, and is returned in the list of
                         sharees via the <xref target="DAV:invite">DAV:invite property</xref>.
                         The server MAY change this to a suitable alternative
                         when it is able to match the sharee to a known user.
                         If absent from the client request, the server SHOULD
-                        add a CS:common-name when it is able to match the
+                        add a DAV:displayname when it is able to match the
                         sharee with a known user, and a common name for that
                         user can be determined.
                     </t>
@@ -508,15 +511,15 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         decline action via the DAV:invite-accepted or
                         DAV:invite-declined elements, and an optional
                         DAV:summary element. IF the invite was accepted, the
-                        body MUST also contain a <xref target="DAV:create-as">
-                        DAV:create-as</xref> element. This element contains a
+                        body MUST also contain a <xref target="DAV:create-in">
+                        DAV:create-in</xref> element. This element contains a
                         single DAV:href element, which content is a URI that
-                        will be used as the target url for the new instance of
-                        the shared resource.
+                        will be used as the target collection, which will be
+                        used as a parent for the new shared resource.
                     </t>
                     <t>
                         All usual preconditions for creating a resource at the
-                        DAV:create-as target url need to be taken into
+                        DAV:create-in target url need to be taken into
                         considerations.
                     </t>
                     <t>
@@ -544,6 +547,30 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         also remove the notification that contained the
                         initial invite.
                     </t>
+                    <section title="Example: Accepting an invite">
+                    <t>
+                        This is an example of a request that the sharee would
+                        send to accept an invitation.
+                    </t>
+                    <t>
+                    <figure>
+                        <artwork><![CDATA[
+POST /principals/users/evert/notifications/1000455.xml HTTP/1.1
+Host: calendar.example.com
+Content-Type: application/xml; charset="utf-8"
+
+<?xml version="1.0" encoding="utf-8" ?>
+<D:invite-reply xmlns:D="DAV:">
+    <D:invite-accepted />
+    <D:create-in>
+        <D:href>/calendars/users/evert/</D:href>
+    </D:create-in>
+    <D:slug>Tech meetups</D:slug>
+</D:invite-reply>
+]]></artwork>
+                    </figure>
+                    </t>
+                    </section>
                 </section>
                 <section title="Removing a Shared Collection">
                     <t>
@@ -852,7 +879,7 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                       <figure>
                         <artwork><![CDATA[
 <!ELEMENT invite-notification (
-            uid, dav:href,
+            dav:href,
             (invite-noresponse | invite-deleted |
             invite-accepted | invite-declined),
             access, organizer,
@@ -957,16 +984,16 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         <artwork><![CDATA[
 <!ELEMENT invite-reply (DAV:href,
                         (invite-accepted | invite-declined),
-                        hosturl, create-as?, summary?>]]></artwork>
+                        hosturl, create-in?, summary?>]]></artwork>
                       </figure>
                     </t>
                   </list>
                 </t>
             </section>
-            <section title="DAV:create-as" anchor="DAV:create-as">
+            <section title="DAV:create-in" anchor="DAV:create-in">
                 <t>
                   <list style="hanging">
-                    <t hangText="Name:">create-as</t>
+                    <t hangText="Name:">create-in</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">The target url for the new resource.</t>
                     <t hangText="Description:">
@@ -975,7 +1002,7 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT create-as (DAV:href)>]]></artwork>
+<!ELEMENT create-in (DAV:href)>]]></artwork>
                       </figure>
                     </t>
                   </list>
