@@ -522,12 +522,11 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         element in the POST request specifies the accept or
                         decline action via the DAV:invite-accepted or
                         DAV:invite-declined elements, and an optional
-                        DAV:summary element. IF the invite was accepted, the
+                        DAV:description element. IF the invite was accepted, the
                         body MUST also contain a <xref target="DAV:create-in">
                         DAV:create-in</xref> element. This element contains a
                         single DAV:href element, which content is a URI that
-                        will be used as the target collection This URI will be
-                        used as a parent for the new shared resource.
+                        will be used as the parent for the new shared resource.
                     </t>
                     <t>
                         The client MAY also provide a <!--<xref target="DAV:slug">-->
@@ -1005,9 +1004,9 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT invite-reply (DAV:href,
+<!ELEMENT invite-reply (href,
                         (invite-accepted | invite-declined),
-                        hosturl, create-in?, summary?>]]></artwork>
+                        hosturl, create-in?, description?>]]></artwork>
                       </figure>
                     </t>
                   </list>
