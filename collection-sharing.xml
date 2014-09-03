@@ -118,7 +118,6 @@
         <section title="Open Issues">
             <t>
                 <list style="numbers">
-                    <t>Replying to invites can't happen on the calendar home, suggest to reply using the resource URI of the notification being replied to.</t>
                     <t>Need mime-type for POST request xml bodies.</t>
                     <t>Allow invite-deleted to also appear in DAV:user</t>
                     <t>Cleaning up notifications that have been replied to.</t>
@@ -126,6 +125,7 @@
                     <t>invite-accepted / invite-declined in the 'invite-notification'. Is it a good name?</t>
                     <t>Differ element names for invite-reply when used as a POST body and as a notification.</t>
                     <t>Shared-url property. Why does it exist?</t>
+                    <t>first-name and last-name properties. I feel that this spec should not define these.</t>
                  </list>
             </t>
         </section>
@@ -589,6 +589,23 @@ Content-Type: application/xml; charset="utf-8"
                     </figure>
                     </t>
                     </section>
+                </section>
+                <section title="Ignoring an invitation">
+                    <t>
+                        For privacy reasons, sharees need to be able to
+                        remove invitations without notifiying the sharer.
+                    </t>
+                    <t>
+                        When the sharee issues a DELETE on an
+                        invite-notification, the server MUST remove the
+                        notification, and MUST not let the sharer know about
+                        this.
+                    </t>
+                    <t>
+                        As a result, from the sharers perspective, the
+                        invitation status for that principal will always
+                        remain to be DAV:invite-noreply.
+                    </t>
                 </section>
                 <section title="Removing a Shared Collection">
                     <t>
