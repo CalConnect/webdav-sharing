@@ -269,7 +269,7 @@ Content-Length: xxxx
         </D:principal>
         <D:invite-declined />
         <D:href>/calendars/users/evert/offdays/</D:href>
-        <D:description>Sorry, I'm not interested</D:description>
+        <D:comment>Sorry, I'm not interested</D:comment>
     </D:invite-reply>
 </D:notification>
 ]]></artwork>
@@ -452,7 +452,7 @@ Content-Length: xxxx
   <D:set>
     <D:href>mailto:eric@example.com</D:href>
     <D:displayname>Eric York</D:displayname>
-    <D:description>Shared workspace</D:description>
+    <D:comment>Shared workspace</D:comment>
     <D:read-write />
   </D:set>
 </D:share>]]></artwork>
@@ -483,7 +483,7 @@ Content-Length: xxxx
 <D:share xmlns:D="DAV:">
   <D:set>
     <D:href>mailto:eric@example.com</D:href>
-    <D:description>Shared workspace</D:description>
+    <D:comment>Shared workspace</D:comment>
     <D:read-write />
   </D:set>
   <D:remove>
@@ -516,7 +516,7 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         element in the POST request specifies the accept or
                         decline action via the DAV:invite-accepted or
                         DAV:invite-declined elements, and an optional
-                        DAV:description element. IF the invite was accepted, the
+                        DAV:comment element. IF the invite was accepted, the
                         body MUST also contain a <xref target="DAV:create-in">
                         DAV:create-in</xref> element. This element contains a
                         single DAV:href element, which content is a URI that
@@ -751,7 +751,7 @@ Content-Type: application/xml; charset="utf-8"
                         <artwork><![CDATA[
 <!ELEMENT user (href, displayname?, (invite-noresponse |
                 invite-accepted | invite-declined | invite-invalid),
-                access, description?)>]]></artwork>
+                access, comment?)>]]></artwork>
                       </figure>
                     </t>
                   </list>
@@ -885,22 +885,6 @@ Content-Type: application/xml; charset="utf-8"
                   </list>
                 </t>
             </section>
-            <section title="DAV:description">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">description</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Summary or title of shared collection.</t>
-                    <t hangText="Description:">A brief description of a shared collection. This can be used by sharers to communicate the nature of a shared collection to sharees, as well as used by sharees to indicate back to the sharer how each sharee is refering to the shared collection.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT description (#PCDATA)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
             <section title="DAV:invite-notification" anchor="DAV:invite-notification">
                 <t>
                   <list style="hanging">
@@ -916,7 +900,7 @@ Content-Type: application/xml; charset="utf-8"
             (invite-noresponse | invite-deleted |
             invite-accepted | invite-declined),
             access, organizer,
-            description?,
+            comment?,
 >]]></artwork>
                       </figure>
                     </t>
@@ -1001,7 +985,7 @@ Content-Type: application/xml; charset="utf-8"
                         <artwork><![CDATA[
 <!ELEMENT invite-reply (href,
                         (invite-accepted | invite-declined),
-                        hosturl, create-in?, description?>]]></artwork>
+                        hosturl, create-in?, comment?>]]></artwork>
                       </figure>
                     </t>
                   </list>
@@ -1051,7 +1035,7 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT set (DAV:href, displayname?, description?,
+<!ELEMENT set (DAV:href, displayname?, comment?,
                (read | read-write)>]]></artwork>
                       </figure>
                     </t>
