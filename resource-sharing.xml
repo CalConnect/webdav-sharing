@@ -17,9 +17,9 @@
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" docName='dav-collection-sharing-00'>
+<rfc ipr="trust200902" docName='dav-resource-sharing-00'>
     <front>
-        <title abbrev="WebDAV Collection Sharing">WebDAV Collection Sharing</title>
+        <title abbrev="WebDAV Resource Sharing">WebDAV Resource Sharing</title>
         <author initials="C." surname="Daboo" fullname="Cyrus Daboo">
             <organization abbrev="Apple Inc.">
                 Apple Inc.
@@ -71,7 +71,8 @@
         <date/>
         <abstract>
             <t>
-                This specification defines an extension to WebDAV that enables the sharing of collections between users on a WebDAV server.
+                This specification defines an extension to WebDAV that enables the sharing of
+                resources between users on a WebDAV server.
             </t>
         </abstract>
     </front>
@@ -86,12 +87,12 @@
             </t>
             <t>
                 This specification introduces a mechanism that allows
-                users of WebDAV servers to invite another user to a collection.
-                The invited user can either accept or reject the invite, which
-                is communicated back to the inviter.
-                If the user chooses to accept the invite, the shared collection
-                will then appear in a location on the server that's accessible
-                by the invitee.
+                users of WebDAV servers to invite another user to share a
+                resource or WebDAV collection. The invited user can either
+                accept or reject the invite, which is communicated back to the
+                sharer. If the user chooses to accept the invite, the shared
+                resource will then appear in a location on the server that's
+                accessible by the invitee.
             </t>
             <t>
                 There are existing mechanism that address similar use-cases,
@@ -106,7 +107,7 @@
             <t>
                 HTTP POST operations are used to manage the sharing invitations
                 and replies, and WebDAV properties are used to expose the state
-                of shared collections.
+                of shared resources.
             </t>
             <t>
                 This specification uses WebDAV notifications to communicate to
@@ -119,7 +120,6 @@
             <t>
                 <list style="numbers">
                     <t>Need mime-type for POST request xml bodies.</t>
-                    <t>Get consensus on turning this into 'resource sharing'.</t>
                     <t>invite-accepted / invite-declined in the 'invite-notification'. Is it a good name?</t>
                     <t>Differ element names for invite-reply when used as a POST body and as a notification.</t>
                     <t>Shared-url property. Why does it exist?</t>
@@ -137,10 +137,10 @@
             </t>
             <t>Terms Used:
                 <list style='hanging'>
-                    <t hangText='Sharer'>A user who is sharing a collection with other users.</t>
-                    <t hangText='Sharee'>A user to whom a collection has been shared.</t>
-                    <t hangText='Sharing Invite'>A message sent by a sharer to a sharee to indicate the status of a shared collection.</t>
-                    <t hangText='Sharing Reply'>A message sent by a sharee to a sharer to indicate the status of a shared collection.</t>
+                    <t hangText='Sharer'>A user who is sharing a resource with other users.</t>
+                    <t hangText='Sharee'>A user to whom a resource has been shared.</t>
+                    <t hangText='Sharing Invite'>A message sent by a sharer to a sharee to indicate the status of a shared resource.</t>
+                    <t hangText='Sharing Reply'>A message sent by a sharee to a sharer to indicate the status of a shared resource.</t>
                 </list>
             </t>
         </section>
@@ -196,13 +196,13 @@
             </t>
             <section title="Invite Notification" anchor='invite-notification'>
                 <t>
-                    When a sharer adds a new sharee to a collection, or updates
+                    When a sharer adds a new sharee to a resource, or updates
                     a sharee, an invite notification is added to the sharee's
                     notification collection.
                 </t>
                 <t>
                     The notification contains information about the shared
-                    collection, the owner and how to respond to the invitation.
+                    resource, the owner and how to respond to the invitation.
                 </t>
                 <section title="Example: An invite notification">
                     <t>
@@ -239,7 +239,7 @@ Content-Length: xxxx
             </section>
             <section title="Invite Reply" anchor='invite-reply'>
                 <t>
-                    After a sharee has accepted or declined an invitiation,
+                    After a sharee has accepted or declined an invitation,
                     the sharer receives an invite-reply in their notification
                     collection.
                 </t>
@@ -279,22 +279,22 @@ Content-Length: xxxx
             </section>
         </section>
 
-        <section title="Collection sharing">
+        <section title="Resource sharing">
             <section title="Feature Discovery">
                 <t>
-                    A server that supports the features described in this document MUST include "collection-sharing" as a field in the DAV response header from an OPTIONS request on any resource that supports these features.
+                    A server that supports the features described in this document MUST include "resource-sharing" as a field in the DAV response header from an OPTIONS request on any resource that supports these features.
                 </t>
             </section>
             <section title="Additional Properties for Collections" anchor='properties'>
                 <t>
-                    The following new or modified WebDAV properties are defined for collections and used to view or manipulate shared collection features.
+                    The following new or modified WebDAV properties are defined for resources and used to view or manipulate shared resources features.
                 </t>
                 <section title="DAV:resourcetype Property" anchor="DAV:resourcetype">
                     <t>
-                        Collections that are shared have elements listed in their DAV:resourcetype property in addition to DAV:collection.
+                        Resources that are shared have elements listed in their DAV:resourcetype property in addition to any elements that may already be there, such as DAV:collection.
                         <list style="symbols">
-                            <t><xref target="DAV:shared-owner">DAV:shared-owner</xref>: used to indicate that the colection is owned by the current user and is being shared by them.</t>
-                            <t><xref target="DAV:shared">DAV:shared</xref>: used to indicate that the collection is owned by another user and is being shared to the current user.</t>
+                            <t><xref target="DAV:shared-owner">DAV:shared-owner</xref>: used to indicate that the resource is owned by the current user and is being shared by them.</t>
+                            <t><xref target="DAV:shared">DAV:shared</xref>: used to indicate that the resource is owned by another user and is being shared to the current user.</t>
                         </list>
                     </t>
                 </section>
@@ -303,25 +303,24 @@ Content-Length: xxxx
                     <list style="hanging">
                       <t hangText="Name:">invite</t>
                       <t hangText="Namespace:">DAV:</t>
-                      <t hangText="Purpose:">Used to show to whom a calendar has been shared.</t>
+                      <t hangText="Purpose:">Used to show to whom a resource has been shared.</t>
                       <t hangText="Protected:">This property MUST be protected.</t>
                       <t hangText="PROPFIND behavior:">This property SHOULD NOT be returned by a PROPFIND allprop request (as defined in Section 14.2 of <xref target="RFC4918"/>).</t>
                       <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in MOVE operations, but MUST NOT be preserved in COPY operations.</t>
 
                       <t hangText="Description:">
-                          This WebDAV property is present on a collection
-                          resource that has been shared by the owner, or on
-                          the collection resources for the sharees. It
-                          provides a list of users to whom the collection has
-                          been shared, along with the "status" of the sharing
-                          invites sent to each user. In addition, servers
-                          SHOULD include a DAV:organizer XML element on
-                          collection resources of the sharees to provide
-                          clients with a fast way to determine who the sharer
-                          is. A server's local privacy policy may prevent
-                          sharees from knowing about other sharees on a shared
-                          calendar. If that is so server will not include
-                          DAV:user XML elements for other sharees.
+                          This WebDAV property is present on a resource that
+                          has been shared by the owner, or on the resources for
+                          the sharees. It provides a list of users to whom the
+                          resource has been shared, along with the "status" of
+                          the sharing invites sent to each user. In addition,
+                          servers SHOULD include a DAV:organizer XML element on
+                          resources of the sharees to provide clients with a
+                          fast way to determine who the sharer is. A server's
+                          local privacy policy may prevent sharees from
+                          knowing about other sharees on a shared calendar.
+                          If that is so server will not include DAV:user XML
+                          elements for other sharees.
                       </t>
                       <t hangText="Definition:">
                         <figure>
@@ -337,17 +336,16 @@ Content-Length: xxxx
                     <list style="hanging">
                       <t hangText="Name:">shared-url</t>
                       <t hangText="Namespace:">DAV:</t>
-                      <t hangText="Purpose:">Indicates the URL of the owner's copy of a shared collection.</t>
+                      <t hangText="Purpose:">Indicates the URL of the owner's copy of a shared resource.</t>
                       <t hangText="Protected:">This property MUST be protected.</t>
                       <t hangText="PROPFIND behavior:">This property SHOULD NOT be returned by a PROPFIND allprop request (as defined in Section 14.2 of <xref target="RFC4918"/>).</t>
                       <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in COPY and MOVE operations.</t>
 
                       <t hangText="Description:">
                           This WebDAV property is present on a shared
-                          collection resource that appears in a sharee's
-                          calendar home collection. Its content is a single
-                          DAV:href element whose value is the URL of the
-                          sharer's calendar being shared.
+                          resource. Its content is a single DAV:href element
+                          whose value is the URL of the sharer's resource being
+                          shared.
                       </t>
                       <t hangText="Definition:">
                         <figure>
@@ -359,48 +357,47 @@ Content-Length: xxxx
                   </t>
                 </section>
             </section>
-            <section title="Sharer Actions on Shared Collections">
-                <section title="Sharing or Unsharing a Collection">
+            <section title="Sharer Actions on Shared Resource">
+                <section title="Sharing or Unsharing a Resource">
                     <t>
-                        To update an existing collection to be shared, the
+                        To update an existing resource to be shared, the
                         sharer simply adds one or more sharees to the
-                        collection as per <xref target="sharee"/>. The server
+                        resource as per <xref target="sharee"/>. The server
                         MUST update the DAV:resourcetype property on the
-                        calendar collection to ensure it contains a
-                        DAV:shared-owner XML element to indicate the calendar
-                        collection is now shared.
+                        collection to ensure it contains a DAV:shared-owner
+                        XML element to indicate the resource is now shared.
                     </t>
                     <t>
-                        To unshare a collection, the sharer simply removes all
-                        sharees from the DAV:invite property of the collection as
+                        To unshare a resource, the sharer simply removes all
+                        sharees from the DAV:invite property of the resource as
                         per <xref target="sharee"/>. The server MUST update the
-                        DAV:resourcetype property on the calendar collection
-                        to ensure it does not contain a DAV:shared-owner XML
-                        element to indicate the collection is not shared.
+                        DAV:resourcetype property on the resource to ensure it
+                        does not contain a DAV:shared-owner XML element to
+                        indicate the resource is not shared.
                     </t>
                 </section>
-                <section title="Manipulating Sharees of a Shared Collection" anchor="sharee">
+                <section title="Manipulating Sharees of a Shared ection" anchor="sharee">
                     <t>
-                        The sharer of a shared collection is able to manipulate
+                        The sharer of a shared resource is able to manipulate
                         the sharee list by issuing a POST request targeted at
-                        the calendar collection resource. The POST request MUST
-                        contain an XML document as its body with the root
-                        element being <xref target="DAV:share">DAV:share</xref>.
+                        the resource. The POST request MUST contain an XML
+                        document as its body with the root element being
+                        <xref target="DAV:share">DAV:share</xref>.
                     </t>
                     <t>
                         The <xref target="DAV:share">DAV:share</xref> element in
                         the POST requests MUST contain one or more
                         <xref target="DAV:set">DAV:set</xref> or
                         <xref target="DAV:remove">DAV:remove</xref> elements.
-                        For each <xref target="DAV:set">CS:set</xref> element,
+                        For each <xref target="DAV:set">DAV:set</xref> element,
                         the server MUST add the specified sharee access to the
-                        collection. For each
+                        resource. For each
                         <xref target="DAV:remove">DAV:remove</xref> element
                         the server MUST remove the specified sharee access
-                        from the shared collection. In each case the server MUST
+                        from the shared resource. In each case the server MUST
                         send a notification message to any sharees whose status
                         is changed (added, modified or removed), indicating to
-                        them a change in status for the shared collection. This
+                        them a change in status for the shared resource. This
                         is accomplished by sending a
                         <xref target="DAV:invite-notification">DAV:invite-notification</xref>
                         notification to each sharee.
@@ -436,7 +433,7 @@ Content-Length: xxxx
                     <section title="Example: Successful Sharee Add Request">
 
                         <t>
-                          This example shows how to add a single sharee (with email address "mailto:eric@example.com") to a shared collection with DAV:read-write access.
+                          This example shows how to add a single sharee (with email address "mailto:eric@example.com") to a shared resource with DAV:read-write access.
                         </t>
 
                         <figure>
@@ -494,17 +491,17 @@ Content-Length: xxxx
                         <figure>
                           <preamble>&gt;&gt; Response &lt;&lt;</preamble>
                           <artwork><![CDATA[
-HTTP/1.1 200 OK
+HTTP/1.1 204 No Content
 Cache-Control: no-cache
 Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         </figure>
                     </section>
                 </section>
             </section>
-            <section title="Sharee Actions on Shared Collections">
+            <section title="Sharee Actions on Shared Resources">
                 <section title="Replying to a Sharing Invite">
                     <t>
-                        When a sharee is invited to a shared collection they
+                        When a sharee is invited to a shared resource they
                         can accept or decline the invite by issuing a POST
                         request to the resource URI for the invitation
                         notification.  The POST request MUST contain an XML
@@ -535,10 +532,10 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                     </t>
                     <t>
                         Note that some servers may restrict where certain types
-                        of collection resources may be created. A CalDAV server
-                        for instance, may only allow calendars to be created in
-                        collections identified by the calendar-home-set WebDAV
-                        property.
+                        of resources may be created. A CalDAV server for
+                        instance, may only allow calendars to be created in
+                        collections identified by the CALDAV:calendar-home-set
+                        WebDAV property.
                     </t>
                     <t>
                         A successful response to an accepted invitation, SHOULD
@@ -621,43 +618,46 @@ Content-Type: application/xml; charset="utf-8"
                         Two levels of access ca be granted by a sharer to any sharee. These are governed by the DAV:access element used in the DAV:invite/DAV:user element that specifies a shared user invite. DAV:access contains a single empty element that defines the type of access granted:
                         <list style="hanging">
                         <t hangText="DAV:read">
-                            When present this indicates that sharees can read information from the collection, but cannot change it.
+                            When present this indicates that sharees can read information from the resource, but cannot change it. This applies to the resource, but if the shared resource is a collection, it also applies to the collection's children.
                         </t>
                         <t hangText="DAV:read-write">
-                            When present this indicates that sharees can read and write collection data.
+                            When present this indicates that sharees can read and write information from the resource.
                         </t>
                         </list>
+                    </t>
+                    <t>
+                        The function of the DAV:read and DAV:read-write
+                        elements is to give a quick indicator for a sharee
+                        what kind of access they may expect. The server may
+                        still set more fine-grained access control rules. The
+                        sharee can find out about these rules by requesting
+                        the DAV:current-user-privilege-set property on the
+                        shared resource, or its children.
                     </t>
                 </section>
                 <section title="Per-instance WebDAV Properties" anchor="per-instance-data">
                     <t>
                         Servers MUST support "per-instance" WebDAV properties
-                        on shared collections and MAY support them on resources
+                        on shared resource and MAY support them on resources
                         within shared collections. A "per-instance" WebDAV
                         property is one whose value can be set and retrieved
-                        on an instance of a collection, but is not
+                        on an instance of a resource, but is not
                         automatically propagated to other instances of the
-                        same shared collection. For example, a sharee may
+                        same shared resource. For example, a sharee may
                         change a property on their instance of a shared
-                        collection, but the instance of the owner of the
-                        collection will not see this updated value.
+                        resource, but the instance of the owner of the
+                        resource will not see this updated value.
                     </t>
                     <t>
-                        For shared collections, the server MUST allow all
+                        For shared resources, the server MUST allow all
                         users to write "per-instance" WebDAV properties on the
-                        shared collection and MAY allow property writes on
-                        resources within the shared collection. This is
+                        shared resources and MAY allow property writes on
+                        resources within the shared resources. This is
                         required even in the case where the sharee has been
                         granted read access only (i.e., the ability to
-                        change the calenar is disallowed). This requirement
+                        change the resource is disallowed). This requirement
                         ensures that sharees can always change "personal"
                         properties such as display names.
-                    </t>
-                    <t>
-                        Servers MUST treat the following properties as "per-instance":
-                        <list>
-                            <t>DAV:displayname</t>
-                        </list>
                     </t>
                     <t>
                         Servers MAY treat any dead property as per-instance.
@@ -671,7 +671,7 @@ Content-Type: application/xml; charset="utf-8"
 
         <section title="Sharing privileges">
             <t>
-                Servers MAY support sharing on a per-collections basis.
+                Servers MAY support sharing on a per-resource basis.
                 This section defines a "DAV:share"
                 <xref target="RFC3744">WebDAV Access Control (ACL)</xref>
                 privilege for use on collections that may be shared.
@@ -679,7 +679,7 @@ Content-Type: application/xml; charset="utf-8"
             <t>
                 This privilege MUST be non-abstract and MAY be protected.
                 This privilege MUST appear in the DAV:supported-privilege-set
-                property for collections that may be shared. In addition, it
+                property for resources that may be shared. In addition, it
                 MUST appear in the DAV:current-user-privilege-set, if the user
                 is allowed to share the collection.
             </t>
@@ -691,8 +691,8 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">shared-owner</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Used to indicate that a collection is being shared by the owner.</t>
-                    <t hangText="Description:">This property appears in the DAV:resourcetype property on the collection resource shared by a sharer. See <xref target="properties"/>.</t>
+                    <t hangText="Purpose:">Used to indicate that a resource is being shared by the owner.</t>
+                    <t hangText="Description:">This property appears in the DAV:resourcetype property on the resource shared by a sharer. See <xref target="properties"/>.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -707,8 +707,8 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">shared</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Used to indicate that a collection is being shared to a sharee.</t>
-                    <t hangText="Description:">This property appears in the DAV:resourcetype property on a collection resource that is shared to a sharee. See <xref target="properties"/>.</t>
+                    <t hangText="Purpose:">Used to indicate that a resources is being shared to a sharee.</t>
+                    <t hangText="Description:">This property appears in the DAV:resourcetype property on a resource that is shared to a sharee. See <xref target="properties"/>.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -727,7 +727,7 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Description:">
                         This element represents a <xref target="RFC3744">WebDAV
                         ACL privilege</xref>, and indicates that the current
-                        principal is allowed to share the collection on which
+                        principal is allowed to share the resource on which
                         it is defined.
                     </t>
                     <t hangText="Definition:">
@@ -779,7 +779,7 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Name:">invite-deleted</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Sharing invite status.</t>
-                    <t hangText="Description:">When used in a <xref target="DAV:invite-notification">DAV:invite-notification</xref> element, this element is used to indicate to the sharee that a shared collection has been unshared by the sharer.</t>
+                    <t hangText="Description:">When used in a <xref target="DAV:invite-notification">DAV:invite-notification</xref> element, this element is used to indicate to the sharee that a shared resource has been unshared by the sharer.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -842,7 +842,7 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">access</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Shared collection access level.</t>
+                    <t hangText="Purpose:">Shared resource access level.</t>
                     <t hangText="Description:">When used in a <xref target="DAV:user">DAV:user</xref> element, this element is used to indicate the sharing access level granted to the corresponding sharee.</t>
                     <t hangText="Definition:">
                       <figure>
@@ -858,8 +858,8 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">read</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Shared collection access level privilege.</t>
-                    <t hangText="Description:">Indicates that the access level granted only allows sharees to read data in the shared collection (though they can write <xref target="per-instance-data">per-instance data</xref>).</t>
+                    <t hangText="Purpose:">Shared resource access level privilege.</t>
+                    <t hangText="Description:">Indicates that the access level granted only allows sharees to read data in the shared resource (though they can write <xref target="per-instance-data">per-instance data</xref>).</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -874,8 +874,8 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">read-write</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Shared collection access level privilege.</t>
-                    <t hangText="Description:">Indicates that the access level granted allows sharees to read and write all data in the collection.</t>
+                    <t hangText="Purpose:">Shared resource access level privilege.</t>
+                    <t hangText="Description:">Indicates that the access level granted allows sharees to read and write all data in the resource.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -890,8 +890,8 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">invite-notification</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">A notification used as a shared collection invite.</t>
-                    <t hangText="Description:">Defines a notification message sent automatically by the server when a sharer adds, changes or removes a sharee from a shared collection. The DAV:href element specifies the URI of the sharee to whom the message was sent.</t>
+                    <t hangText="Purpose:">A notification used as a shared resource invite.</t>
+                    <t hangText="Description:">Defines a notification message sent automatically by the server when a sharer adds, changes or removes a sharee from a shared resource. The DAV:href element specifies the URI of the sharee to whom the message was sent.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -912,8 +912,8 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">hosturl</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Identifies the source URL of a shared collection.</t>
-                    <t hangText="Description:">Contains a single DAV:href element that refers to the source of a shared collection - i.e., the URL of the collection shared by the sharer.</t>
+                    <t hangText="Purpose:">Identifies the source URL of a shared resource.</t>
+                    <t hangText="Description:">Contains a single DAV:href element that refers to the source of a shared resource - i.e., the URL of the resource shared by the sharer.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -928,8 +928,8 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">organizer</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Identifies the sharer of a shared collection.</t>
-                    <t hangText="Description:">Contains a single DAV:href element that identifies the URI of the sharer of a shared collection, and an optional DAV:displayname element that matches that user, and an optional DAV:first-name, DAV:last-name pair of elements that match that user. In some cases servers might have directory information that includes only the common name, or only the first or last name, and it is better to expose those directly to the client as-is rather than to try and split or combine the attributes to synthesize one set or the other.</t>
+                    <t hangText="Purpose:">Identifies the sharer of a shared resource.</t>
+                    <t hangText="Description:">Contains a single DAV:href element that identifies the URI of the sharer of a shared resource, and an optional DAV:displayname element that matches that user, and an optional DAV:first-name, DAV:last-name pair of elements that match that user. In some cases servers might have directory information that includes only the common name, or only the first or last name, and it is better to expose those directly to the client as-is rather than to try and split or combine the attributes to synthesize one set or the other.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -978,8 +978,8 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">invite-reply</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">A notification used as a reply to a shared collection invite.</t>
-                    <t hangText="Description:">Defines a notification message sent automatically by the server when a sharee replies to a shared collection invite. The DAV:href element specifies the URI of the sharee to whom the original invite message was sent.</t>
+                    <t hangText="Purpose:">A notification used as a reply to a shared resource invite.</t>
+                    <t hangText="Description:">Defines a notification message sent automatically by the server when a sharee replies to a shared resource invite. The DAV:href element specifies the URI of the sharee to whom the original invite message was sent.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -998,7 +998,7 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">The target url for the new resource.</t>
                     <t hangText="Description:">
-                        When a user accepts an invitation to share a collection, this URI will be used to create the new shared resource.
+                        When a user accepts an invitation to share a resource, this URI will be used to create the new shared resource.
                     </t>
                     <t hangText="Definition:">
                       <figure>
@@ -1015,7 +1015,7 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Name:">share</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Describes changes to sharees.</t>
-                    <t hangText="Description:">The root element used in POST requests on collections by sharers to manipulate the sharee list of a shared collections.</t>
+                    <t hangText="Description:">The root element used in POST requests on resources by sharers to manipulate the sharee list of a shared resource.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -1031,7 +1031,7 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Name:">set</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Sets access for a sharee.</t>
-                    <t hangText="Description:">Used to add or modify sharee access to a shared collection. The specified access to the shared collection is given to the sharee.</t>
+                    <t hangText="Description:">Used to add or modify sharee access to a shared resource. The specified access to the shared resource is given to the sharee.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -1048,7 +1048,7 @@ Content-Type: application/xml; charset="utf-8"
                     <t hangText="Name:">remove</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Removes access for a sharee.</t>
-                    <t hangText="Description:">Used to remove sharee access to a shared collection. All access to the shared collection is removed for the sharee.</t>
+                    <t hangText="Description:">Used to remove sharee access to a shared resource. All access to the shared resource is removed for the sharee.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -1063,8 +1063,8 @@ Content-Type: application/xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">shared-as</t>
                     <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Identifies a shared collection.</t>
-                    <t hangText="Description:">Returned by the server for a POST request by a sharee accepting a shared collection invite. The DAV:href element specifies the URI of the collection created by the acceptance.</t>
+                    <t hangText="Purpose:">Identifies a shared resource.</t>
+                    <t hangText="Description:">Returned by the server for a POST request by a sharee accepting a shared resource invite. The DAV:href element specifies the URI of the resource created by the acceptance.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
