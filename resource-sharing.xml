@@ -119,7 +119,6 @@
         <section title="Open Issues">
             <t>
                 <list style="numbers">
-                    <t>Need mime-type for POST request xml bodies.</t>
                     <t>invite-accepted / invite-declined in the 'invite-notification'. Is it a good name?</t>
                     <t>Differ element names for invite-reply when used as a POST body and as a notification.</t>
                     <t>Shared-url property. Why does it exist?</t>
@@ -376,13 +375,19 @@ Content-Length: xxxx
                         indicate the resource is not shared.
                     </t>
                 </section>
-                <section title="Manipulating Sharees of a Shared ection" anchor="sharee">
+                <section title="Manipulating Sharees of a Shared Resource" anchor="sharee">
                     <t>
                         The sharer of a shared resource is able to manipulate
                         the sharee list by issuing a POST request targeted at
                         the resource. The POST request MUST contain an XML
                         document as its body with the root element being
                         <xref target="DAV:share">DAV:share</xref>.
+                    </t>
+                    <t>
+                        The POST request MUST contain a Content-Type HTTP
+                        header, which MUST contain "application/davshare+xml"
+                        as its value. Servers SHOULD reject the request if
+                        this is not the case.
                     </t>
                     <t>
                         The <xref target="DAV:share">DAV:share</xref> element in
@@ -441,7 +446,7 @@ Content-Length: xxxx
                           <artwork><![CDATA[
 POST /calendars/users/cyrus/shared/ HTTP/1.1
 Host: calendar.example.com
-Content-Type: application/xml; charset="utf-8"
+Content-Type: application/davsharing+xml; charset="utf-8"
 Content-Length: xxxx
 
 <?xml version="1.0" encoding="utf-8" ?>
@@ -473,7 +478,7 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                           <artwork><![CDATA[
 POST /calendars/users/cyrus/shared/ HTTP/1.1
 Host: calendar.example.com
-Content-Type: application/xml; charset="utf-8"
+Content-Type: application/davsharing+xml; charset="utf-8"
 Content-Length: xxxx
 
 <?xml version="1.0" encoding="utf-8" ?>
@@ -507,6 +512,12 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         notification.  The POST request MUST contain an XML
                         document as its body with the root element being
                         <xref target="DAV:invite-reply">DAV:invite-reply</xref>.
+                    </t>
+                    <t>
+                        The POST request MUST contain a Content-Type HTTP
+                        header, which MUST contain "application/davshare+xml"
+                        as its value. Servers SHOULD reject the request if
+                        this is not the case.
                     </t>
                     <t>
                         The <xref target="DAV:invite-reply">DAV:invite-reply</xref>
@@ -570,7 +581,7 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         <artwork><![CDATA[
 POST /principals/users/evert/notifications/1000455.xml HTTP/1.1
 Host: calendar.example.com
-Content-Type: application/xml; charset="utf-8"
+Content-Type: application/davsharing+xml; charset="utf-8"
 
 <?xml version="1.0" encoding="utf-8" ?>
 <D:invite-reply xmlns:D="DAV:">
@@ -1090,6 +1101,41 @@ Content-Type: application/xml; charset="utf-8"
             <t>
                 This specification is the result of discussions between the Apple calendar server and client teams.
             </t>
+        </section>
+        <section title='IANA Considerations'>
+            <t>
+                This document defines a MIME media type for XML documents
+                used in for sharing. This media type SHOULD be used for all
+                POST requests in this specification.
+            </t>
+            <t>
+            <list style="hanging">
+              <t hangText="Type name:">application</t>
+              <t hangText="Subtype name:">davsharing+xml</t>
+              <t hangText="Required parameters:">none</t>
+              <t hangText="Optional parameters:">none</t>
+              <t hangText="Encoding considerations:">Identical to those of "application/xml" as described in <xref target="RFC7303">RFC7303</xref>.</t>
+              <t hangText="Security considerations:">See <xref target="security" />.</t>
+              <t hangText="Interoperability considerations:">There are no known interoperability issues.</t>
+              <t hangText="Published specification:">This specification.</t>
+              <t hangText="Applications that use this media type:">No known applications currently use this media type.</t>
+              <t hangText="Fragment identifier considerations:">N/A.</t>
+            </list>
+          </t>
+          <t>Additional information</t>
+          <t>
+          <list style="hanging">
+              <t hangText="Deprecated alias names for this type">N/A.</t>
+              <t hangText="Magic number(s)">N/A.</t>
+              <t hangText="File extension(s)">xml</t>
+              <t hangText="Macintosh file type code(s)">TEXT</t>
+              <t hangText="Person &amp; email address to contact for further information:">me@evertpot.com</t>
+              <t hangText="Intended usage">COMMON</t>
+              <t hangText="Restrictions on usage">There are no restrictions on where this media</t>
+              <t hangText="Author">See the "Authors' Addresses" section of this document.</t>
+              <t hangText="Change Controller">IETF</t>
+          </list>
+          </t>
         </section>
     </middle>
     <back>
