@@ -7,6 +7,7 @@
 <!ENTITY rfc4918 PUBLIC '' 'bibxml/reference.RFC.4918.xml'>
 <!ENTITY rfc6352 PUBLIC '' 'bibxml/reference.RFC.6352.xml'>
 <!ENTITY rfc6638 PUBLIC '' 'bibxml/reference.RFC.6638.xml'>
+<!ENTITY rfc7303 PUBLIC '' 'bibxml/reference.RFC.7303.xml'>
 ]>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
@@ -120,9 +121,9 @@
             <t>
                 <list style="numbers">
                     <t>invite-accepted / invite-declined in the 'invite-notification'. Is it a good name?</t>
-                    <t>Differ element names for invite-reply when used as a POST body and as a notification.</t>
                     <t>Shared-url property. Why does it exist?</t>
                     <t>first-name and last-name properties. I feel that this spec should not define these.</t>
+                    <t>Need to review all xml elements, examples and dtds</t>
                  </list>
             </t>
         </section>
@@ -151,37 +152,37 @@
                 single sharee.
             </t>
             <t>
-                To share a collection with another user, the sharer's client
-                executes an HTTP POST request against the collection resource
-                for the collection to be shared. The POST request body will
-                contain details of the user to whom the collection is to be
-                shared as well as the access right to be granted to them. If
-                the request succeeds, a notification is sent to the sharee
-                with details of the collection being shared to them.
+                To share a resource with another user, the sharer's client
+                executes an HTTP POST request against the resource that's to
+                be shared. The POST request body will contain details of the
+                user to whom the resource is to be shared as well as the
+                access right to be granted to them. If the request succeeds, a
+                notification is sent to the sharee with details of the
+                resource being shared to them.
             </t>
             <t>
                 The sharer's client will show the notification to the sharee
                 and present them with the choice to accept or decline the
                 invitation to the shared collection. If the sharee chooses to
                 decline, then nothing changes for that sharee. If the sharee
-                chooses to accept, then a new collection is created at a
+                chooses to accept, then a new resource is created at a
                 location that's accessible to the sharee.
                 The server enforces the appropriate access privileges for the
                 sharee.
             </t>
             <t>
                 At any time, the sharer can inspect properties on the
-                collection being shared, and determine the accept/decline
+                resource being shared, and determine the accept/decline
                 status of each sharee. Additional sharees can be added and
                 existing ones removed. The access privileges for existing
                 sharees can also be changed.
             </t>
             <t>
-                Once a sharee has access to the shared collection, they can
+                Once a sharee has access to the shared resource, they can
                 remove it and decline the sharing invite by simply having
                 their client issue an HTTP DELETE request on the shared
                 collection. That does not delete any data, but rather simply
-                removes the "link" to the sharer's collection and sets the
+                removes the "link" to the sharer's resource and sets the
                 sharee's invite status to declined.
             </t>
         </section>
@@ -236,10 +237,10 @@ Content-Length: xxxx
                     </t>
                 </section>
             </section>
-            <section title="Invite Reply" anchor='invite-reply'>
+            <section title="Invite Reply" anchor='reply-notification'>
                 <t>
                     After a sharee has accepted or declined an invitation,
-                    the sharer receives an invite-reply in their notification
+                    the sharer receives a reply-notification in their notification
                     collection.
                 </t>
                 <t>
@@ -262,14 +263,14 @@ Content-Length: xxxx
 
 <D:notification xmlns:D="DAV:">
     <D:dtstamp>2014-09-03T02:30:00Z</D:dtstamp>
-    <D:invite-reply>
+    <D:reply-notification>
         <D:principal>
             <D:href>mailto:john@example.org</D:href>
         </D:principal>
         <D:invite-declined />
         <D:href>/calendars/users/evert/offdays/</D:href>
         <D:comment>Sorry, I'm not interested</D:comment>
-    </D:invite-reply>
+    </D:reply-notification>
 </D:notification>
 ]]></artwork>
                     </figure>
@@ -284,7 +285,7 @@ Content-Length: xxxx
                     A server that supports the features described in this document MUST include "resource-sharing" as a field in the DAV response header from an OPTIONS request on any resource that supports these features.
                 </t>
             </section>
-            <section title="Additional Properties for Collections" anchor='properties'>
+            <section title="Additional Properties for resources" anchor='properties'>
                 <t>
                     The following new or modified WebDAV properties are defined for resources and used to view or manipulate shared resources features.
                 </t>
@@ -563,7 +564,7 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                         SHOULD send a notification to the sharer to update
                         them on the change in the sharee state. This is
                         accomplished by sending a
-                        <xref target="DAV:invite-reply">DAV:invite-reply</xref>
+                        <xref target="DAV:reply-notification">DAV:reply-notification</xref>
                         notification to the sharer.
                     </t>
                     <t>
@@ -613,10 +614,23 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                         remain to be DAV:invite-noreply.
                     </t>
                 </section>
-                <section title="Removing a Shared Collection">
+                <section title="Making modifications to a shared resource">
                     <t>
-                        To remove a shared collection a DELETE request is
-                        targeted at the shared collection URI. When such a
+                        Any changes that a sharee makes to a shared resource
+                        should also be reflected in the sharers instance of
+                        the resource.
+                    </t>
+                    <t>
+                        If the shared resource is a collection, any resources
+                        in the collection, or in the collection's
+                        child-collections must also appear in the sharers
+                        instance.
+                    </t>
+                </section>
+                <section title="Removing a shared resource">
+                    <t>
+                        To remove a shared resource a DELETE request is
+                        targeted at the shared resource URI. When such a
                         request is received the server MUST remove the shared
                         collection and automatically update the sharee's
                         status in the sharer's DAV:invite property.
@@ -989,6 +1003,24 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                   <list style="hanging">
                     <t hangText="Name:">invite-reply</t>
                     <t hangText="Namespace:">DAV:</t>
+                    <t hangText="Purpose:">Root element for a POST request used to respond to a share invitation.</t>
+                    <t hangText="Description:">When a user responds to an invitation, the user issues a POST request with an xml body. DAV:invite-reply is the root element for this xml document.</t>
+                    <t hangText="Definition:">
+                      <figure>
+                        <artwork><![CDATA[
+<!ELEMENT invite-reply (href,
+                        (invite-accepted | invite-declined),
+                        hosturl, create-in?, comment?>]]></artwork>
+                      </figure>
+                    </t>
+                  </list>
+                </t>
+            </section>
+            <section title="DAV:reply-notification" anchor="DAV:reply-notification">
+                <t>
+                  <list style="hanging">
+                    <t hangText="Name:">reply-notification</t>
+                    <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">A notification used as a reply to a shared resource invite.</t>
                     <t hangText="Description:">Defines a notification message sent automatically by the server when a sharee replies to a shared resource invite. The DAV:href element specifies the URI of the sharee to whom the original invite message was sent.</t>
                     <t hangText="Definition:">
@@ -1115,7 +1147,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
               <t hangText="Required parameters:">none</t>
               <t hangText="Optional parameters:">none</t>
               <t hangText="Encoding considerations:">Identical to those of "application/xml" as described in <xref target="RFC7303">RFC7303</xref>.</t>
-              <t hangText="Security considerations:">See <xref target="security" />.</t>
+              <t hangText="Security considerations:">N/A.</t>
               <t hangText="Interoperability considerations:">There are no known interoperability issues.</t>
               <t hangText="Published specification:">This specification.</t>
               <t hangText="Applications that use this media type:">No known applications currently use this media type.</t>
@@ -1146,6 +1178,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             &rfc4918;
             &rfc6352;
             &rfc6638;
+            &rfc7303;
         </references>
 <!--
 <references title='Informative References'>
