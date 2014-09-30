@@ -1,0 +1,14 @@
+POST /calendars/evert/project-calendar/ HTTP/1.1
+Content-Type: application/davsharing+xml; charset="utf-8"
+
+<?xml version="1.0" encoding="utf-8" ?>
+<share xmlns="DAV:">
+  <set>
+    <href>mailto:cyrus@example.com</href>
+    <comment>Project planning</comment>
+    <read />
+  </set>
+  <remove>
+    <href>mailto:wilfredo@example.com</href>
+  </remove>
+</share>

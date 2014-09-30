@@ -1,0 +1,19 @@
+HTTP/1.1 200 OK
+Content-Type: application/davnotification+xml
+
+<?xml version="1.0" encoding="utf-8" ?>
+<notification xmlns="DAV:">
+    <dtstamp>2014-08-05T13:38:02Z</dtstamp>
+    <invite-notification>
+        <principal>
+            <href>/principals/users/evert/</href>
+        </principal>
+        <invite-accepted />
+        <href>/calendars/evert/project-calendar/</href>
+        <access><read /></access>
+        <prop>
+            <displayname>Project planning</displayname>
+            <resourcetype><collection /></resourcetype>
+        </prop>
+    </invite-notification>
+</notification>

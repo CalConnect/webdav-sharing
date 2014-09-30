@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Content-Type: application/davnotification+xml
+
+<?xml version="1.0"?>
+<notification xmlns="DAV:">
+    <dtstamp>2014-09-03T02:30:00Z</dtstamp>
+    <reply-notification>
+        <principal>
+            <href>mailto:cyrus@example.com</href>
+        </principal>
+        <invite-accepted />
+        <href>/calendars/users/evert/project-calendar/</href>
+        <comment>Thanks!</comment>
+    </reply-notification>
+</notification>
