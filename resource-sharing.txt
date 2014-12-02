@@ -4,10 +4,10 @@
 
 Network Working Group                                           C. Daboo
 Internet-Draft                                                   E. York
-Expires: April 1, 2015                                        Apple Inc.
+Expires: June 5, 2015                                         Apple Inc.
                                                                   E. Pot
                                                               fruux GmbH
-                                                      September 28, 2014
+                                                        December 2, 2014
 
 
                         WebDAV Resource Sharing
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 1, 2015.
+   This Internet-Draft will expire on June 5, 2015.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Daboo, et al.             Expires April 1, 2015                 [Page 1]
+Daboo, et al.             Expires June 5, 2015                  [Page 1]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Daboo, et al.             Expires April 1, 2015                 [Page 2]
+Daboo, et al.             Expires June 5, 2015                  [Page 2]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
      8.15. DAV:organizer . . . . . . . . . . . . . . . . . . . . . .  20
@@ -165,22 +165,26 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                 [Page 3]
+Daboo, et al.             Expires June 5, 2015                  [Page 3]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 2.  Open Issues
 
-   1.  invite-accepted / invite-declined in the 'invite-notification'.
+   1.  Drop UID from xml body?  Yes or No?
+
+   2.  Update set/remove elements to set-invitee/remove-invitee.
+
+   3.  invite-accepted / invite-declined in the 'invite-notification'.
        Is it a good name?
 
-   2.  Shared-url property.  Why does it exist?
+   4.  Shared-url property.  Why does it exist?
 
-   3.  first-name and last-name properties.  I feel that this spec
+   5.  first-name and last-name properties.  I feel that this spec
        should not define these.
 
-   4.  Need to review all xml elements, examples and dtds
+   6.  Need to review all xml elements, examples and dtds.
 
 3.  Conventions Used in This Document
 
@@ -214,17 +218,17 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
    To share a resource with another user, the sharer's client executes
    an HTTP POST request against the resource that's to be shared.  The
    POST request body will contain details of the user to whom the
+
+
+
+Daboo, et al.             Expires June 5, 2015                  [Page 4]
+
+Internet-Draft           WebDAV Resource Sharing           December 2014
+
+
    resource is to be shared as well as the access right to be granted to
    them.  If the request succeeds, a notification is sent to the sharee
    with details of the resource being shared to them.
-
-
-
-
-Daboo, et al.             Expires April 1, 2015                 [Page 4]
-
-Internet-Draft           WebDAV Resource Sharing          September 2014
-
 
    The sharer's client will show the notification to the sharee and
    present them with the choice to accept or decline the invitation to
@@ -273,13 +277,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-
-
-
-
-Daboo, et al.             Expires April 1, 2015                 [Page 5]
+Daboo, et al.             Expires June 5, 2015                  [Page 5]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    HTTP/1.1 200 OK
@@ -333,9 +333,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                 [Page 6]
+Daboo, et al.             Expires June 5, 2015                  [Page 6]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    HTTP/1.1 200 OK
@@ -389,9 +389,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                 [Page 7]
+Daboo, et al.             Expires June 5, 2015                  [Page 7]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Protected:  This property MUST be protected.
@@ -445,9 +445,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                 [Page 8]
+Daboo, et al.             Expires June 5, 2015                  [Page 8]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 6.3.  Sharer Actions on Shared Resource
@@ -501,9 +501,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                 [Page 9]
+Daboo, et al.             Expires June 5, 2015                  [Page 9]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    returning the list of sharees via the DAV:invite property
@@ -557,9 +557,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 10]
+Daboo, et al.             Expires June 5, 2015                 [Page 10]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    >> Request <<
@@ -613,9 +613,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 11]
+Daboo, et al.             Expires June 5, 2015                 [Page 11]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    The client MAY also provide a DAV:slug property.  The server MAY use
@@ -669,9 +669,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 12]
+Daboo, et al.             Expires June 5, 2015                 [Page 12]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 6.4.2.  Ignoring an invitation
@@ -684,7 +684,7 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
    this.
 
    As a result, from the sharers perspective, the invitation status for
-   that principal will always remain to be DAV:invite-noreply.
+   that principal will always remain as DAV:invite-noreply.
 
 6.4.3.  Making modifications to a shared resource
 
@@ -692,7 +692,7 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
    reflected in the sharers instance of the resource.
 
    If the shared resource is a collection, any resources in the
-   collection, or in the collection's child-collections must also appear
+   collection, or in the collection's child-collections MUST also appear
    in the sharers instance.
 
 6.4.4.  Removing a shared resource
@@ -706,7 +706,7 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 6.5.1.  Access Levels
 
-   Two levels of access ca be granted by a sharer to any sharee.  These
+   Two levels of access can be granted by a sharer to any sharee.  These
    are governed by the DAV:access element used in the DAV:invite/
    DAV:user element that specifies a shared user invite.  DAV:access
    contains a single empty element that defines the type of access
@@ -725,9 +725,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 13]
+Daboo, et al.             Expires June 5, 2015                 [Page 13]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    The server may still set more fine-grained access control rules.  The
@@ -781,9 +781,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 14]
+Daboo, et al.             Expires June 5, 2015                 [Page 14]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Purpose:  Used to indicate that a resource is being shared by the
@@ -837,9 +837,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 15]
+Daboo, et al.             Expires June 5, 2015                 [Page 15]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Purpose:  Used to show status of sharing invites sent to sharees.
@@ -893,9 +893,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 16]
+Daboo, et al.             Expires June 5, 2015                 [Page 16]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 8.7.  DAV:invite-accepted
@@ -949,9 +949,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 17]
+Daboo, et al.             Expires June 5, 2015                 [Page 17]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Description:  When used in a DAV:user (Section 8.4) element, this
@@ -1005,9 +1005,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 18]
+Daboo, et al.             Expires June 5, 2015                 [Page 18]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Description:  Indicates that the access level granted allows sharees
@@ -1061,9 +1061,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 19]
+Daboo, et al.             Expires June 5, 2015                 [Page 19]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 8.15.  DAV:organizer
@@ -1117,9 +1117,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 20]
+Daboo, et al.             Expires June 5, 2015                 [Page 20]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Description:  The last name is optionally included by the server when
@@ -1173,9 +1173,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 21]
+Daboo, et al.             Expires June 5, 2015                 [Page 21]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 8.20.  DAV:create-in
@@ -1229,9 +1229,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 22]
+Daboo, et al.             Expires June 5, 2015                 [Page 22]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 8.23.  DAV:remove
@@ -1285,9 +1285,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 23]
+Daboo, et al.             Expires June 5, 2015                 [Page 23]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 12.  IANA Considerations
@@ -1341,9 +1341,9 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 24]
+Daboo, et al.             Expires June 5, 2015                 [Page 24]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Change Controller  IETF
@@ -1397,9 +1397,9 @@ Appendix A.  Change History
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 25]
+Daboo, et al.             Expires June 5, 2015                 [Page 25]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    1.  Removed read-write-shared access mode - now a server that does
@@ -1424,10 +1424,10 @@ Appendix B.  Backwards compatibility
    introduced in this specification, may need to have a similar property
    in the old namespace.
 
-   XML documentations as sent by POST requests and responses, and
-   resources returned from notifications can be distinguished by the use
-   of the Content-Type and Accept HTTP headers.  The earlier draft does
-   not define new mime-types for these, but this specification does.
+   XML documents as sent by POST requests and responses, and resources
+   returned from notifications can be distinguished by the use of the
+   Content-Type and Accept HTTP headers.  The earlier draft does not
+   define new mime-types for these, but this specification does.
 
 Authors' Addresses
 
@@ -1453,9 +1453,9 @@ Authors' Addresses
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 26]
+Daboo, et al.             Expires June 5, 2015                 [Page 26]
 
-Internet-Draft           WebDAV Resource Sharing          September 2014
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Evert Pot
@@ -1509,4 +1509,4 @@ Internet-Draft           WebDAV Resource Sharing          September 2014
 
 
 
-Daboo, et al.             Expires April 1, 2015                [Page 27]
+Daboo, et al.             Expires June 5, 2015                 [Page 27]

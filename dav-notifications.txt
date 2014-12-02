@@ -4,9 +4,9 @@
 
 Network Working Group                                           C. Daboo
 Internet-Draft                                                Apple Inc.
-Expires: March 6, 2015                                            E. Pot
+Expires: June 5, 2015                                             E. Pot
                                                               fruux GmbH
-                                                       September 2, 2014
+                                                        December 2, 2014
 
 
                        WebDAV: User Notifications
@@ -32,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 6, 2015.
+   This Internet-Draft will expire on June 5, 2015.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Daboo & Pot               Expires March 6, 2015                 [Page 1]
+Daboo & Pot               Expires June 5, 2015                  [Page 1]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
 Table of Contents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Daboo & Pot               Expires March 6, 2015                 [Page 2]
+Daboo & Pot               Expires June 5, 2015                  [Page 2]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
 3.  Requirements Overview
@@ -165,9 +165,9 @@ Internet-Draft          WebDAV User Notifications         September 2014
 
 
 
-Daboo & Pot               Expires March 6, 2015                 [Page 3]
+Daboo & Pot               Expires June 5, 2015                  [Page 3]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
    recognize.  Servers MAY delete notification resources on their own if
@@ -221,9 +221,9 @@ Internet-Draft          WebDAV User Notifications         September 2014
 
 
 
-Daboo & Pot               Expires March 6, 2015                 [Page 4]
+Daboo & Pot               Expires June 5, 2015                  [Page 4]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
    Description:  This property is needed for a client to determine where
@@ -277,9 +277,9 @@ Internet-Draft          WebDAV User Notifications         September 2014
 
 
 
-Daboo & Pot               Expires March 6, 2015                 [Page 5]
+Daboo & Pot               Expires June 5, 2015                  [Page 5]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
 4.4.  XML Element Definitions
@@ -333,9 +333,9 @@ Internet-Draft          WebDAV User Notifications         September 2014
 
 
 
-Daboo & Pot               Expires March 6, 2015                 [Page 6]
+Daboo & Pot               Expires June 5, 2015                  [Page 6]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
    <!ELEMENT dtstamp (#PCDATA)>
@@ -389,9 +389,9 @@ Internet-Draft          WebDAV User Notifications         September 2014
 
 
 
-Daboo & Pot               Expires March 6, 2015                 [Page 7]
+Daboo & Pot               Expires June 5, 2015                  [Page 7]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
    <?xml version="1.0" encoding="UTF-8"?>
@@ -445,9 +445,9 @@ Internet-Draft          WebDAV User Notifications         September 2014
 
 
 
-Daboo & Pot               Expires March 6, 2015                 [Page 8]
+Daboo & Pot               Expires June 5, 2015                  [Page 8]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
    Applications that use this media type:  No known applications
@@ -501,9 +501,9 @@ Internet-Draft          WebDAV User Notifications         September 2014
 
 
 
-Daboo & Pot               Expires March 6, 2015                 [Page 9]
+Daboo & Pot               Expires June 5, 2015                  [Page 9]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
    [RFC7303]  Thompson, H. and C. Lilley, "XML Media Types", RFC 7303,
@@ -557,9 +557,9 @@ Authors' Addresses
 
 
 
-Daboo & Pot               Expires March 6, 2015                [Page 10]
+Daboo & Pot               Expires June 5, 2015                 [Page 10]
 
-Internet-Draft          WebDAV User Notifications         September 2014
+Internet-Draft          WebDAV User Notifications          December 2014
 
 
    Evert Pot
@@ -613,4 +613,4 @@ Internet-Draft          WebDAV User Notifications         September 2014
 
 
 
-Daboo & Pot               Expires March 6, 2015                [Page 11]
+Daboo & Pot               Expires June 5, 2015                 [Page 11]
