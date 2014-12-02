@@ -120,10 +120,12 @@
         <section title="Open Issues">
             <t>
                 <list style="numbers">
+                    <t>Drop UID from xml body? Yes or No?</t>
+                    <t>Update set/remove elements to set-invitee/remove-invitee.</t>
                     <t>invite-accepted / invite-declined in the 'invite-notification'. Is it a good name?</t>
                     <t>Shared-url property. Why does it exist?</t>
                     <t>first-name and last-name properties. I feel that this spec should not define these.</t>
-                    <t>Need to review all xml elements, examples and dtds</t>
+                    <t>Need to review all xml elements, examples and dtds.</t>
                  </list>
             </t>
         </section>
@@ -611,7 +613,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t>
                         As a result, from the sharers perspective, the
                         invitation status for that principal will always
-                        remain to be DAV:invite-noreply.
+                        remain as DAV:invite-noreply.
                     </t>
                 </section>
                 <section title="Making modifications to a shared resource">
@@ -623,7 +625,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t>
                         If the shared resource is a collection, any resources
                         in the collection, or in the collection's
-                        child-collections must also appear in the sharers
+                        child-collections MUST also appear in the sharers
                         instance.
                     </t>
                 </section>
@@ -640,7 +642,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             <section title="General Considerations">
                 <section title="Access Levels">
                     <t>
-                        Two levels of access ca be granted by a sharer to any sharee. These are governed by the DAV:access element used in the DAV:invite/DAV:user element that specifies a shared user invite. DAV:access contains a single empty element that defines the type of access granted:
+                        Two levels of access can be granted by a sharer to any sharee. These are governed by the DAV:access element used in the DAV:invite/DAV:user element that specifies a shared user invite. DAV:access contains a single empty element that defines the type of access granted:
                         <list style="hanging">
                         <t hangText="DAV:read">
                             When present this indicates that sharees can read information from the resource, but cannot change it. This applies to the resource, but if the shared resource is a collection, it also applies to the collection's children.
@@ -1219,7 +1221,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 to have a similar property in the old namespace.
             </t>
             <t>
-                XML documentations as sent by POST requests and responses, and
+                XML documents as sent by POST requests and responses, and
                 resources returned from notifications can be distinguished by
                 the use of the Content-Type and Accept HTTP headers. The earlier
                 draft does not define new mime-types for these, but this
