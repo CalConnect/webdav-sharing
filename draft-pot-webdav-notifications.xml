@@ -18,25 +18,9 @@
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" docName='webdav-notifications-00'>
+<rfc ipr="trust200902" docName='draft-pot-webdav-notifications-00'>
     <front>
         <title abbrev="WebDAV User Notifications">WebDAV: User Notifications</title>
-        <author initials="C." surname="Daboo" fullname="Cyrus Daboo">
-            <organization abbrev="Apple Inc.">
-                Apple Inc.
-            </organization>
-            <address>
-                <postal>
-                    <street>1 Infinite Loop</street>
-                    <city>Cupertino</city>
-                    <region>CA</region>
-                    <code>95014</code>
-                    <country>USA</country>
-                </postal>
-                <email>cyrus@daboo.name</email>
-                <uri>http://www.apple.com/</uri>
-            </address>
-        </author>
         <author initials="E." surname="Pot" fullname="Evert Pot">
             <organization abbrev="fruux GmbH">
                 fruux GmbH
@@ -51,6 +35,22 @@
                 </postal>
                 <email>me@evertpot.com</email>
                 <uri>https://fruux.com/</uri>
+            </address>
+        </author>
+        <author initials="C." surname="Daboo" fullname="Cyrus Daboo">
+            <organization abbrev="Apple Inc.">
+                Apple Inc.
+            </organization>
+            <address>
+                <postal>
+                    <street>1 Infinite Loop</street>
+                    <city>Cupertino</city>
+                    <region>CA</region>
+                    <code>95014</code>
+                    <country>USA</country>
+                </postal>
+                <email>cyrus@daboo.name</email>
+                <uri>http://www.apple.com/</uri>
             </address>
         </author>
         <date/>

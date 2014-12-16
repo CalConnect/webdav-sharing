@@ -2,15 +2,15 @@
 
 
 
-Network Working Group                                           C. Daboo
-Internet-Draft                                                Apple Inc.
-Expires: June 5, 2015                                             E. Pot
-                                                              fruux GmbH
-                                                        December 2, 2014
+Network Working Group                                             E. Pot
+Internet-Draft                                                fruux GmbH
+Expires: June 18, 2015                                          C. Daboo
+                                                              Apple Inc.
+                                                       December 15, 2014
 
 
                        WebDAV: User Notifications
-                        webdav-notifications-00
+                   draft-pot-webdav-notifications-00
 
 Abstract
 
@@ -32,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 5, 2015.
+   This Internet-Draft will expire on June 18, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Daboo & Pot               Expires June 5, 2015                  [Page 1]
+Pot & Daboo               Expires June 18, 2015                 [Page 1]
 
 Internet-Draft          WebDAV User Notifications          December 2014
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Daboo & Pot               Expires June 5, 2015                  [Page 2]
+Pot & Daboo               Expires June 18, 2015                 [Page 2]
 
 Internet-Draft          WebDAV User Notifications          December 2014
 
@@ -165,7 +165,7 @@ Internet-Draft          WebDAV User Notifications          December 2014
 
 
 
-Daboo & Pot               Expires June 5, 2015                  [Page 3]
+Pot & Daboo               Expires June 18, 2015                 [Page 3]
 
 Internet-Draft          WebDAV User Notifications          December 2014
 
@@ -221,7 +221,7 @@ Internet-Draft          WebDAV User Notifications          December 2014
 
 
 
-Daboo & Pot               Expires June 5, 2015                  [Page 4]
+Pot & Daboo               Expires June 18, 2015                 [Page 4]
 
 Internet-Draft          WebDAV User Notifications          December 2014
 
@@ -277,7 +277,7 @@ Internet-Draft          WebDAV User Notifications          December 2014
 
 
 
-Daboo & Pot               Expires June 5, 2015                  [Page 5]
+Pot & Daboo               Expires June 18, 2015                 [Page 5]
 
 Internet-Draft          WebDAV User Notifications          December 2014
 
@@ -333,7 +333,7 @@ Internet-Draft          WebDAV User Notifications          December 2014
 
 
 
-Daboo & Pot               Expires June 5, 2015                  [Page 6]
+Pot & Daboo               Expires June 18, 2015                 [Page 6]
 
 Internet-Draft          WebDAV User Notifications          December 2014
 
@@ -389,7 +389,7 @@ Internet-Draft          WebDAV User Notifications          December 2014
 
 
 
-Daboo & Pot               Expires June 5, 2015                  [Page 7]
+Pot & Daboo               Expires June 18, 2015                 [Page 7]
 
 Internet-Draft          WebDAV User Notifications          December 2014
 
@@ -445,7 +445,7 @@ Internet-Draft          WebDAV User Notifications          December 2014
 
 
 
-Daboo & Pot               Expires June 5, 2015                  [Page 8]
+Pot & Daboo               Expires June 18, 2015                 [Page 8]
 
 Internet-Draft          WebDAV User Notifications          December 2014
 
@@ -501,7 +501,7 @@ Internet-Draft          WebDAV User Notifications          December 2014
 
 
 
-Daboo & Pot               Expires June 5, 2015                  [Page 9]
+Pot & Daboo               Expires June 18, 2015                 [Page 9]
 
 Internet-Draft          WebDAV User Notifications          December 2014
 
@@ -538,30 +538,6 @@ Appendix A.  Backwards-compatibility with earlier drafts
 
 Authors' Addresses
 
-   Cyrus Daboo
-   Apple Inc.
-   1 Infinite Loop
-   Cupertino, CA  95014
-   USA
-
-   Email: cyrus@daboo.name
-   URI:   http://www.apple.com/
-
-
-
-
-
-
-
-
-
-
-
-Daboo & Pot               Expires June 5, 2015                 [Page 10]
-
-Internet-Draft          WebDAV User Notifications          December 2014
-
-
    Evert Pot
    fruux GmbH
    Koenigsstrasse 32
@@ -581,6 +557,19 @@ Internet-Draft          WebDAV User Notifications          December 2014
 
 
 
+Pot & Daboo               Expires June 18, 2015                [Page 10]
+
+Internet-Draft          WebDAV User Notifications          December 2014
+
+
+   Cyrus Daboo
+   Apple Inc.
+   1 Infinite Loop
+   Cupertino, CA  95014
+   USA
+
+   Email: cyrus@daboo.name
+   URI:   http://www.apple.com/
 
 
 
@@ -613,4 +602,15 @@ Internet-Draft          WebDAV User Notifications          December 2014
 
 
 
-Daboo & Pot               Expires June 5, 2015                 [Page 11]
+
+
+
+
+
+
+
+
+
+
+
+Pot & Daboo               Expires June 18, 2015                [Page 11]
