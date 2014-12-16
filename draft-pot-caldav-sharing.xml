@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="rfc2629.xslt"?>
+<!DOCTYPE rfc SYSTEM 'rfc2629.dtd' [
+<!ENTITY rfc2119 PUBLIC '' 'bibxml/reference.RFC.2119.xml'>
+<!ENTITY rfc4791 PUBLIC '' 'bibxml/reference.RFC.4791.xml'>
+<!ENTITY rfc4918 PUBLIC '' 'bibxml/reference.RFC.4918.xml'>
+<!ENTITY rfc6352 PUBLIC '' 'bibxml/reference.RFC.6352.xml'>
+<!ENTITY rfc6638 PUBLIC '' 'bibxml/reference.RFC.6638.xml'>
+<!ENTITY rfc7303 PUBLIC '' 'bibxml/reference.RFC.7303.xml'>
+]>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc strict="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc ipr="trust200902" docName='draft-pot-caldav-sharing-00'>
+    <front>
+        <title abbrev="CalDAV Calendar Sharing">CalDAV Calendar Sharing</title>
+        <author initials="E." surname="Pot" fullname="Evert Pot">
+            <organization abbrev="fruux GmbH">
+                fruux GmbH
+            </organization>
+            <address>
+                <postal>
+                    <street>Koenigsstrasse 32</street>
+                    <city>Muenster</city>
+                    <region>NRW</region>
+                    <code>48143</code>
+                    <country>Germany</country>
+                </postal>
+                <email>me@evertpot.com</email>
+                <uri>https://fruux.com/</uri>
+            </address>
+        </author>
+        <author initials="C." surname="Daboo" fullname="Cyrus Daboo">
+            <organization abbrev="Apple Inc.">
+                Apple Inc.
+            </organization>
+            <address>
+                <postal>
+                    <street>1 Infinite Loop</street>
+                    <city>Cupertino</city>
+                    <region>CA</region>
+                    <code>95014</code>
+                    <country>USA</country>
+                </postal>
+                <email>cyrus@daboo.name</email>
+                <uri>http://www.apple.com/</uri>
+            </address>
+        </author>
+        <author initials="E." surname="York" fullname="Eric York">
+            <organization abbrev="Apple Inc.">
+                Apple Inc.
+            </organization>
+            <address>
+                <postal>
+                    <street>1 Infinite Loop</street>
+                    <city>Cupertino</city>
+                    <region>CA</region>
+                    <code>95014</code>
+                    <country>USA</country>
+                </postal>
+                <email></email>
+                <uri>http://www.apple.com/</uri>
+            </address>
+        </author>
+        <date/>
+        <abstract>
+            <t>
+                This specification defines sharing calendars between users on
+                a CalDAV server.
+            </t>
+        </abstract>
+    </front>
+    <middle>
+        <section title='Introduction'>
+
+            <t>
+                Users of <xref target="RFC4791">CalDAV</xref> often require a
+                mechanism to share a calendar with other users.
+            </t>
+            <t>
+                In the past this use-case has been fulfilled by non-standard
+                means. This specification aims to describe a standard way for
+                clients and servers to share calendars.
+            </t>
+            <t>
+                Sharing calendars is for the most part completely implemented
+                using <!--<xref target="-->draft-pot-webdav-resource-sharing<!--" />-->,
+                but there are a few considerations specific to CalDAV to ensure
+                that mechanisms such as scheduling still behaves as expected.
+            </t>
+        </section>
+
+        <section title="Open Issues">
+            <t>
+                <list style="numbers">
+                    <t>Do we need feature discovery for this spec?</t>
+                    <t>DAV:owner requirement for scheduling. I think this is problematic...</t>
+                    <t>I don't think we should allow sharees that have access to an invite for which they are the attendee for, via the organizers shared calendar, to allow them to make attendee-related changes. The entire collection should operate as if the operation is on behalf of the organizer.</t>
+                 </list>
+            </t>
+        </section>
+
+        <section title='Conventions Used in This Document'>
+            <t>
+                The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
+            </t>
+            <t>
+                When XML element types in the namespaces "DAV:" and "urn:ietf:params:xml:ns:caldav" are referenced in this document outside of the context of an XML fragment, the string "DAV:" and "CALDAV:" will be prefixed to the element type names respectively.
+            </t>
+            <t>Terms Used:
+                <list style='hanging'>
+                    <t hangText='Sharer'>...</t>
+                </list>
+            </t>
+        </section>
+
+        <section title="Calendar sharing" anchor="calendar-sharing">
+            <t>
+              While the <!--<xref target="-->draft-pot-webdav-resource-sharing<!--" />-->
+              specification allows sharing of potentially any resource on a
+              server, this specification only concerns itself with sharing
+              calendar collections, as defined in <xref target="RFC4791">CalDAV</xref>.
+            </t>
+            <t>
+                Sharing of resources other than calendar collections is not
+                addressed in this specification.
+            </t>
+        </section>
+
+        <section title='Per-instance calendar data' anchor="per-instance-calendar-data">
+            <t>
+                Servers that support calendar sharing MUST support "per-instance"
+                calendar data in calendar object resources stored in shared
+                calendars. This allows each sharee and the sharer to store
+                their own alarms and free busy transparency status without
+                "interfering" with other users who also have access to the
+                same calendar object resources.
+            </t>
+            <t>
+                For calendaring object resources in shared calendar
+                collections, the server MUST treat the following iCalendar
+                data objects as per-instance:
+            </t>
+            <t>
+              <list style="empty">
+                <t>TRANSP property</t>
+                <t>VALARM component</t>
+              </list>
+            </t>
+        </section>
+
+        <section title='Scheduling' anchor="scheduling">
+            <t>
+                <xref target="RFC6638">CalDAV Scheduling</xref> defines how a
+                CalDAV server carries out scheduling operations when calendar
+                object resources are created, modified or deleted and include
+                "ORGANIZER" and "ATTENDEE" iCalendar properties.
+            </t>
+            <t>
+               When calendar object resources are created, modified or deleted in
+               shared calendars by sharees, the following restrictions apply:
+            </t>
+            <t>
+              <list style="numbers">
+                <t>
+                    The "ORGANIZER" iCalendar property value in the iCalendar
+                    data MUST match a calendar user address of the sharer
+                    (owner) of the shared calendar.  The DAV:owner WebDAV
+                    property MUST be present on a shared calendar and MUST
+                    provide a reference to a principal- URL of the sharer
+                    (owner) of the shared calendar.  Clients can use this value
+                    to determine what the allowed "ORGANIZER" iCalendar property
+                    values are. The server MUST reject any attempt by a sharee
+                    to create an iCalendar component with an "ORGANIZER"
+                    property value other than the sharer (owner) of the shared
+                    calendar.
+                </t>
+                <t>
+                    The server MUST reject any attempt by a sharee to MOVE a
+                    calendar object resource in a shared calendar to some other
+                    collection.
+                </t>
+                <t>
+                    When a sharee is listed as an Attendee in a calendar object
+                    resource in a shared calendar, and write access is granted,
+                    the sharee is allowed to change not only iCalendar data
+                    related to the Organizer, but also data related to the
+                    Attendee. i.e., a sharee can change their own participation
+                    status on the "ATTENDEE" iCalendar property referring to
+                    them.  Additionally, if the sharee is not listed as an
+                    Attendee, and write access is granted, the sharee can add
+                    themselves as an Attendee.
+                </t>
+                <t>
+                    The default calendar collection defined in Section 6.3 of
+                    <xref target="RFC6638" /> MUST NOT be a calendar shared to
+                    the corresponding calendar user.
+                </t>
+              </list>
+            </t>
+            <t>
+                Following are additional considerations for scheduling with
+                shared calendars:
+            </t>
+            <t>
+              <list style="numbers">
+                <t>
+                    A scheduled iCalendar component could appear in more than
+                    one calendar collection within a sharee's calendar home if
+                    the sharee is an Attendee and the Organizer or other
+                    Attendees have shared a calendar with the sharee that
+                    includes their copies of the iCalendar component. It is
+                    important to note that the scheduled component in the
+                    shared calendar could have different access rights than
+                    the one in the sharee's owned calendar.
+                </t>
+                <t>
+                    A scheduled iCalendar component appearing in a sharee's
+                    shared calendar could include the sharee as an Attendee. 
+                    For recurring events, it is possible for the sharee to
+                    only be listed as an Attendee in some instances, as opposed
+                    to all.  Clients will need to be aware of this when
+                    allowing sharee's to set their own participation status.
+                </t>
+                <t>
+                    In addition, when a shared calendar is first accepted by a
+                    sharee, the server SHOULD set the
+                    CALDAV:schedule-calendar-transp property to the value
+                    CALDAV:transparent to ensure newly accepted shared
+                    calendars do not contribute to the sharee's freebusy time
+                    until the sharee explicitly requests it.
+                </t>
+              </list>
+            </t>
+        </section>
+    </middle>
+    <back>
+        <references title='Normative References'>
+            &rfc2119;
+            &rfc4791;
+            &rfc4918;
+            &rfc6352;
+            &rfc6638;
+            &rfc7303;
+        </references>
+<!--
+<references title='Informative References'>
+</references>
+-->
+        <section title='Change History'>
+        </section>
+    </back>
+</rfc>
