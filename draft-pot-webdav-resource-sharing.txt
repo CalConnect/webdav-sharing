@@ -115,23 +115,21 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
      8.15. DAV:organizer . . . . . . . . . . . . . . . . . . . . . .  20
-     8.16. DAV:first-name  . . . . . . . . . . . . . . . . . . . . .  20
-     8.17. DAV:last-name . . . . . . . . . . . . . . . . . . . . . .  20
-     8.18. DAV:invite-reply  . . . . . . . . . . . . . . . . . . . .  21
-     8.19. DAV:reply-notification  . . . . . . . . . . . . . . . . .  21
-     8.20. DAV:create-in . . . . . . . . . . . . . . . . . . . . . .  22
-     8.21. DAV:share . . . . . . . . . . . . . . . . . . . . . . . .  22
-     8.22. DAV:set . . . . . . . . . . . . . . . . . . . . . . . . .  22
-     8.23. DAV:remove  . . . . . . . . . . . . . . . . . . . . . . .  23
-     8.24. DAV:shared-as . . . . . . . . . . . . . . . . . . . . . .  23
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  23
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
+     8.16. DAV:invite-reply  . . . . . . . . . . . . . . . . . . . .  20
+     8.17. DAV:reply-notification  . . . . . . . . . . . . . . . . .  20
+     8.18. DAV:create-in . . . . . . . . . . . . . . . . . . . . . .  21
+     8.19. DAV:share . . . . . . . . . . . . . . . . . . . . . . . .  21
+     8.20. DAV:set-invitee . . . . . . . . . . . . . . . . . . . . .  21
+     8.21. DAV:remove-invitee  . . . . . . . . . . . . . . . . . . .  22
+     8.22. DAV:shared-as . . . . . . . . . . . . . . . . . . . . . .  22
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  22
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  22
    11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  23
-   12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
-   13. Normative References  . . . . . . . . . . . . . . . . . . . .  25
-   Appendix A.  Change History . . . . . . . . . . . . . . . . . . .  25
-   Appendix B.  Backwards compatibility  . . . . . . . . . . . . . .  26
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  26
+   12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
+   13. Normative References  . . . . . . . . . . . . . . . . . . . .  24
+   Appendix A.  Change History . . . . . . . . . . . . . . . . . . .  24
+   Appendix B.  Backwards compatibility  . . . . . . . . . . . . . .  25
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  25
 
 1.  Introduction
 
@@ -165,6 +163,8 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
+
+
 Pot, et al.               Expires June 18, 2015                 [Page 3]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
@@ -172,17 +172,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 2.  Open Issues
 
-   1.  Update set/remove elements to set-invitee/remove-invitee.
-
-   2.  invite-accepted / invite-declined in the 'invite-notification'.
-       Is it a good name?
-
-   3.  Shared-url property.  Why does it exist?
-
-   4.  first-name and last-name properties.  I feel that this spec
-       should not define these.
-
-   5.  Need to review all xml elements, examples and dtds.
+   1.  ...
 
 3.  Conventions Used in This Document
 
@@ -217,15 +207,6 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
    an HTTP POST request against the resource that's to be shared.  The
    POST request body will contain details of the user to whom the
    resource is to be shared as well as the access right to be granted to
-
-
-
-
-Pot, et al.               Expires June 18, 2015                 [Page 4]
-
-Internet-Draft           WebDAV Resource Sharing           December 2014
-
-
    them.  If the request succeeds, a notification is sent to the sharee
    with details of the resource being shared to them.
 
@@ -236,6 +217,14 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
    then a new resource is created at a location that's accessible to the
    sharee.  The server enforces the appropriate access privileges for
    the sharee.
+
+
+
+
+Pot, et al.               Expires June 18, 2015                 [Page 4]
+
+Internet-Draft           WebDAV Resource Sharing           December 2014
+
 
    At any time, the sharer can inspect properties on the resource being
    shared, and determine the accept/decline status of each sharee.
@@ -268,6 +257,17 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
    This is an example of a response to a GET request on a correct invite
    notification.  Note that several HTTP response headers have been
    removed for brevity.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -435,9 +435,9 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
    COPY/MOVE behavior:  This property value MUST be preserved in COPY
       and MOVE operations.
 
-   Description:  This WebDAV property is present on a shared resource.
-      Its content is a single DAV:href element whose value is the URL of
-      the sharer's resource being shared.
+   Description:  This WebDAV property MAY be present on a shared
+      resource.  Its content is a single DAV:href element whose value is
+      the URL of the sharer's resource being shared.
 
    Definition:
 
@@ -478,17 +478,17 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
    reject the request if this is not the case.
 
    The DAV:share (Section 8.3) element in the POST requests MUST contain
-   one or more DAV:set (Section 8.22) or DAV:remove (Section 8.23)
-   elements.  For each DAV:set (Section 8.22) element, the server MUST
-   add the specified sharee access to the resource.  For each DAV:remove
-   (Section 8.23) element the server MUST remove the specified sharee
-   access from the shared resource.  In each case the server MUST send a
-   notification message to any sharees whose status is changed (added,
-   modified or removed), indicating to them a change in status for the
-   shared resource.  This is accomplished by sending a DAV:invite-
-   notification (Section 8.13) notification to each sharee.  The server
-   SHOULD NOT send notification messages to sharees whose status is
-   unchanged.
+   one or more DAV:set-invitee (Section 8.20) or DAV:remove-invitee
+   (Section 8.21) elements.  For each DAV:set-invitee (Section 8.20)
+   element, the server MUST add the specified sharee access to the
+   resource.  For each DAV:remove-invitee (Section 8.21) element the
+   server MUST remove the specified sharee access from the shared
+   resource.  In each case the server MUST send a notification message
+   to any sharees whose status is changed (added, modified or removed),
+   indicating to them a change in status for the shared resource.  This
+   is accomplished by sending a DAV:invite-notification (Section 8.13)
+   notification to each sharee.  The server SHOULD NOT send notification
+   messages to sharees whose status is unchanged.
 
    Sharees are identified via a DAV:href element whose value is either a
    principal-URL for a sharee hosted on the same server, an email
@@ -509,14 +509,15 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
    returning the list of sharees via the DAV:invite property
    (Section 6.2.2).
 
-   The client MAY include a DAV:displayname element in the DAV:set
-   (Section 8.22) element.  When provided, the value represents the
-   common name for the sharee, and is returned in the list of sharees
-   via the DAV:invite property (Section 6.2.2).  The server MAY change
-   this to a suitable alternative when it is able to match the sharee to
-   a known user.  If absent from the client request, the server SHOULD
-   add a DAV:displayname when it is able to match the sharee with a
-   known user, and a common name for that user can be determined.
+   The client MAY include a DAV:displayname element in the DAV:set-
+   invitee (Section 8.20) element.  When provided, the value represents
+   the common name for the sharee, and is returned in the list of
+   sharees via the DAV:invite property (Section 6.2.2).  The server MAY
+   change this to a suitable alternative when it is able to match the
+   sharee to a known user.  If absent from the client request, the
+   server SHOULD add a DAV:displayname when it is able to match the
+   sharee with a known user, and a common name for that user can be
+   determined.
 
 6.3.2.1.  Example: Successful Sharee Add Request
 
@@ -533,12 +534,12 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
    <?xml version="1.0" encoding="utf-8" ?>
    <D:share xmlns:D="DAV:">
-     <D:set>
+     <D:set-invitee>
        <D:href>mailto:eric@example.com</D:href>
        <D:displayname>Eric York</D:displayname>
        <D:comment>Shared workspace</D:comment>
        <D:read-write />
-     </D:set>
+     </D:set-invitee>
    </D:share>
 
    >> Response <<
@@ -556,7 +557,6 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-
 Pot, et al.               Expires June 18, 2015                [Page 10]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
@@ -571,14 +571,14 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
    <?xml version="1.0" encoding="utf-8" ?>
    <D:share xmlns:D="DAV:">
-     <D:set>
+     <D:set-invitee>
        <D:href>mailto:eric@example.com</D:href>
        <D:comment>Shared workspace</D:comment>
        <D:read-write />
-     </D:set>
-     <D:remove>
+     </D:set-invitee>
+     <D:remove-invitee>
        <D:href>mailto:wilfredo@example.com</D:href>
-     </D:remove>
+     </D:remove-invitee>
    </D:share>
 
    >> Response <<
@@ -595,17 +595,17 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
    decline the invite by issuing a POST request to the resource URI for
    the invitation notification.  The POST request MUST contain an XML
    document as its body with the root element being DAV:invite-reply
-   (Section 8.18).
+   (Section 8.16).
 
    The POST request MUST contain a Content-Type HTTP header, which MUST
    contain "application/davshare+xml" as its value.  Servers SHOULD
    reject the request if this is not the case.
 
-   The DAV:invite-reply (Section 8.18) element in the POST request
+   The DAV:invite-reply (Section 8.16) element in the POST request
    specifies the accept or decline action via the DAV:invite-accepted or
    DAV:invite-declined elements, and an optional DAV:comment element.
    IF the invite was accepted, the body MUST also contain a DAV:create-
-   in (Section 8.20) element.  This element contains a single DAV:href
+   in (Section 8.18) element.  This element contains a single DAV:href
    element, which content is a URI that will be used as the parent for
    the new shared resource.
 
@@ -640,7 +640,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
    When the sharee replies to an invite, the server SHOULD send a
    notification to the sharer to update them on the change in the sharee
    state.  This is accomplished by sending a DAV:reply-notification
-   (Section 8.19) notification to the sharer.
+   (Section 8.17) notification to the sharer.
 
    After the sharee has issued a reply, the server SHOULD also remove
    the notification that contained the initial invite.
@@ -1076,60 +1076,14 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
    Description:  Contains a single DAV:href element that identifies the
       URI of the sharer of a shared resource, and an optional
-      DAV:displayname element that matches that user, and an optional
-      DAV:first-name, DAV:last-name pair of elements that match that
-      user.  In some cases servers might have directory information that
-      includes only the common name, or only the first or last name, and
-      it is better to expose those directly to the client as-is rather
-      than to try and split or combine the attributes to synthesize one
-      set or the other.
+      DAV:displayname element that matches that user.
 
    Definition:
 
    <!ELEMENT organizer (href,
-                        displayname?,
-                        first-name, last-name)?)>
+                        displayname?)?)>
 
-8.16.  DAV:first-name
-
-   Name:  first-name
-
-   Namespace:  DAV:
-
-   Purpose:  The first name of a sharer or sharee.
-
-   Description:  The first name is optionally included by the server
-      when returning results for sharers or sharees and in
-      notifications.
-
-   Definition:
-
-   <!ELEMENT first-name (#PCDATA)>
-
-8.17.  DAV:last-name
-
-   Name:  last-name
-
-   Namespace:  DAV:
-
-   Purpose:  The last name of a sharer or sharee.
-
-
-
-
-Pot, et al.               Expires June 18, 2015                [Page 20]
-
-Internet-Draft           WebDAV Resource Sharing           December 2014
-
-
-   Description:  The last name is optionally included by the server when
-      returning results for sharers or sharees and in notifications.
-
-   Definition:
-
-   <!ELEMENT last-name (#PCDATA)>
-
-8.18.  DAV:invite-reply
+8.16.  DAV:invite-reply
 
    Name:  invite-reply
 
@@ -1148,7 +1102,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
                            (invite-accepted | invite-declined),
                            hosturl, create-in?, comment?>
 
-8.19.  DAV:reply-notification
+8.17.  DAV:reply-notification
 
    Name:  reply-notification
 
@@ -1161,24 +1115,20 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
       DAV:href element specifies the URI of the sharee to whom the
       original invite message was sent.
 
+
+
+Pot, et al.               Expires June 18, 2015                [Page 20]
+
+Internet-Draft           WebDAV Resource Sharing           December 2014
+
+
    Definition:
 
    <!ELEMENT invite-reply (href,
                            (invite-accepted | invite-declined),
                            hosturl, create-in?, comment?>
 
-
-
-
-
-
-
-Pot, et al.               Expires June 18, 2015                [Page 21]
-
-Internet-Draft           WebDAV Resource Sharing           December 2014
-
-
-8.20.  DAV:create-in
+8.18.  DAV:create-in
 
    Name:  create-in
 
@@ -1193,7 +1143,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
    <!ELEMENT create-in (DAV:href)>
 
-8.21.  DAV:share
+8.19.  DAV:share
 
    Name:  share
 
@@ -1208,9 +1158,9 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
    <!ELEMENT share (set | remove)*>
 
-8.22.  DAV:set
+8.20.  DAV:set-invitee
 
-   Name:  set
+   Name:  set-invitee
 
    Namespace:  DAV:
 
@@ -1220,23 +1170,22 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
       resource.  The specified access to the shared resource is given to
       the sharee.
 
+
+
+
+Pot, et al.               Expires June 18, 2015                [Page 21]
+
+Internet-Draft           WebDAV Resource Sharing           December 2014
+
+
    Definition:
 
    <!ELEMENT set (DAV:href, displayname?, comment?,
                   (read | read-write)>
 
+8.21.  DAV:remove-invitee
 
-
-
-
-Pot, et al.               Expires June 18, 2015                [Page 22]
-
-Internet-Draft           WebDAV Resource Sharing           December 2014
-
-
-8.23.  DAV:remove
-
-   Name:  remove
+   Name:  remove-invitee
 
    Namespace:  DAV:
 
@@ -1249,7 +1198,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
    <!ELEMENT remove (DAV:href)>
 
-8.24.  DAV:shared-as
+8.22.  DAV:shared-as
 
    Name:  shared-as
 
@@ -1273,22 +1222,22 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
    This document does not require any actions on the part of IANA.
 
+
+
+
+
+
+
+
+Pot, et al.               Expires June 18, 2015                [Page 22]
+
+Internet-Draft           WebDAV Resource Sharing           December 2014
+
+
 11.  Acknowledgments
 
    This specification is the result of discussions between the Apple
    calendar server and client teams.
-
-
-
-
-
-
-
-
-Pot, et al.               Expires June 18, 2015                [Page 23]
-
-Internet-Draft           WebDAV Resource Sharing           December 2014
-
 
 12.  IANA Considerations
 
@@ -1334,17 +1283,16 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
    Intended usage  COMMON
 
-   Restrictions on usage  There are no restrictions on where this media
-
-   Author  See the "Authors' Addresses" section of this document.
 
 
-
-
-Pot, et al.               Expires June 18, 2015                [Page 24]
+Pot, et al.               Expires June 18, 2015                [Page 23]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
+
+   Restrictions on usage  There are no restrictions on where this media
+
+   Author  See the "Authors' Addresses" section of this document.
 
    Change Controller  IETF
 
@@ -1390,17 +1338,15 @@ Appendix A.  Change History
    4.  Added CALDAV:supported-calendar-component-set optional element to
        CS:invite-notification.
 
-   Changes in -02:
 
 
 
-
-
-
-Pot, et al.               Expires June 18, 2015                [Page 25]
+Pot, et al.               Expires June 18, 2015                [Page 24]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
+
+   Changes in -02:
 
    1.  Removed read-write-shared access mode - now a server that does
        not support shared scheduling should advertise that via a DAV
@@ -1441,6 +1387,21 @@ Authors' Addresses
    URI:   https://fruux.com/
 
 
+
+
+
+
+
+
+
+
+
+
+Pot, et al.               Expires June 18, 2015                [Page 25]
+
+Internet-Draft           WebDAV Resource Sharing           December 2014
+
+
    Cyrus Daboo
    Apple Inc.
    1 Infinite Loop
@@ -1449,13 +1410,6 @@ Authors' Addresses
 
    Email: cyrus@daboo.name
    URI:   http://www.apple.com/
-
-
-
-
-Pot, et al.               Expires June 18, 2015                [Page 26]
-
-Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Eric York
@@ -1499,14 +1453,4 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-
-
-
-
-
-
-
-
-
-
-Pot, et al.               Expires June 18, 2015                [Page 27]
+Pot, et al.               Expires June 18, 2015                [Page 26]
