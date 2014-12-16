@@ -120,12 +120,8 @@
         <section title="Open Issues">
             <t>
                 <list style="numbers">
-                    <t>Update set/remove elements to set-invitee/remove-invitee.</t>
-                    <t>invite-accepted / invite-declined in the 'invite-notification'. Is it a good name?</t>
-                    <t>Shared-url property. Why does it exist?</t>
-                    <t>first-name and last-name properties. I feel that this spec should not define these.</t>
-                    <t>Need to review all xml elements, examples and dtds.</t>
-                 </list>
+                    <t>...</t>
+                </list>
             </t>
         </section>
 
@@ -343,7 +339,7 @@ Content-Length: xxxx
                       <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in COPY and MOVE operations.</t>
 
                       <t hangText="Description:">
-                          This WebDAV property is present on a shared
+                          This WebDAV property MAY be present on a shared
                           resource. Its content is a single DAV:href element
                           whose value is the URL of the sharer's resource being
                           shared.
@@ -394,18 +390,19 @@ Content-Length: xxxx
                     <t>
                         The <xref target="DAV:share">DAV:share</xref> element in
                         the POST requests MUST contain one or more
-                        <xref target="DAV:set">DAV:set</xref> or
-                        <xref target="DAV:remove">DAV:remove</xref> elements.
-                        For each <xref target="DAV:set">DAV:set</xref> element,
-                        the server MUST add the specified sharee access to the
-                        resource. For each
-                        <xref target="DAV:remove">DAV:remove</xref> element
-                        the server MUST remove the specified sharee access
-                        from the shared resource. In each case the server MUST
-                        send a notification message to any sharees whose status
-                        is changed (added, modified or removed), indicating to
-                        them a change in status for the shared resource. This
-                        is accomplished by sending a
+                        <xref target="DAV:set-invitee">DAV:set-invitee</xref> or
+                        <xref target="DAV:remove-invitee">DAV:remove-invitee</xref>
+                        elements.
+                        For each <xref target="DAV:set-invitee">DAV:set-invitee</xref>
+                        element, the server MUST add the specified sharee
+                        access to the resource. For each
+                        <xref target="DAV:remove-invitee">DAV:remove-invitee</xref>
+                        element the server MUST remove the specified sharee
+                        access from the shared resource. In each case the
+                        server MUST send a notification message to any sharees
+                        whose status is changed (added, modified or removed),
+                        indicating to them a change in status for the shared
+                        resource. This is accomplished by sending a
                         <xref target="DAV:invite-notification">DAV:invite-notification</xref>
                         notification to each sharee.
                         The server SHOULD NOT send notification messages to
@@ -426,8 +423,8 @@ Content-Length: xxxx
                     </t>
                     <t>
                         The client MAY include a DAV:displayname element in
-                        the <xref target="DAV:set">DAV:set</xref> element.
-                        When provided, the value represents the common
+                        the <xref target="DAV:set-invitee">DAV:set-invitee</xref>
+                        element.  When provided, the value represents the common
                         name for the sharee, and is returned in the list of
                         sharees via the <xref target="DAV:invite">DAV:invite property</xref>.
                         The server MAY change this to a suitable alternative
@@ -453,12 +450,12 @@ Content-Length: xxxx
 
 <?xml version="1.0" encoding="utf-8" ?>
 <D:share xmlns:D="DAV:">
-  <D:set>
+  <D:set-invitee>
     <D:href>mailto:eric@example.com</D:href>
     <D:displayname>Eric York</D:displayname>
     <D:comment>Shared workspace</D:comment>
     <D:read-write />
-  </D:set>
+  </D:set-invitee>
 </D:share>]]></artwork>
                         </figure>
                         <figure>
@@ -485,14 +482,14 @@ Content-Length: xxxx
 
 <?xml version="1.0" encoding="utf-8" ?>
 <D:share xmlns:D="DAV:">
-  <D:set>
+  <D:set-invitee>
     <D:href>mailto:eric@example.com</D:href>
     <D:comment>Shared workspace</D:comment>
     <D:read-write />
-  </D:set>
-  <D:remove>
+  </D:set-invitee>
+  <D:remove-invitee>
     <D:href>mailto:wilfredo@example.com</D:href>
-  </D:remove>
+  </D:remove-invitee>
 </D:share>]]></artwork>
                         </figure>
                         <figure>
@@ -955,45 +952,15 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t hangText="Name:">organizer</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Identifies the sharer of a shared resource.</t>
-                    <t hangText="Description:">Contains a single DAV:href element that identifies the URI of the sharer of a shared resource, and an optional DAV:displayname element that matches that user, and an optional DAV:first-name, DAV:last-name pair of elements that match that user. In some cases servers might have directory information that includes only the common name, or only the first or last name, and it is better to expose those directly to the client as-is rather than to try and split or combine the attributes to synthesize one set or the other.</t>
+                    <t hangText="Description:">
+                        Contains a single DAV:href element that identifies the
+                        URI of the sharer of a shared resource, and an optional
+                        DAV:displayname element that matches that user.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
 <!ELEMENT organizer (href,
-                     displayname?,
-                     first-name, last-name)?)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:first-name" anchor="DAV:first-name">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">first-name</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">The first name of a sharer or sharee.</t>
-                    <t hangText="Description:">The first name is optionally included by the server when returning results for sharers or sharees and in notifications.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT first-name (#PCDATA)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:last-name" anchor="DAV:last-name">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">last-name</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">The last name of a sharer or sharee.</t>
-                    <t hangText="Description:">The last name is optionally included by the server when returning results for sharers or sharees and in notifications.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT last-name (#PCDATA)>]]></artwork>
+                     displayname?)?)>]]></artwork>
                       </figure>
                     </t>
                   </list>
@@ -1069,10 +1036,10 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                   </list>
                 </t>
             </section>
-            <section title="DAV:set" anchor="DAV:set">
+            <section title="DAV:set-invitee" anchor="DAV:set-invitee">
                 <t>
                   <list style="hanging">
-                    <t hangText="Name:">set</t>
+                    <t hangText="Name:">set-invitee</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Sets access for a sharee.</t>
                     <t hangText="Description:">Used to add or modify sharee access to a shared resource. The specified access to the shared resource is given to the sharee.</t>
@@ -1086,10 +1053,10 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                   </list>
                 </t>
             </section>
-            <section title="DAV:remove" anchor="DAV:remove">
+            <section title="DAV:remove-invitee" anchor="DAV:remove-invitee">
                 <t>
                   <list style="hanging">
-                    <t hangText="Name:">remove</t>
+                    <t hangText="Name:">remove-invitee</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Removes access for a sharee.</t>
                     <t hangText="Description:">Used to remove sharee access to a shared resource. All access to the shared resource is removed for the sharee.</t>
