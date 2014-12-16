@@ -2,16 +2,16 @@
 
 
 
-Network Working Group                                           C. Daboo
-Internet-Draft                                                   E. York
-Expires: June 5, 2015                                         Apple Inc.
-                                                                  E. Pot
-                                                              fruux GmbH
-                                                        December 2, 2014
+Network Working Group                                             E. Pot
+Internet-Draft                                                fruux GmbH
+Expires: June 18, 2015                                          C. Daboo
+                                                                 E. York
+                                                              Apple Inc.
+                                                       December 15, 2014
 
 
                         WebDAV Resource Sharing
-                        dav-resource-sharing-00
+                  draft-pot-webdav-resource-sharing-00
 
 Abstract
 
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 5, 2015.
+   This Internet-Draft will expire on June 18, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Daboo, et al.             Expires June 5, 2015                  [Page 1]
+Pot, et al.               Expires June 18, 2015                 [Page 1]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Daboo, et al.             Expires June 5, 2015                  [Page 2]
+Pot, et al.               Expires June 18, 2015                 [Page 2]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -165,26 +165,24 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                  [Page 3]
+Pot, et al.               Expires June 18, 2015                 [Page 3]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 2.  Open Issues
 
-   1.  Drop UID from xml body?  Yes or No?
+   1.  Update set/remove elements to set-invitee/remove-invitee.
 
-   2.  Update set/remove elements to set-invitee/remove-invitee.
-
-   3.  invite-accepted / invite-declined in the 'invite-notification'.
+   2.  invite-accepted / invite-declined in the 'invite-notification'.
        Is it a good name?
 
-   4.  Shared-url property.  Why does it exist?
+   3.  Shared-url property.  Why does it exist?
 
-   5.  first-name and last-name properties.  I feel that this spec
+   4.  first-name and last-name properties.  I feel that this spec
        should not define these.
 
-   6.  Need to review all xml elements, examples and dtds.
+   5.  Need to review all xml elements, examples and dtds.
 
 3.  Conventions Used in This Document
 
@@ -218,15 +216,16 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
    To share a resource with another user, the sharer's client executes
    an HTTP POST request against the resource that's to be shared.  The
    POST request body will contain details of the user to whom the
+   resource is to be shared as well as the access right to be granted to
 
 
 
-Daboo, et al.             Expires June 5, 2015                  [Page 4]
+
+Pot, et al.               Expires June 18, 2015                 [Page 4]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
-   resource is to be shared as well as the access right to be granted to
    them.  If the request succeeds, a notification is sent to the sharee
    with details of the resource being shared to them.
 
@@ -277,7 +276,8 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                  [Page 5]
+
+Pot, et al.               Expires June 18, 2015                 [Page 5]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -333,7 +333,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                  [Page 6]
+Pot, et al.               Expires June 18, 2015                 [Page 6]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -389,7 +389,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                  [Page 7]
+Pot, et al.               Expires June 18, 2015                 [Page 7]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -445,7 +445,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                  [Page 8]
+Pot, et al.               Expires June 18, 2015                 [Page 8]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -501,7 +501,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                  [Page 9]
+Pot, et al.               Expires June 18, 2015                 [Page 9]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -557,7 +557,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 10]
+Pot, et al.               Expires June 18, 2015                [Page 10]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -613,7 +613,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 11]
+Pot, et al.               Expires June 18, 2015                [Page 11]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -669,7 +669,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 12]
+Pot, et al.               Expires June 18, 2015                [Page 12]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -725,7 +725,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 13]
+Pot, et al.               Expires June 18, 2015                [Page 13]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -781,7 +781,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 14]
+Pot, et al.               Expires June 18, 2015                [Page 14]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -837,7 +837,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 15]
+Pot, et al.               Expires June 18, 2015                [Page 15]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -893,7 +893,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 16]
+Pot, et al.               Expires June 18, 2015                [Page 16]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -949,7 +949,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 17]
+Pot, et al.               Expires June 18, 2015                [Page 17]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -1005,7 +1005,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 18]
+Pot, et al.               Expires June 18, 2015                [Page 18]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -1061,7 +1061,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 19]
+Pot, et al.               Expires June 18, 2015                [Page 19]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -1117,7 +1117,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 20]
+Pot, et al.               Expires June 18, 2015                [Page 20]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -1173,7 +1173,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 21]
+Pot, et al.               Expires June 18, 2015                [Page 21]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -1229,7 +1229,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 22]
+Pot, et al.               Expires June 18, 2015                [Page 22]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -1285,7 +1285,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 23]
+Pot, et al.               Expires June 18, 2015                [Page 23]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -1341,7 +1341,7 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 24]
+Pot, et al.               Expires June 18, 2015                [Page 24]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -1397,7 +1397,7 @@ Appendix A.  Change History
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 25]
+Pot, et al.               Expires June 18, 2015                [Page 25]
 
 Internet-Draft           WebDAV Resource Sharing           December 2014
 
@@ -1431,6 +1431,16 @@ Appendix B.  Backwards compatibility
 
 Authors' Addresses
 
+   Evert Pot
+   fruux GmbH
+   Koenigsstrasse 32
+   Muenster, NRW  48143
+   Germany
+
+   Email: me@evertpot.com
+   URI:   https://fruux.com/
+
+
    Cyrus Daboo
    Apple Inc.
    1 Infinite Loop
@@ -1439,6 +1449,13 @@ Authors' Addresses
 
    Email: cyrus@daboo.name
    URI:   http://www.apple.com/
+
+
+
+
+Pot, et al.               Expires June 18, 2015                [Page 26]
+
+Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
    Eric York
@@ -1453,19 +1470,6 @@ Authors' Addresses
 
 
 
-Daboo, et al.             Expires June 5, 2015                 [Page 26]
-
-Internet-Draft           WebDAV Resource Sharing           December 2014
-
-
-   Evert Pot
-   fruux GmbH
-   Koenigsstrasse 32
-   Muenster, NRW  48143
-   Germany
-
-   Email: me@evertpot.com
-   URI:   https://fruux.com/
 
 
 
@@ -1505,8 +1509,4 @@ Internet-Draft           WebDAV Resource Sharing           December 2014
 
 
 
-
-
-
-
-Daboo, et al.             Expires June 5, 2015                 [Page 27]
+Pot, et al.               Expires June 18, 2015                [Page 27]

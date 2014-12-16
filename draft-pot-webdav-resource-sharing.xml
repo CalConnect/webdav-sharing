@@ -21,6 +21,22 @@
 <rfc ipr="trust200902" docName='draft-pot-webdav-resource-sharing-00'>
     <front>
         <title abbrev="WebDAV Resource Sharing">WebDAV Resource Sharing</title>
+        <author initials="E." surname="Pot" fullname="Evert Pot">
+            <organization abbrev="fruux GmbH">
+                fruux GmbH
+            </organization>
+            <address>
+                <postal>
+                    <street>Koenigsstrasse 32</street>
+                    <city>Muenster</city>
+                    <region>NRW</region>
+                    <code>48143</code>
+                    <country>Germany</country>
+                </postal>
+                <email>me@evertpot.com</email>
+                <uri>https://fruux.com/</uri>
+            </address>
+        </author>
         <author initials="C." surname="Daboo" fullname="Cyrus Daboo">
             <organization abbrev="Apple Inc.">
                 Apple Inc.
@@ -51,22 +67,6 @@
                 </postal>
                 <email></email>
                 <uri>http://www.apple.com/</uri>
-            </address>
-        </author>
-        <author initials="E." surname="Pot" fullname="Evert Pot">
-            <organization abbrev="fruux GmbH">
-                fruux GmbH
-            </organization>
-            <address>
-                <postal>
-                    <street>Koenigsstrasse 32</street>
-                    <city>Muenster</city>
-                    <region>NRW</region>
-                    <code>48143</code>
-                    <country>Germany</country>
-                </postal>
-                <email>me@evertpot.com</email>
-                <uri>https://fruux.com/</uri>
             </address>
         </author>
         <date/>
