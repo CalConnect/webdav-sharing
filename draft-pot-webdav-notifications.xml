@@ -371,14 +371,12 @@
                 ask the server for a specific representation of a notification.
             </t>
         </section>
-        <!--
-        <section title='Change History'>
+        <section title='Change History (to be removed prior to publication as an RFC'>
             <t>Changes in -01:
                 <list style='numbers'>
                     <t></t>
                 </list>
             </t>
         </section>
-        -->
     </back>
 </rfc>

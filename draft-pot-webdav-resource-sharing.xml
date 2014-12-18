@@ -1161,27 +1161,6 @@ Content-Type: application/davsharing+xml; charset="utf-8"
 <references title='Informative References'>
 </references>
 -->
-        <section title='Change History'>
-            <t>Changes in -03:
-                <list style='numbers'>
-                    <t>Fixed access element DTD.</t>
-                    <t>Remove MKxxx and PROPPATCH mechanism for upgrading/downgrading shared state on a calendar collection. Instead the server implicitly sets the state based on whether there are any sharees or not..</t>
-                    <t>Added CS:first-name and CS:last-name optional element to CS:organizer.</t>
-                    <t>Added CALDAV:supported-calendar-component-set optional element to CS:invite-notification.</t>
-                </list>
-            </t>
-            <t>Changes in -02:
-                <list style='numbers'>
-                    <t>Removed read-write-shared access mode - now a server that does not support shared scheduling should advertise that via a DAV header</t>
-                </list>
-            </t>
-            <t>Changes in -01:
-                <list style='numbers'>
-                    <t>Added CS:shared-url property</t>
-                    <t>Clarified that notifications are only required to be sent when sharee status is changed</t>
-                </list>
-            </t>
-        </section>
         <section title='Backwards compatibility'>
             <t>
                 This specification is based on an earlier effort, often referred
@@ -1201,6 +1180,13 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 the use of the Content-Type and Accept HTTP headers. The earlier
                 draft does not define new mime-types for these, but this
                 specification does.
+            </t>
+        </section>
+        <section title='Change History (to be removed prior to publication as an RFC'>
+            <t>Changes in -01:
+                <list style='numbers'>
+                    <t></t>
+                </list>
             </t>
         </section>
     </back>
