@@ -132,10 +132,10 @@
                 </list>
             </t>
             <t>
-               The DTD samples used in this document are for illustrative
-               purposes only. The conventions and restrictions described in
-               <xref target="RFC4918" x:fmt="of" x:sec="17" />
-             </t>
+              The DTD samples used in this document are for illustrative
+              purposes only. The conventions and restrictions described in
+              <xref target="RFC4918" /> section 17.
+            </t>
         </section>
 
         <section title='Overview' anchor='overview'>
