@@ -1016,7 +1016,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                   </list>
                 </t>
             </section>
-            <section title="DAV:share-resource">
+            <section title="DAV:share-resource" anchor="DAV:share-resource">
                 <t>
                   <list style="hanging">
                     <t hangText="Name:">share-resource</t>
