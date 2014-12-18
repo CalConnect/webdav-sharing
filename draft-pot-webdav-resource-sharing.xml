@@ -131,6 +131,11 @@
                     <t hangText='Sharing Reply'>A message sent by a sharee to a sharer to indicate the status of a shared resource.</t>
                 </list>
             </t>
+            <t>
+               The DTD samples used in this document are for illustrative
+               purposes only. The conventions and restrictions described in
+               <xref target="RFC4918" x:fmt="of" x:sec="17" />
+             </t>
         </section>
 
         <section title='Overview' anchor='overview'>
@@ -370,7 +375,7 @@ Content-Length: xxxx
                         the sharee list by issuing a POST request targeted at
                         the resource. The POST request MUST contain an XML
                         document as its body with the root element being
-                        <xref target="DAV:share">DAV:share</xref>.
+                        <xref target="DAV:share-resource">DAV:share-resource</xref>.
                     </t>
                     <t>
                         The POST request MUST contain a Content-Type HTTP
@@ -379,7 +384,7 @@ Content-Length: xxxx
                         this is not the case.
                     </t>
                     <t>
-                        The <xref target="DAV:share">DAV:share</xref> element in
+                        The <xref target="DAV:share-resource">DAV:share-resource</xref> element in
                         the POST requests MUST contain one or more
                         <xref target="DAV:set-invitee">DAV:set-invitee</xref> or
                         <xref target="DAV:remove-invitee">DAV:remove-invitee</xref>
@@ -1011,17 +1016,17 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                   </list>
                 </t>
             </section>
-            <section title="DAV:share">
+            <section title="DAV:share-resource">
                 <t>
                   <list style="hanging">
-                    <t hangText="Name:">share</t>
+                    <t hangText="Name:">share-resource</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Describes changes to sharees.</t>
                     <t hangText="Description:">The root element used in POST requests on resources by sharers to manipulate the sharee list of a shared resource.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT share (set | remove)*>]]></artwork>
+<!ELEMENT share-resource (set | remove)*>]]></artwork>
                       </figure>
                     </t>
                   </list>
@@ -1178,6 +1183,8 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t>Fixed some issues in the DTD declatations of set-invitee and remove-invitee.</t>
                     <t>Removed an unused normative reference.</t>
                     <t>Removed 'open issues' section.</t>
+                    <t>Added a paragraph about xml/dtd handling with a reference to RFC4917</t>
+                    <t>Renamed DAV:share to DAV:share-resource for the POST request</t>
                 </list>
             </t>
         </section>

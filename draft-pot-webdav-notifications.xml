@@ -78,14 +78,19 @@
         </section>
 
         <section title='Conventions Used in This Document'>
-            <t>
-                The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
-            </t>
-            <t>
-                When XML element types in the namespaces "DAV:" is referenced
-                in this document outside of the context of an XML fragment,
-                the string "DAV:" will be prefixed to the element type name.
-            </t>
+           <t>
+             The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
+           </t>
+           <t>
+             When XML element types in the namespaces "DAV:" is referenced
+             in this document outside of the context of an XML fragment,
+             the string "DAV:" will be prefixed to the element type name.
+           </t>
+           <t>
+             The DTD samples used in this document are for illustrative
+             purposes only. The conventions and restrictions described in
+             <xref target="RFC4918" x:fmt="of" x:sec="17" />
+           </t>
         </section>
 
         <section title="Requirements Overview">
@@ -374,7 +379,7 @@
         <section title='Change History (to be removed prior to publication as an RFC'>
             <t>Changes in -01:
                 <list style='numbers'>
-                    <t></t>
+                    <t>Added a paragraph about xml/dtd handling with a reference to RFC4917</t>
                 </list>
             </t>
         </section>
