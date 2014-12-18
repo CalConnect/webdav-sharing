@@ -1046,7 +1046,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT set (DAV:href, displayname?, comment?,
+<!ELEMENT set-invitee (href, displayname?, comment?,
                (read | read-write)>]]></artwork>
                       </figure>
                     </t>
@@ -1063,7 +1063,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT remove (DAV:href)>]]></artwork>
+<!ELEMENT remove-invitee (href)>]]></artwork>
                       </figure>
                     </t>
                   </list>
@@ -1185,7 +1185,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
         <section title='Change History (to be removed prior to publication as an RFC'>
             <t>Changes in -01:
                 <list style='numbers'>
-                    <t></t>
+                    <t>Fixed some issues in the DTD declatations of set-invitee and remove-invitee.</t>
                 </list>
             </t>
         </section>
