@@ -18,7 +18,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" docName='draft-pot-webdav-resource-sharing-00'>
+<rfc ipr="trust200902" docName='draft-pot-webdav-resource-sharing-01'>
     <front>
         <title abbrev="WebDAV Resource Sharing">WebDAV Resource Sharing</title>
         <author initials="E." surname="Pot" fullname="Evert Pot">
@@ -1098,9 +1098,18 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             </t>
         </section>
         <section title='Acknowledgments'>
-            <t>
-                This specification is the result of discussions between the Apple calendar server and client teams.
-            </t>
+          <t>
+             The authors would like to thank the members of the Calendaring and
+             Scheduling Consortium's SharingTechnical Committee. In particular,
+             the following individuals have made important contributions to
+             this work: Richard Brigham, John Chaffee, Michael Douglass and
+             Ken Murchison and Dave Thewlis.
+          </t>
+           <t>
+             This specification originated from work at the Calendaring and
+             Scheduling Consortium, which has supported the development and
+             testing of implementations of the specification.
+           </t>
         </section>
         <section title='IANA Considerations'>
             <t>
