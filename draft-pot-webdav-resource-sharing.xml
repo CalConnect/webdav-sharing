@@ -6,7 +6,6 @@
 <!ENTITY rfc4791 PUBLIC '' 'bibxml/reference.RFC.4791.xml'>
 <!ENTITY rfc4918 PUBLIC '' 'bibxml/reference.RFC.4918.xml'>
 <!ENTITY rfc6352 PUBLIC '' 'bibxml/reference.RFC.6352.xml'>
-<!ENTITY rfc6638 PUBLIC '' 'bibxml/reference.RFC.6638.xml'>
 <!ENTITY rfc7303 PUBLIC '' 'bibxml/reference.RFC.7303.xml'>
 ]>
 <?rfc toc="yes"?>
@@ -603,7 +602,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t>
                         When the sharee issues a DELETE on an
                         invite-notification, the server MUST remove the
-                        notification, and MUST not let the sharer know about
+                        notification, and MUST NOT let the sharer know about
                         this.
                     </t>
                     <t>
@@ -1154,7 +1153,6 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             &rfc4791;
             &rfc4918;
             &rfc6352;
-            &rfc6638;
             &rfc7303;
         </references>
 <!--
@@ -1186,6 +1184,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             <t>Changes in -01:
                 <list style='numbers'>
                     <t>Fixed some issues in the DTD declatations of set-invitee and remove-invitee.</t>
+                    <t>Removed an unused normative reference.</t>
                 </list>
             </t>
         </section>
