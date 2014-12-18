@@ -116,14 +116,6 @@
             </t>
         </section>
 
-        <section title="Open Issues">
-            <t>
-                <list style="numbers">
-                    <t>...</t>
-                </list>
-            </t>
-        </section>
-
         <section title='Conventions Used in This Document'>
             <t>
                 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
@@ -1185,6 +1177,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 <list style='numbers'>
                     <t>Fixed some issues in the DTD declatations of set-invitee and remove-invitee.</t>
                     <t>Removed an unused normative reference.</t>
+                    <t>Removed 'open issues' section.</t>
                 </list>
             </t>
         </section>
