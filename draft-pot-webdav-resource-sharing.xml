@@ -275,7 +275,10 @@ Content-Length: xxxx
         <section title="Resource sharing">
             <section title="Feature Discovery">
                 <t>
-                    A server that supports the features described in this document MUST include "resource-sharing" as a field in the DAV response header from an OPTIONS request on any resource that supports these features.
+                  A server that supports the features described in this
+                  document MUST return the DAV:share privilege on any resource
+                  that supports resource-sharing. This privilege is further
+                  described in <xref target="DAV:share"/>.
                 </t>
             </section>
             <section title="Additional Properties for resources" anchor='properties'>
