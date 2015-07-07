@@ -17,7 +17,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" docName='draft-pot-webdav-resource-sharing-01'>
+<rfc ipr="trust200902" docName='draft-pot-webdav-resource-sharing-02'>
     <front>
         <title abbrev="WebDAV Resource Sharing">WebDAV Resource Sharing</title>
         <author initials="E." surname="Pot" fullname="Evert Pot">
@@ -276,9 +276,9 @@ Content-Length: xxxx
             <section title="Feature Discovery">
                 <t>
                   A server that supports the features described in this
-                  document MUST return the DAV:share privilege on any resource
-                  that supports resource-sharing. This privilege is further
-                  described in <xref target="DAV:share"/>.
+                  document MUST include "resource-sharing" as a field in the
+                  DAV response header from an OPTIONS request on any resource
+                  that supports these features.
                 </t>
             </section>
             <section title="Additional Properties for resources" anchor='properties'>
@@ -1181,6 +1181,11 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             </t>
         </section>
         <section title='Change History (to be removed prior to publication as an RFC'>
+            <t>Changes in -02:
+                <list style='numbers'>
+                    <t>...</t>
+                </list>
+            </t>
             <t>Changes in -01:
                 <list style='numbers'>
                     <t>Fixed some issues in the DTD declatations of set-invitee and remove-invitee.</t>
