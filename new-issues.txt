@@ -1,7 +1,0 @@
-1. To indicate that a resource is shared, it must be done with the
-   `{DAV:}resourcetype` property, which may be either `{DAV}shared-owner` or
-   `{DAV:}shared`. I think this is an abuse of `{DAV:}resourcetype`.
-2. example for {DAV:}share-resource says it's {DAV:}share.
-3. Removed Dav: resource-sharing from OPTIONS.
-4. Remove organizer/owner from DAV:invite.
-5. {DAV:}shared-url is a poor name. Should perhaps be {DAV:}shared-original-url

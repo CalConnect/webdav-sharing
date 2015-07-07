@@ -285,9 +285,10 @@ Content-Length: xxxx
                 <t>
                     The following new or modified WebDAV properties are defined for resources and used to view or manipulate shared resources features.
                 </t>
-                <section title="DAV:resourcetype Property" anchor="DAV:resourcetype">
+                <section title="DAV:share-mode Property" anchor="DAV:resourcetype">
                     <t>
-                        Resources that are shared have elements listed in their DAV:resourcetype property in addition to any elements that may already be there, such as DAV:collection.
+                      Resources that are shared must have a DAV:share-mode property. It's value
+                      should be one of two elements:
                         <list style="symbols">
                             <t><xref target="DAV:shared-owner">DAV:shared-owner</xref>: used to indicate that the resource is owned by the current user and is being shared by them.</t>
                             <t><xref target="DAV:shared">DAV:shared</xref>: used to indicate that the resource is owned by another user and is being shared to the current user.</t>
@@ -310,7 +311,7 @@ Content-Length: xxxx
                           the sharees. It provides a list of users to whom the
                           resource has been shared, along with the "status" of
                           the sharing invites sent to each user. In addition,
-                          servers SHOULD include a DAV:organizer XML element on
+                          servers SHOULD include a DAV:principal XML element on
                           resources of the sharees to provide clients with a
                           fast way to determine who the sharer is. A server's
                           local privacy policy may prevent sharees from
@@ -327,10 +328,10 @@ Content-Length: xxxx
                     </list>
                   </t>
                 </section>
-                <section title="DAV:shared-url Property" anchor="DAV:shared-url">
+                <section title="DAV:sharer-resource-url Property" anchor="DAV:sharer-resource-url">
                   <t>
                     <list style="hanging">
-                      <t hangText="Name:">shared-url</t>
+                      <t hangText="Name:">sharer-resource-url</t>
                       <t hangText="Namespace:">DAV:</t>
                       <t hangText="Purpose:">Indicates the URL of the owner's copy of a shared resource.</t>
                       <t hangText="Protected:">This property MUST be protected.</t>
@@ -346,7 +347,7 @@ Content-Length: xxxx
                       <t hangText="Definition:">
                         <figure>
                           <artwork><![CDATA[
-<!ELEMENT shared-url (DAV:href)>]]></artwork>
+<!ELEMENT sharer-resource-url (DAV:href)>]]></artwork>
                         </figure>
                       </t>
                     </list>
@@ -358,18 +359,16 @@ Content-Length: xxxx
                     <t>
                         To update an existing resource to be shared, the
                         sharer simply adds one or more sharees to the
-                        resource as per <xref target="sharee"/>. The server
-                        MUST update the DAV:resourcetype property on the
-                        collection to ensure it contains a DAV:shared-owner
-                        XML element to indicate the resource is now shared.
+                        resource as per <xref target="sharee"/>. The server MUST
+                        indicate that the resource is now shared by updating the
+                        value of the DAV:share-mode WebDAV property.
                     </t>
                     <t>
                         To unshare a resource, the sharer simply removes all
                         sharees from the DAV:invite property of the resource as
-                        per <xref target="sharee"/>. The server MUST update the
-                        DAV:resourcetype property on the resource to ensure it
-                        does not contain a DAV:shared-owner XML element to
-                        indicate the resource is not shared.
+                        per <xref target="sharee"/>. The server MUST indicate
+                        that the resource is no longer shared by removing the
+                        value from the DAV:share-mode WebDAV property.
                     </t>
                 </section>
                 <section title="Manipulating Sharees of a Shared Resource" anchor="sharee">
@@ -448,14 +447,14 @@ Content-Type: application/davsharing+xml; charset="utf-8"
 Content-Length: xxxx
 
 <?xml version="1.0" encoding="utf-8" ?>
-<D:share xmlns:D="DAV:">
+<D:share-resource xmlns:D="DAV:">
   <D:set-invitee>
     <D:href>mailto:eric@example.com</D:href>
     <D:displayname>Eric York</D:displayname>
     <D:comment>Shared workspace</D:comment>
     <D:read-write />
   </D:set-invitee>
-</D:share>]]></artwork>
+</D:share-resource>]]></artwork>
                         </figure>
                         <figure>
                           <preamble>&gt;&gt; Response &lt;&lt;</preamble>
@@ -480,7 +479,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
 Content-Length: xxxx
 
 <?xml version="1.0" encoding="utf-8" ?>
-<D:share xmlns:D="DAV:">
+<D:share-resource xmlns:D="DAV:">
   <D:set-invitee>
     <D:href>mailto:eric@example.com</D:href>
     <D:comment>Shared workspace</D:comment>
@@ -489,7 +488,7 @@ Content-Length: xxxx
   <D:remove-invitee>
     <D:href>mailto:wilfredo@example.com</D:href>
   </D:remove-invitee>
-</D:share>]]></artwork>
+</D:share-resource>]]></artwork>
                         </figure>
                         <figure>
                           <preamble>&gt;&gt; Response &lt;&lt;</preamble>
@@ -714,7 +713,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t hangText="Name:">shared-owner</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Used to indicate that a resource is being shared by the owner.</t>
-                    <t hangText="Description:">This property appears in the DAV:resourcetype property on the resource shared by a sharer. See <xref target="properties"/>.</t>
+                    <t hangText="Description:">This property appears in the DAV:share-mode property on the resource shared by a sharer. See <xref target="properties"/>.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -730,7 +729,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t hangText="Name:">shared</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Used to indicate that a resources is being shared to a sharee.</t>
-                    <t hangText="Description:">This property appears in the DAV:resourcetype property on a resource that is shared to a sharee. See <xref target="properties"/>.</t>
+                    <t hangText="Description:">This property appears in the DAV:share-mode property on a resource that is shared to a sharee. See <xref target="properties"/>.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -739,6 +738,22 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     </t>
                   </list>
                 </t>
+            </section>
+            <section title="DAV:share-mode" anchor="DAV:share-mode">
+              <t>
+                  <list style="hanging">
+                    <t hangText="Name:">share-mode</t>
+                    <t hangText="Namespace:">DAV:</t>
+                    <t hangText="Purpose:">Used to indicate that a resource is being shared.</t>
+                    <t hangText="Description:">This is a WebDAV property that may appear on an instance of a shared resource. See <xref target="properties" />.</t>
+                    <t hangText="Definition:">
+                      <figure>
+                        <artwork><![CDATA[
+<!ELEMENT share-mode (shared | shared-owner)?>]]></artwork>
+                      </figure>
+                    </t>
+                  </list>
+              </t>
             </section>
             <section title="DAV:share" anchor="DAV:share">
                 <t>
@@ -921,7 +936,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             dav:href,
             (invite-noresponse | invite-deleted |
             invite-accepted | invite-declined),
-            access, organizer,
+            access, principal,
             comment?,
 >]]></artwork>
                       </figure>
@@ -1183,7 +1198,9 @@ Content-Type: application/davsharing+xml; charset="utf-8"
         <section title='Change History (to be removed prior to publication as an RFC'>
             <t>Changes in -02:
                 <list style='numbers'>
-                    <t>...</t>
+                  <t>Renamed DAV:shared-url to DAV:sharer-instance-url</t>
+                  <t>Introduced DAV:share-mode WebDAV property</t>
+                  <t>Removed additions to DAV:resource-type to indicate that a resource is shared.</t>
                 </list>
             </t>
             <t>Changes in -01:
