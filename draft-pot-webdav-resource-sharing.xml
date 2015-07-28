@@ -1073,7 +1073,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
-<!ELEMENT share-resource (set | remove)*>]]></artwork>
+<!ELEMENT share-resource (set-invitee | remove-invitee)*>]]></artwork>
                       </figure>
                     </t>
                   </list>
@@ -1090,7 +1090,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                       <figure>
                         <artwork><![CDATA[
 <!ELEMENT set-invitee (href, displayname?, comment?,
-               (read | read-write)>]]></artwork>
+               (read | read-write))>]]></artwork>
                       </figure>
                     </t>
                   </list>
@@ -1228,12 +1228,13 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             <t>Changes in -03:
                 <list style='numbers'>
                   <t>Introduced the DAV:reply-url element.</t>
+                  <t>Fixes in DTD declarations.</t>
                 </list>
             </t>
             <t>Changes in -02:
                 <list style='numbers'>
-                  <t>Renamed DAV:shared-url to DAV:sharer-instance-url</t>
-                  <t>Introduced DAV:share-mode WebDAV property</t>
+                  <t>Renamed DAV:shared-url to DAV:sharer-instance-url.</t>
+                  <t>Introduced DAV:share-mode WebDAV property.</t>
                   <t>Removed additions to DAV:resource-type to indicate that a resource is shared.</t>
                 </list>
             </t>
