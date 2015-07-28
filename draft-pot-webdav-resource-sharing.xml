@@ -223,6 +223,9 @@ Content-Length: xxxx
             <D:displayname>Vacation days!!</D:displayname>
             <D:resourcetype><D:collection /></D:resourcetype>
         </D:prop>
+        <D:reply-url>
+          <D:href>?invite-reply</D:href>
+        </D:reply-url>
     </D:invite-notification>
 </D:notification>
 ]]></artwork>
@@ -467,7 +470,11 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                     <section title="Example: Successful Multiple Sharee Change Request">
 
                         <t>
-                            This example shows how multiple sharee's can be manipulated in a single request. The sharee with email address "mailto:eric@example.com" has their access downgraded to CS:read, whilst another sharee is removed from the access list entirely.
+                          This example shows how multiple sharee's can be
+                          manipulated in a single request. The sharee with email
+                          address "mailto:eric@example.com" has their access
+                          downgraded to CS:read, whilst another sharee is
+                          removed from the access list entirely.
                         </t>
 
                         <figure>
@@ -505,9 +512,10 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                     <t>
                         When a sharee is invited to a shared resource they
                         can accept or decline the invite by issuing a POST
-                        request to the resource URI for the invitation
-                        notification.  The POST request MUST contain an XML
-                        document as its body with the root element being
+                        request to the url specified in the
+                        <xref target="DAV:reply-url" /> element, in the
+                        invitation notification. The POST request MUST contain
+                        an XML document as its body with the root element being
                         <xref target="DAV:invite-reply">DAV:invite-reply</xref>.
                     </t>
                     <t>
@@ -936,8 +944,8 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             dav:href,
             (invite-noresponse | invite-deleted |
             invite-accepted | invite-declined),
-            access, principal,
-            comment?,
+            access, principal, reply-url
+            comment?, prop?
 >]]></artwork>
                       </figure>
                     </t>
@@ -1011,6 +1019,27 @@ Content-Type: application/davsharing+xml; charset="utf-8"
 <!ELEMENT invite-reply (href,
                         (invite-accepted | invite-declined),
                         hosturl, create-in?, comment?>]]></artwork>
+                      </figure>
+                    </t>
+                  </list>
+                </t>
+            </section>
+            <section title="DAV:reply-url" anchor="DAV:reply-url">
+                <t>
+                  <list style="hanging">
+                    <t hangText="Name:">reply-url</t>
+                    <t hangText="Namespace:">DAV:</t>
+                    <t hangText="Purpose:">The url that must be used to reply to the sharing invitation.</t>
+                    <t hangText="Description:">
+                      When a client receives an invite-notification, the body
+                      of the notifcation contains a reply-url. The client can
+                      respond to the invitation by issuing a POST request on
+                      the target of the reply-url.
+                    </t>
+                    <t hangText="Definition:">
+                      <figure>
+                        <artwork><![CDATA[
+<!ELEMENT invite-reply (href)>]]></artwork>
                       </figure>
                     </t>
                   </list>
