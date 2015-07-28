@@ -17,7 +17,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" docName='draft-pot-webdav-resource-sharing-02'>
+<rfc ipr="trust200902" docName='draft-pot-webdav-resource-sharing-03'>
     <front>
         <title abbrev="WebDAV Resource Sharing">WebDAV Resource Sharing</title>
         <author initials="E." surname="Pot" fullname="Evert Pot">
@@ -1225,6 +1225,11 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             </t>
         </section>
         <section title='Change History (to be removed prior to publication as an RFC'>
+            <t>Changes in -03:
+                <list style='numbers'>
+                  <t>Introduced the DAV:reply-url element.</t>
+                </list>
+            </t>
             <t>Changes in -02:
                 <list style='numbers'>
                   <t>Renamed DAV:shared-url to DAV:sharer-instance-url</t>
