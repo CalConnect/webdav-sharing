@@ -288,15 +288,34 @@ Content-Length: xxxx
                 <t>
                     The following new or modified WebDAV properties are defined for resources and used to view or manipulate shared resources features.
                 </t>
-                <section title="DAV:share-mode Property" anchor="DAV:resourcetype">
-                    <t>
-                      Resources that are shared must have a DAV:share-mode property. It's value
-                      should be one of two elements:
-                        <list style="symbols">
-                            <t><xref target="DAV:shared-owner">DAV:shared-owner</xref>: used to indicate that the resource is owned by the current user and is being shared by them.</t>
-                            <t><xref target="DAV:shared">DAV:shared</xref>: used to indicate that the resource is owned by another user and is being shared to the current user.</t>
-                        </list>
-                    </t>
+                <section title="DAV:share-mode Property" anchor="DAV:share-mode">
+                  <t>
+                    <list style="hanging">
+                      <t hangText="Name:">share-mode</t>
+                      <t hangText="Namespace:">DAV:</t>
+                      <t hangText="Purpose:">Allows a client to see if a resource is a shared resource.</t>
+                      <t hangText="Protected:">This property MUST be protected.</t>
+                      <t hangText="PROPFIND behavior:">This property SHOULD NOT be returned by a PROPFIND allprop request (as defined in Section 14.2 of <xref target="RFC4918"/>).</t>
+                      <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in MOVE operations, but MUST NOT be preserved in COPY operations.</t>
+
+                      <t hangText="Description:">
+                        Resources that are shared must have a DAV:share-mode property. It's value
+                        should be one of two elements:
+                          <list style="symbols">
+                              <t><xref target="DAV:shared-owner">DAV:shared-owner</xref>: used to indicate that the resource is owned by the current user and is being shared by them.</t>
+                              <t><xref target="DAV:shared">DAV:shared</xref>: used to indicate that the resource is owned by another user and is being shared to the current user.</t>
+                          </list>
+                      </t>
+
+                      </t>
+                      <t hangText="Definition:">
+                        <figure>
+                          <artwork><![CDATA[
+<!ELEMENT share-mode (shared-owner|shared)>]]></artwork>
+                        </figure>
+                      </t>
+                    </list>
+                  </t>
                 </section>
                 <section title="DAV:invite Property" anchor="DAV:invite">
                   <t>
@@ -1229,6 +1248,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 <list style='numbers'>
                   <t>Introduced the DAV:reply-url element.</t>
                   <t>Fixes in DTD declarations.</t>
+                  <t>Include more details about the share-mode property.</t>
                 </list>
             </t>
             <t>Changes in -02:
