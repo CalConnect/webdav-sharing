@@ -120,6 +120,7 @@
                 <list style="numbers">
                     <t>organizer needs to be renamed to invitee.</t>
                     <t>consolidate how principals and principal information is set across properties, requests and notifications.</t>
+                    <t>There's a few structural problems on how xml elements are defined, both in the middle of the document and in "XML Element definitions".</t>
                  </list>
             </t>
         </section>
@@ -296,7 +297,7 @@ Content-Length: xxxx
                 <t>
                     The following new or modified WebDAV properties are defined for resources and used to view or manipulate shared resources features.
                 </t>
-                <section title="DAV:share-mode Property" anchor="DAV:share-mode">
+                <section title="DAV:share-mode Property">
                   <t>
                     <list style="hanging">
                       <t hangText="Name:">share-mode</t>
@@ -313,8 +314,6 @@ Content-Length: xxxx
                               <t><xref target="DAV:shared-owner">DAV:shared-owner</xref>: used to indicate that the resource is owned by the current user and is being shared by them.</t>
                               <t><xref target="DAV:shared">DAV:shared</xref>: used to indicate that the resource is owned by another user and is being shared to the current user.</t>
                           </list>
-                      </t>
-
                       </t>
                       <t hangText="Definition:">
                         <figure>
