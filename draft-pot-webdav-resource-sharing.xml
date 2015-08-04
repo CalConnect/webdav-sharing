@@ -115,6 +115,14 @@
                 invitations.
             </t>
         </section>
+        <section title="Open Issues">
+            <t>
+                <list style="numbers">
+                    <t>organizer needs to be renamed to invitee.</t>
+                    <t>consolidate how principals and principal information is set across properties, requests and notifications.</t>
+                 </list>
+            </t>
+        </section>
 
         <section title='Conventions Used in This Document'>
             <t>
