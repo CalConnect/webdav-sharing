@@ -117,10 +117,9 @@
         </section>
         <section title="Open Issues">
             <t>
-                <list style="numbers">
-                    <t>organizer needs to be renamed to invitee.</t>
-                    <t>consolidate how principals and principal information is set across properties, requests and notifications.</t>
-                    <t>There's a few structural problems on how xml elements are defined, both in the middle of the document and in "XML Element definitions".</t>
+                 <list style="numbers">
+                    <t>Almost everything in XML element definitions is currently wrong.</t>
+                    <t>Talk about relationship to privileges.</t>
                  </list>
             </t>
         </section>
@@ -147,7 +146,7 @@
             </t>
         </section>
 
-        <section title='Overview' anchor='overview'>
+        <section title='High-level overview' anchor='overview'>
             <t>
                 This section provides a basic overview of this protocol by way
                 of a simple use case of a sharer sharing a collection with a
@@ -189,6 +188,330 @@
             </t>
         </section>
 
+        <section title="Sharing a resource">
+          <section title="Advertising resource sharing support">
+            <t>
+                A server that supports the features described in this
+                document MUST include "resource-sharing" as a field in the
+                DAV response header from an OPTIONS request on any resource
+                that supports these features.
+            </t>
+            <t>
+                A response to this OPTIONS request might look as follows:
+            </t>
+            <t>
+                <figure>
+                   <artwork><![CDATA[
+HTTP/1.1 200 OK
+
+Dav: 1,3,extended-mkcol,resource-sharing
+Allow: GET,HEAD,POST,OPTIONS,PROPFIND,PROPPATCH
+]]></artwork>
+                </figure>
+            </t>
+          </section>
+          <section title="Required privileges">
+            <t>
+              A server that supports sharing on a specific resource, MUST
+              enforce this using the "DAV:share" privilege. Privileges are
+              defined in <xref target="RFC3744" />.
+            </t>
+            <t>
+              The privilege MUST be non-abstract and MAY be protected. This
+              privilege MUST appear in the DAV:supported-privilege-set
+              property for resources that may be shared. In addition, it MUST
+              appear in the DAV:current-user-privilege-set property, if the
+              user is in fact allowed to share the resource. This mechanism
+              is also used by a client to discover sharing capabilities on
+              specific resources.
+            </t>
+          </section>
+          <section title="Sharing POST request">
+            <t>
+              To share a resource or revoke access to a shared resource, the
+              client must issue a POST request to the resource that the user
+              wants to share. The POST request MUST contain an XML document as
+              its body, with the root element being <xref target="DAV:share-resource" />
+            </t>
+            <t>
+              The POST request MUST contain a Content-Type HTTP header, which
+              MUST contain "application/davshare+xml" as its value. Servers
+              SHOULD reject the request if this is not the case.
+            </t>
+            <t>
+              The DAV:share-resource element can contain one or more DAV:sharee
+              elements. Each DAV:sharee element MUST at least have a
+              DAV:href element containing a URI identifying the sharee.
+            </t>
+            <t>
+              The URI in DAV:href may be a principal-URL referring to a
+              sharee host on the same server, an email address or any other URI
+              identifying a user. In the case of the latter two, the sharee might not
+              be a user on the same server - though in that case how invitations are
+              sent or access is enabled is out of scope for this specification.
+            </t>
+            <t>
+              The DAV:prop element is optional, and can be used to provide more
+              information about the sharee. The server MAY use this information and
+              later return it when information is requested about the list of sharees.
+              Any valid WebDAV property might be provided here, but it's up to the
+              discretion of the server what to support.
+              A client SHOULD provide at least a DAV:displayname property as a human-
+              readable string identifying the user.
+            </t>
+            <t>
+              The DAV:share-access element is required. It MUST contain one of the
+              following elements:
+            </t>
+            <t>
+            <list style="hanging">
+              <t hangText="DAV:read">
+                  When present this indicates that sharees can read information from the resource, but cannot change it. This applies to the resource, but if the shared resource is a collection, it also applies to the collection's children.
+              </t>
+              <t hangText="DAV:read-write">
+                  When present this indicates that sharees can read and write information from the resource.
+              </t>
+              <t hangText="DAV:no-access">
+                  When present this indicates that access to the resource is revoked for the sharee.
+              </t>
+            </list>
+            </t>
+            <section title="Example: Sharing a resource">
+              <t>
+                The following example grants read-write access to a resource
+                identified by "/calendars/users/cyrus/shared" to a sharee
+                with email address "mailto:eric@example.com".
+              </t>
+              <t>
+                  <figure>
+                     <artwork><![CDATA[
+POST /calendars/users/cyrus/shared/ HTTP/1.1
+Host: calendar.example.com
+Content-Type: application/davsharing+xml; charset="utf-8"
+Content-Length: xxxx
+
+<?xml version="1.0" encoding="utf-8" ?>
+<D:share-resource xmlns:D="DAV:">
+  <D:sharee>
+    <D:href>mailto:eric@example.com</D:href>
+    <D:prop>
+      <D:displayname>Eric York</D:displayname>
+    </D:prop>
+    <D:comment>Shared workspace</D:comment>
+    <D:share-access>
+      <D:read-write />
+    </D:share-access>
+  </D:sharee>
+</D:share-resource>]]></artwork>
+                  </figure>
+               </t>
+               <t>
+                 If the operation was successful, the server MUST respond with a
+                 204 No Content HTTP status.
+               </t>
+               <t>
+                 <figure>
+                   <artwork><![CDATA[
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
+                 </figure>
+               </t>
+          </section>
+          <section title="Example: Multiple sharee changes">
+              <t>
+                This example shows how multiple sharee's can be
+                manipulated in a single request. The sharee with email
+                address "mailto:eric@example.com" has their access
+                downgraded to CS:read, whilst another sharee is
+                removed from the access list entirely.
+              </t>
+              <t>
+                  <figure>
+                     <artwork><![CDATA[
+POST /calendars/users/cyrus/shared/ HTTP/1.1
+Host: calendar.example.com
+Content-Type: application/davsharing+xml; charset="utf-8"
+Content-Length: xxxx
+
+<?xml version="1.0" encoding="utf-8" ?>
+<D:share-resource xmlns:D="DAV:">
+  <D:sharee>
+    <D:href>mailto:eric@example.com</D:href>
+    <D:share-access>
+      <D:read />
+    </D:share-access>
+  </D:sharee>
+  <D:sharee>
+    <D:href>mailto:wilfredo@example.com</D:href>
+    <D:share-access>
+      <D:no-access />
+    </D:share-access>
+  </D:sharee>
+</D:share-resource>]]></artwork>
+                  </figure>
+               </t>
+          </section>
+        </section>
+
+        <section title="New WebDAV properties on shared resources">
+            <t>
+                The following new or modified WebDAV properties are defined for resources and used to view or manipulate shared resources features.
+            </t>
+            <section title="DAV:share-access Property">
+              <t>
+                <list style="hanging">
+                  <t hangText="Name:">share-access</t>
+                  <t hangText="Namespace:">DAV:</t>
+                  <t hangText="Purpose:">Allows a client to see if a resource is a shared resource and the access level.</t>
+                  <t hangText="Protected:">This property MUST be protected.</t>
+                  <t hangText="PROPFIND behavior:">This property SHOULD NOT be returned by a PROPFIND allprop request (as defined in Section 14.2 of <xref target="RFC4918"/>).</t>
+                  <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in MOVE operations, but MUST NOT be preserved in COPY operations.</t>
+
+                  <t hangText="Description:">
+                    Resources that are shared must have a DAV:share-mode property. It's value
+                    should be one of two elements:
+                      <list style="symbols">
+                          <t>DAV:not-shared: Used to indicate that the resource is not shared. This is the default, which means that if the DAV:share-access is omitted, this value is implied.</t>
+                          <t>DAV:shared-owner: used to indicate that the resource is owned by the current user and is being shared by them.</t>
+                          <t>DAV:read-write>: used to indicate that the resource is shared, and the current instance is the 'shared instance' which has read-write access.</t>
+                          <t>DAV:read: used to indicate that the resource is shared, and the current instance is the 'shared instance', and only read access is provided.</t>
+                      </list>
+                  </t>
+                  <t hangText="Definition:">
+                    <figure>
+                      <artwork><![CDATA[
+<!ELEMENT share-access (not-shared|shared-owner|read-write|read)>]]></artwork>
+                    </figure>
+                  </t>
+                </list>
+              </t>
+            </section>
+            <section title="DAV:invite Property" anchor="DAV:invite">
+                <t>
+                  <list style="hanging">
+                    <t hangText="Name:">invite</t>
+                    <t hangText="Namespace:">DAV:</t>
+                    <t hangText="Purpose:">Used to show to whom a resource has been shared.</t>
+                    <t hangText="Protected:">This property MUST be protected.</t>
+                    <t hangText="PROPFIND behavior:">This property SHOULD NOT be returned by a PROPFIND allprop request (as defined in Section 14.2 of <xref target="RFC4918"/>).</t>
+                    <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in MOVE operations, but MUST NOT be preserved in COPY operations.</t>
+
+                    <t hangText="Description:">
+                        This WebDAV property is present on a resource that
+                        has been shared by the owner, or on the resources for
+                        the sharees. It provides a list of users to whom the
+                        resource has been shared, along with the "status" of
+                        the sharing invites sent to each user. In addition,
+                        servers SHOULD include a DAV:principal XML element on
+                        resources of the sharees to provide clients with a
+                        fast way to determine who the sharer is. A server's
+                        local privacy policy may prevent sharees from
+                        knowing about other sharees on a shared calendar.
+                        If that is so server will not include DAV:user XML
+                        elements for other sharees.
+                    </t>
+                    <t hangText="Definition:">
+                      <figure>
+                        <artwork><![CDATA[
+<!ELEMENT invite (sharee)>
+<!ELEMENT sharee (href, share-access, prop?, principal?, (invite-no-response | invite-accepted | invite-declined | invite-invalid)>
+<!ELEMENT share-access (shared-owner|read-write|read)>
+<!ELEMENT principal (href)>
+<!ELEMENT prop ANY>
+                          ]]></artwork>
+                      </figure>
+                    </t>
+                  </list>
+                </t>
+            </section>
+            <section title="DAV:sharer-resource-uri Property" anchor="DAV:sharer-resource-uri">
+              <t>
+                <list style="hanging">
+                  <t hangText="Name:">sharer-resource-uri</t>
+                  <t hangText="Namespace:">DAV:</t>
+                  <t hangText="Purpose:">A unique URI that identifies the shared resource.</t>
+                  <t hangText="Protected:">This property MUST be protected.</t>
+                  <t hangText="PROPFIND behavior:">This property SHOULD NOT be returned by a PROPFIND allprop request (as defined in Section 14.2 of <xref target="RFC4918"/>).</t>
+                  <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in COPY and MOVE operations.</t>
+
+                  <t hangText="Description:">
+                      This WebDAV property SHOULD be present on a shared
+                      resource. Its content is a single DAV:href element
+                      whose value is the URL of the sharer's resource being
+                      shared. The property MUST contain a URI that uniquely identifies
+                      the original shared resource. The URI MAY refer to a resource
+                      hosted on the same server, but MAY also refer to a URN.
+                  </t>
+                  <t hangText="Definition:">
+                    <figure>
+                      <artwork><![CDATA[
+<!ELEMENT sharer-resource-url (DAV:href)>]]></artwork>
+                    </figure>
+                  </t>
+                </list>
+              </t>
+            </section>
+
+        </section>
+
+        <section title="Handling the share process">
+
+          <t>
+            This specification supports two major processes for sharing a resource.
+            The server can either immediately set up the newly shared resource, or
+            the server can provide an invitation process. The former might be useful
+            in  small trusted team settings, whereas the invitation process might be
+            used in public servers, where it's desirable for users to explicitly
+            opt-in to getting access to newly shared resources.
+          </t>
+          <t>
+            This specification provides a invitation and notification mechanism.
+            It might also be possible that servers provide their own out-of-band
+            mechanism for this, but this should not affect clients.
+          </t>
+
+          <section title="The invitation process">
+            <t>
+              If the server opts to support the standard invitation process, the
+              server MUST support <!-- <xref target="dav-notifcations"-->WebDAV
+              notifications<!-- </xref> -->.
+            </t>
+            <t>
+              Sharees for a resource MUST appear up in the DAV:invite property.
+              Each sharee will have one of the following elements:
+              <list style="hanging">
+                <t hangText="DAV:invite-noresponse">The sharee was invited, but has not yet responded to the invite.</t>
+                <t hangText="DAV:invite-accepted">The sharee has accepted the invite.</t>
+                <t hangText="DAV:invite-declined">The sharee has declined the invite.</t>
+                <t hangText="DAV:invite-invalid">The invitation was invalid or could not be delivered.</t>
+              </list>
+            </t>
+            <t>
+              When sharees are initially invited, they will get the DAV:invite-noresponse status.
+              When a sharee's access has been changed, they will retain their existing status.
+              When a sharee's access has been revoked, they will no longer appear in the DAV:invite property.
+            </t>
+            <t>
+              After any of these mutations, sharees receive an <xref target="invite-notification" /> in their
+              notification collection. After the sharee has accepted or declined the invite, their status
+              will reflect this response.
+            </t>
+          </section>
+
+          <section title="Instant sharing">
+
+            <t>
+              Implementing the invitation process is optional. It's also possible for servers
+              to immediately apply changes. The effect is that no notifications may be needed,
+              and the server behaves as if sharees immediately accept invitations.
+              Sharees listed in DAV:invite might immediately receive a DAV:invite-accepted status.
+            </t>
+
+          </section>
+
+        </section>
+
         <section title="Notification Definitions">
             <t>
                 In order to facilitate the process of sharing invitations, this
@@ -226,8 +549,10 @@ Content-Length: xxxx
             <D:href>/principals/users/evert/</D:href>
         </D:principal>
         <D:invite-accepted />
-        <D:href>/calendars/users/evert/offdays/</D:href>
-        <D:access><D:read-write /></D:access>
+        <D:sharer-resource-uri>
+          <D:href>/calendars/users/evert/offdays/</D:href>
+        </D:sharer-resource-uri>
+        <D:share-access><D:read-write /></D:share-access>
         <D:prop>
             <D:displayname>Vacation days!!</D:displayname>
             <D:resourcetype><D:collection /></D:resourcetype>
@@ -239,7 +564,35 @@ Content-Length: xxxx
 </D:notification>
 ]]></artwork>
                     </figure>
-                    </t>
+                  </t>
+                  <t>
+                    In this notification, DAV:principal indicates which principal
+                    is the sharer for the resource. The notification MUST contain
+                    DAV:invite-accepted or DAV:invite-noresponse
+                    to indicate the current invitation status of the sharee in the
+                    shared resource.
+                  </t>
+                  <t>
+                    New invites to shares would carry the DAV:invite-noresponse status.
+                    In case the sharee had accepted an earlier invite, but it's access
+                    was changed or revoked, the invitation will have a DAV:invite-accepted
+                    status.
+                  </t>
+                  <t>
+                    DAV:sharer-resource-uri refers to the DAV:sharer-resource-uri that
+                    the shared resource will have, and can be used to identify which
+                    invitation refers to which existing shared resource.
+                  </t>
+                  <t>
+                    DAV:share-access MUST be one of DAV:read-write, DAV:read or DAV:no-access.
+                  </t>
+                  <t>
+                    DAV:reply-url appears for invitations to new shared resources. The url
+                    in this property can be used for a sharee to accept or decline the
+                    invite. DAV:reply-url only appears for sharees with the
+                    DAV:invite-noresponse status, and does not appear when DAV:share-access
+                    is DAV:no-access.
+                  </t>
                 </section>
             </section>
             <section title="Invite Reply" anchor='reply-notification'>
@@ -269,10 +622,10 @@ Content-Length: xxxx
 <D:notification xmlns:D="DAV:">
     <D:dtstamp>2014-09-03T02:30:00Z</D:dtstamp>
     <D:reply-notification>
-        <D:principal>
-            <D:href>mailto:john@example.org</D:href>
-        </D:principal>
-        <D:invite-declined />
+        <D:sharee>
+          <D:href>mailto:john@example.org</D:href>
+          <D:invite-declined />
+        </D:sharee>
         <D:href>/calendars/users/evert/offdays/</D:href>
         <D:comment>Sorry, I'm not interested</D:comment>
     </D:reply-notification>
@@ -284,256 +637,7 @@ Content-Length: xxxx
             </section>
         </section>
 
-        <section title="Resource sharing">
-            <section title="Feature Discovery">
-                <t>
-                  A server that supports the features described in this
-                  document MUST include "resource-sharing" as a field in the
-                  DAV response header from an OPTIONS request on any resource
-                  that supports these features.
-                </t>
-            </section>
-            <section title="Additional Properties for resources" anchor='properties'>
-                <t>
-                    The following new or modified WebDAV properties are defined for resources and used to view or manipulate shared resources features.
-                </t>
-                <section title="DAV:share-mode Property">
-                  <t>
-                    <list style="hanging">
-                      <t hangText="Name:">share-mode</t>
-                      <t hangText="Namespace:">DAV:</t>
-                      <t hangText="Purpose:">Allows a client to see if a resource is a shared resource.</t>
-                      <t hangText="Protected:">This property MUST be protected.</t>
-                      <t hangText="PROPFIND behavior:">This property SHOULD NOT be returned by a PROPFIND allprop request (as defined in Section 14.2 of <xref target="RFC4918"/>).</t>
-                      <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in MOVE operations, but MUST NOT be preserved in COPY operations.</t>
-
-                      <t hangText="Description:">
-                        Resources that are shared must have a DAV:share-mode property. It's value
-                        should be one of two elements:
-                          <list style="symbols">
-                              <t><xref target="DAV:shared-owner">DAV:shared-owner</xref>: used to indicate that the resource is owned by the current user and is being shared by them.</t>
-                              <t><xref target="DAV:shared">DAV:shared</xref>: used to indicate that the resource is owned by another user and is being shared to the current user.</t>
-                          </list>
-                      </t>
-                      <t hangText="Definition:">
-                        <figure>
-                          <artwork><![CDATA[
-<!ELEMENT share-mode (shared-owner|shared)>]]></artwork>
-                        </figure>
-                      </t>
-                    </list>
-                  </t>
-                </section>
-                <section title="DAV:invite Property" anchor="DAV:invite">
-                  <t>
-                    <list style="hanging">
-                      <t hangText="Name:">invite</t>
-                      <t hangText="Namespace:">DAV:</t>
-                      <t hangText="Purpose:">Used to show to whom a resource has been shared.</t>
-                      <t hangText="Protected:">This property MUST be protected.</t>
-                      <t hangText="PROPFIND behavior:">This property SHOULD NOT be returned by a PROPFIND allprop request (as defined in Section 14.2 of <xref target="RFC4918"/>).</t>
-                      <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in MOVE operations, but MUST NOT be preserved in COPY operations.</t>
-
-                      <t hangText="Description:">
-                          This WebDAV property is present on a resource that
-                          has been shared by the owner, or on the resources for
-                          the sharees. It provides a list of users to whom the
-                          resource has been shared, along with the "status" of
-                          the sharing invites sent to each user. In addition,
-                          servers SHOULD include a DAV:principal XML element on
-                          resources of the sharees to provide clients with a
-                          fast way to determine who the sharer is. A server's
-                          local privacy policy may prevent sharees from
-                          knowing about other sharees on a shared calendar.
-                          If that is so server will not include DAV:user XML
-                          elements for other sharees.
-                      </t>
-                      <t hangText="Definition:">
-                        <figure>
-                          <artwork><![CDATA[
-<!ELEMENT invite (organizer?, user*)>]]></artwork>
-                        </figure>
-                      </t>
-                    </list>
-                  </t>
-                </section>
-                <section title="DAV:sharer-resource-url Property" anchor="DAV:sharer-resource-url">
-                  <t>
-                    <list style="hanging">
-                      <t hangText="Name:">sharer-resource-url</t>
-                      <t hangText="Namespace:">DAV:</t>
-                      <t hangText="Purpose:">Indicates the URL of the owner's copy of a shared resource.</t>
-                      <t hangText="Protected:">This property MUST be protected.</t>
-                      <t hangText="PROPFIND behavior:">This property SHOULD NOT be returned by a PROPFIND allprop request (as defined in Section 14.2 of <xref target="RFC4918"/>).</t>
-                      <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in COPY and MOVE operations.</t>
-
-                      <t hangText="Description:">
-                          This WebDAV property MAY be present on a shared
-                          resource. Its content is a single DAV:href element
-                          whose value is the URL of the sharer's resource being
-                          shared.
-                      </t>
-                      <t hangText="Definition:">
-                        <figure>
-                          <artwork><![CDATA[
-<!ELEMENT sharer-resource-url (DAV:href)>]]></artwork>
-                        </figure>
-                      </t>
-                    </list>
-                  </t>
-                </section>
-            </section>
-            <section title="Sharer Actions on Shared Resource">
-                <section title="Sharing or Unsharing a Resource">
-                    <t>
-                        To update an existing resource to be shared, the
-                        sharer simply adds one or more sharees to the
-                        resource as per <xref target="sharee"/>. The server MUST
-                        indicate that the resource is now shared by updating the
-                        value of the DAV:share-mode WebDAV property.
-                    </t>
-                    <t>
-                        To unshare a resource, the sharer simply removes all
-                        sharees from the DAV:invite property of the resource as
-                        per <xref target="sharee"/>. The server MUST indicate
-                        that the resource is no longer shared by removing the
-                        value from the DAV:share-mode WebDAV property.
-                    </t>
-                </section>
-                <section title="Manipulating Sharees of a Shared Resource" anchor="sharee">
-                    <t>
-                        The sharer of a shared resource is able to manipulate
-                        the sharee list by issuing a POST request targeted at
-                        the resource. The POST request MUST contain an XML
-                        document as its body with the root element being
-                        <xref target="DAV:share-resource">DAV:share-resource</xref>.
-                    </t>
-                    <t>
-                        The POST request MUST contain a Content-Type HTTP
-                        header, which MUST contain "application/davshare+xml"
-                        as its value. Servers SHOULD reject the request if
-                        this is not the case.
-                    </t>
-                    <t>
-                        The <xref target="DAV:share-resource">DAV:share-resource</xref> element in
-                        the POST requests MUST contain one or more
-                        <xref target="DAV:set-invitee">DAV:set-invitee</xref> or
-                        <xref target="DAV:remove-invitee">DAV:remove-invitee</xref>
-                        elements.
-                        For each <xref target="DAV:set-invitee">DAV:set-invitee</xref>
-                        element, the server MUST add the specified sharee
-                        access to the resource. For each
-                        <xref target="DAV:remove-invitee">DAV:remove-invitee</xref>
-                        element the server MUST remove the specified sharee
-                        access from the shared resource. In each case the
-                        server MUST send a notification message to any sharees
-                        whose status is changed (added, modified or removed),
-                        indicating to them a change in status for the shared
-                        resource. This is accomplished by sending a
-                        <xref target="DAV:invite-notification">DAV:invite-notification</xref>
-                        notification to each sharee.
-                        The server SHOULD NOT send notification messages to
-                        sharees whose status is unchanged.
-                    </t>
-                    <t>
-                        Sharees are identified via a DAV:href element whose
-                        value is either a principal-URL for a sharee hosted on
-                        the same server, an email address, or any other URI
-                        identifying a user.
-                        In the case of the later two, the sharee might not be
-                        a user on the same server - though in that case how
-                        invitations are sent or access enabled is out of scope
-                        for this specification. A server MAY change the
-                        sharee's "address" to any suitable alternative that
-                        it might prefer when returning the list of sharees via
-                        the <xref target="DAV:invite">DAV:invite property</xref>.
-                    </t>
-                    <t>
-                        The client MAY include a DAV:displayname element in
-                        the <xref target="DAV:set-invitee">DAV:set-invitee</xref>
-                        element.  When provided, the value represents the common
-                        name for the sharee, and is returned in the list of
-                        sharees via the <xref target="DAV:invite">DAV:invite property</xref>.
-                        The server MAY change this to a suitable alternative
-                        when it is able to match the sharee to a known user.
-                        If absent from the client request, the server SHOULD
-                        add a DAV:displayname when it is able to match the
-                        sharee with a known user, and a common name for that
-                        user can be determined.
-                    </t>
-                    <section title="Example: Successful Sharee Add Request">
-
-                        <t>
-                          This example shows how to add a single sharee (with email address "mailto:eric@example.com") to a shared resource with DAV:read-write access.
-                        </t>
-
-                        <figure>
-                          <preamble>&gt;&gt; Request &lt;&lt;</preamble>
-                          <artwork><![CDATA[
-POST /calendars/users/cyrus/shared/ HTTP/1.1
-Host: calendar.example.com
-Content-Type: application/davsharing+xml; charset="utf-8"
-Content-Length: xxxx
-
-<?xml version="1.0" encoding="utf-8" ?>
-<D:share-resource xmlns:D="DAV:">
-  <D:set-invitee>
-    <D:href>mailto:eric@example.com</D:href>
-    <D:displayname>Eric York</D:displayname>
-    <D:comment>Shared workspace</D:comment>
-    <D:read-write />
-  </D:set-invitee>
-</D:share-resource>]]></artwork>
-                        </figure>
-                        <figure>
-                          <preamble>&gt;&gt; Response &lt;&lt;</preamble>
-                          <artwork><![CDATA[
-HTTP/1.1 200 OK
-Cache-Control: no-cache
-Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
-                        </figure>
-                    </section>
-                    <section title="Example: Successful Multiple Sharee Change Request">
-
-                        <t>
-                          This example shows how multiple sharee's can be
-                          manipulated in a single request. The sharee with email
-                          address "mailto:eric@example.com" has their access
-                          downgraded to CS:read, whilst another sharee is
-                          removed from the access list entirely.
-                        </t>
-
-                        <figure>
-                          <preamble>&gt;&gt; Request &lt;&lt;</preamble>
-                          <artwork><![CDATA[
-POST /calendars/users/cyrus/shared/ HTTP/1.1
-Host: calendar.example.com
-Content-Type: application/davsharing+xml; charset="utf-8"
-Content-Length: xxxx
-
-<?xml version="1.0" encoding="utf-8" ?>
-<D:share-resource xmlns:D="DAV:">
-  <D:set-invitee>
-    <D:href>mailto:eric@example.com</D:href>
-    <D:comment>Shared workspace</D:comment>
-    <D:read-write />
-  </D:set-invitee>
-  <D:remove-invitee>
-    <D:href>mailto:wilfredo@example.com</D:href>
-  </D:remove-invitee>
-</D:share-resource>]]></artwork>
-                        </figure>
-                        <figure>
-                          <preamble>&gt;&gt; Response &lt;&lt;</preamble>
-                          <artwork><![CDATA[
-HTTP/1.1 204 No Content
-Cache-Control: no-cache
-Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
-                        </figure>
-                    </section>
-                </section>
-            </section>
-            <section title="Sharee Actions on Shared Resources">
+        <section title="Sharee Actions on Shared Resources">
                 <section title="Replying to a Sharing Invite">
                     <t>
                         When a sharee is invited to a shared resource they
@@ -668,27 +772,8 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 </section>
             </section>
             <section title="General Considerations">
-                <section title="Access Levels">
-                    <t>
-                        Two levels of access can be granted by a sharer to any sharee. These are governed by the DAV:access element used in the DAV:invite/DAV:user element that specifies a shared user invite. DAV:access contains a single empty element that defines the type of access granted:
-                        <list style="hanging">
-                        <t hangText="DAV:read">
-                            When present this indicates that sharees can read information from the resource, but cannot change it. This applies to the resource, but if the shared resource is a collection, it also applies to the collection's children.
-                        </t>
-                        <t hangText="DAV:read-write">
-                            When present this indicates that sharees can read and write information from the resource.
-                        </t>
-                        </list>
-                    </t>
-                    <t>
-                        The function of the DAV:read and DAV:read-write
-                        elements is to give a quick indicator for a sharee
-                        what kind of access they may expect. The server may
-                        still set more fine-grained access control rules. The
-                        sharee can find out about these rules by requesting
-                        the DAV:current-user-privilege-set property on the
-                        shared resource, or its children.
-                    </t>
+                <section title="Relationship between sharing access levels and WebDAV ACL">
+
                 </section>
                 <section title="Per-instance WebDAV Properties" anchor="per-instance-data">
                     <t>
@@ -724,22 +809,6 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             </section>
         </section>
 
-        <section title="Sharing privileges">
-            <t>
-                Servers MAY support sharing on a per-resource basis.
-                This section defines a "DAV:share"
-                <xref target="RFC3744">WebDAV Access Control (ACL)</xref>
-                privilege for use on collections that may be shared.
-            </t>
-            <t>
-                This privilege MUST be non-abstract and MAY be protected.
-                This privilege MUST appear in the DAV:supported-privilege-set
-                property for resources that may be shared. In addition, it
-                MUST appear in the DAV:current-user-privilege-set, if the user
-                is allowed to share the collection.
-            </t>
-        </section>
-
         <section title='XML Element Definitions'>
             <section title="DAV:shared-owner" anchor="DAV:shared-owner">
                 <t>
@@ -747,7 +816,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t hangText="Name:">shared-owner</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Used to indicate that a resource is being shared by the owner.</t>
-                    <t hangText="Description:">This property appears in the DAV:share-mode property on the resource shared by a sharer. See <xref target="properties"/>.</t>
+                    <t hangText="Description:">This property appears in the DAV:share-mode property on the resource shared by a sharer.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -763,7 +832,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t hangText="Name:">shared</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Used to indicate that a resources is being shared to a sharee.</t>
-                    <t hangText="Description:">This property appears in the DAV:share-mode property on a resource that is shared to a sharee. See <xref target="properties"/>.</t>
+                    <t hangText="Description:">This property appears in the DAV:share-mode property on a resource that is shared to a sharee.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -779,7 +848,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     <t hangText="Name:">share-mode</t>
                     <t hangText="Namespace:">DAV:</t>
                     <t hangText="Purpose:">Used to indicate that a resource is being shared.</t>
-                    <t hangText="Description:">This is a WebDAV property that may appear on an instance of a shared resource. See <xref target="properties" />.</t>
+                    <t hangText="Description:">This is a WebDAV property that may appear on an instance of a shared resource.</t>
                     <t hangText="Definition:">
                       <figure>
                         <artwork><![CDATA[
@@ -1253,9 +1322,15 @@ Content-Type: application/davsharing+xml; charset="utf-8"
         <section title='Change History (to be removed prior to publication as an RFC'>
             <t>Changes in -03:
                 <list style='numbers'>
+                  <t>A major rewrite, making many xml elements consistent with each other.</t>
+                  <t>While all of the same data is still there, many xml elements have changed.</t>
+                  <t>Added 'Instant sharing' concept, making notifications integration optional.</t>
+                  <t>Removed DAV:share-mode</t>
+                  <t>Added DAV:share-access</t>
+                  <t>Added a DAV:sharee element with a consistent set of information about sharees.</t>
+                  <t>Clarified the nature of DAV:invite-accepted element in DAV:invite-notifaction documents.</t>
                   <t>Introduced the DAV:reply-url element.</t>
-                  <t>Fixes in DTD declarations.</t>
-                  <t>Include more details about the share-mode property.</t>
+                  <t>DAV:sharer-instance-url is now DAV:sharer-instance-uri and may contain other uris.</t>
                 </list>
             </t>
             <t>Changes in -02:
