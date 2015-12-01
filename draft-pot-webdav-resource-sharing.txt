@@ -177,10 +177,6 @@ Internet-Draft           WebDAV Resource Sharing             August 2015
    2.  consolidate how principals and principal information is set
        across properties, requests and notifications.
 
-   3.  There's a few structural problems on how xml elements are
-       defined, both in the middle of the document and in "XML Element
-       definitions".
-
 3.  Conventions Used in This Document
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -218,6 +214,10 @@ Internet-Draft           WebDAV Resource Sharing             August 2015
    an HTTP POST request against the resource that's to be shared.  The
    POST request body will contain details of the user to whom the
    resource is to be shared as well as the access right to be granted to
+   them.  If the request succeeds, a notification is sent to the sharee
+   with details of the resource being shared to them.
+
+
 
 
 
@@ -225,9 +225,6 @@ Pot, et al.             Expires February 5, 2016                [Page 4]
 
 Internet-Draft           WebDAV Resource Sharing             August 2015
 
-
-   them.  If the request succeeds, a notification is sent to the sharee
-   with details of the resource being shared to them.
 
    The sharer's client will show the notification to the sharee and
    present them with the choice to accept or decline the invitation to
@@ -268,6 +265,9 @@ Internet-Draft           WebDAV Resource Sharing             August 2015
    This is an example of a response to a GET request on a correct invite
    notification.  Note that several HTTP response headers have been
    removed for brevity.
+
+
+
 
 
 
