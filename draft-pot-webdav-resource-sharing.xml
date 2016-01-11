@@ -115,13 +115,13 @@
                 invitations.
             </t>
         </section>
-        <section title="Open Issues">
+        <!--<section title="Open Issues">
             <t>
                  <list style="numbers">
                     <t>...</t>
                  </list>
             </t>
-        </section>
+        </section>-->
 
         <section title='Conventions Used in This Document'>
             <t>
@@ -1288,7 +1288,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
         <section title='Change History (to be removed prior to publication as an RFC'>
             <t>Changes in -03:
                 <list style='numbers'>
-                  <t>A major rewrite, making many xml elements consistent with each other.</t>
+                  <t>A major rewrite, making many xml elements self-consistent and with other WebDAV specifications.</t>
                   <t>While all of the same data is still there, many xml elements have changed.</t>
                   <t>Added 'Instant sharing' concept, making notifications integration optional.</t>
                   <t>Removed DAV:share-mode</t>
@@ -1297,6 +1297,12 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                   <t>Clarified the nature of DAV:invite-accepted element in DAV:invite-notifaction documents.</t>
                   <t>Introduced the DAV:reply-url element.</t>
                   <t>DAV:sharer-instance-url is now DAV:sharer-instance-uri and may contain other uris.</t>
+                  <t>Added security concerns.</t>
+                  <t>Complete rewrite of the XML Elements section, using DTDs.</t>
+                  <t>DAV:invite-notification is now DAV:share-invite-notification.</t>
+                  <t>DAV:reply-notification is now DAV:share-reply-notification.</t>
+                  <t>Added design philosophy section.</t>
+                  <t>Added information about relationship with WebDAV ACL.</t>
                 </list>
             </t>
             <t>Changes in -02:
