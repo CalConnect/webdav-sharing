@@ -4,9 +4,9 @@
 
 Network Working Group                                             E. Pot
 Internet-Draft                                                fruux GmbH
-Expires: December 11, 2015                                      C. Daboo
+Expires: July 14, 2016                                          C. Daboo
                                                               Apple Inc.
-                                                            June 9, 2015
+                                                        January 11, 2016
 
 
                        WebDAV: User Notifications
@@ -32,11 +32,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 11, 2015.
+   This Internet-Draft will expire on July 14, 2016.
 
 Copyright Notice
 
-   Copyright (c) 2015 IETF Trust and the persons identified as the
+   Copyright (c) 2016 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Pot & Daboo             Expires December 11, 2015               [Page 1]
+Pot & Daboo               Expires July 14, 2016                 [Page 1]
 
-Internet-Draft          WebDAV User Notifications              June 2015
+Internet-Draft          WebDAV User Notifications           January 2016
 
 
 Table of Contents
@@ -84,7 +84,7 @@ Table of Contents
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  10
    Appendix A.  Backwards-compatibility with earlier drafts  . . . .  10
    Appendix B.  Change History (to be removed prior to publication
-                as an RFC  . . . . . . . . . . . . . . . . . . . . .  10
+                as an RFC  . . . . . . . . . . . . . . . . . . . . .  11
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Pot & Daboo             Expires December 11, 2015               [Page 2]
+Pot & Daboo               Expires July 14, 2016                 [Page 2]
 
-Internet-Draft          WebDAV User Notifications              June 2015
+Internet-Draft          WebDAV User Notifications           January 2016
 
 
    When XML element types in the namespaces "DAV:" is referenced in this
@@ -165,9 +165,9 @@ Internet-Draft          WebDAV User Notifications              June 2015
 
 
 
-Pot & Daboo             Expires December 11, 2015               [Page 3]
+Pot & Daboo               Expires July 14, 2016                 [Page 3]
 
-Internet-Draft          WebDAV User Notifications              June 2015
+Internet-Draft          WebDAV User Notifications           January 2016
 
 
    (Section 4.3.1) property to ensure that the notification is of a type
@@ -221,9 +221,9 @@ Internet-Draft          WebDAV User Notifications              June 2015
 
 
 
-Pot & Daboo             Expires December 11, 2015               [Page 4]
+Pot & Daboo               Expires July 14, 2016                 [Page 4]
 
-Internet-Draft          WebDAV User Notifications              June 2015
+Internet-Draft          WebDAV User Notifications           January 2016
 
 
    PROPFIND behavior:  This property SHOULD NOT be returned by a
@@ -277,9 +277,9 @@ Internet-Draft          WebDAV User Notifications              June 2015
 
 
 
-Pot & Daboo             Expires December 11, 2015               [Page 5]
+Pot & Daboo               Expires July 14, 2016                 [Page 5]
 
-Internet-Draft          WebDAV User Notifications              June 2015
+Internet-Draft          WebDAV User Notifications           January 2016
 
 
    Definition:
@@ -333,9 +333,9 @@ Internet-Draft          WebDAV User Notifications              June 2015
 
 
 
-Pot & Daboo             Expires December 11, 2015               [Page 6]
+Pot & Daboo               Expires July 14, 2016                 [Page 6]
 
-Internet-Draft          WebDAV User Notifications              June 2015
+Internet-Draft          WebDAV User Notifications           January 2016
 
 
    Description:  DAV:dtstamp is an element whose content MUST conform to
@@ -389,9 +389,9 @@ Internet-Draft          WebDAV User Notifications              June 2015
 
 
 
-Pot & Daboo             Expires December 11, 2015               [Page 7]
+Pot & Daboo               Expires July 14, 2016                 [Page 7]
 
-Internet-Draft          WebDAV User Notifications              June 2015
+Internet-Draft          WebDAV User Notifications           January 2016
 
 
    Example:  This is an example of the body of a notification resource
@@ -445,9 +445,9 @@ Internet-Draft          WebDAV User Notifications              June 2015
 
 
 
-Pot & Daboo             Expires December 11, 2015               [Page 8]
+Pot & Daboo               Expires July 14, 2016                 [Page 8]
 
-Internet-Draft          WebDAV User Notifications              June 2015
+Internet-Draft          WebDAV User Notifications           January 2016
 
 
    Published specification:  This specification.
@@ -495,38 +495,46 @@ Internet-Draft          WebDAV User Notifications              June 2015
 9.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, March 1997.
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
 
 
 
-
-
-Pot & Daboo             Expires December 11, 2015               [Page 9]
+Pot & Daboo               Expires July 14, 2016                 [Page 9]
 
-Internet-Draft          WebDAV User Notifications              June 2015
+Internet-Draft          WebDAV User Notifications           January 2016
 
 
-   [RFC3339]  Klyne, G., Ed. and C. Newman, "Date and Time on the
-              Internet: Timestamps", RFC 3339, July 2002.
+   [RFC3339]  Klyne, G. and C. Newman, "Date and Time on the Internet:
+              Timestamps", RFC 3339, DOI 10.17487/RFC3339, July 2002,
+              <http://www.rfc-editor.org/info/rfc3339>.
 
-   [RFC4918]  Dusseault, L., "HTTP Extensions for Web Distributed
-              Authoring and Versioning (WebDAV)", RFC 4918, June 2007.
+   [RFC4918]  Dusseault, L., Ed., "HTTP Extensions for Web Distributed
+              Authoring and Versioning (WebDAV)", RFC 4918,
+              DOI 10.17487/RFC4918, June 2007,
+              <http://www.rfc-editor.org/info/rfc4918>.
 
    [RFC6352]  Daboo, C., "CardDAV: vCard Extensions to Web Distributed
-              Authoring and Versioning (WebDAV)", RFC 6352, August 2011.
+              Authoring and Versioning (WebDAV)", RFC 6352,
+              DOI 10.17487/RFC6352, August 2011,
+              <http://www.rfc-editor.org/info/rfc6352>.
 
    [RFC7303]  Thompson, H. and C. Lilley, "XML Media Types", RFC 7303,
-              July 2014.
+              DOI 10.17487/RFC7303, July 2014,
+              <http://www.rfc-editor.org/info/rfc7303>.
 
 9.2.  Informative References
 
    [RFC3744]  Clemm, G., Reschke, J., Sedlar, E., and J. Whitehead, "Web
-              Distributed Authoring and Versioning (WebDAV)
-              AccessA ControlA Protocol", RFC 3744, May 2004.
+              Distributed Authoring and Versioning (WebDAV) Access
+              Control Protocol", RFC 3744, DOI 10.17487/RFC3744, May
+              2004, <http://www.rfc-editor.org/info/rfc3744>.
 
    [RFC4791]  Daboo, C., Desruisseaux, B., and L. Dusseault,
               "Calendaring Extensions to WebDAV (CalDAV)", RFC 4791,
-              March 2007.
+              DOI 10.17487/RFC4791, March 2007,
+              <http://www.rfc-editor.org/info/rfc4791>.
 
 Appendix A.  Backwards-compatibility with earlier drafts
 
@@ -545,6 +553,15 @@ Appendix A.  Backwards-compatibility with earlier drafts
    negotation using the Accept header to ask the server for a specific
    representation of a notification.
 
+
+
+
+
+Pot & Daboo               Expires July 14, 2016                [Page 10]
+
+Internet-Draft          WebDAV User Notifications           January 2016
+
+
 Appendix B.  Change History (to be removed prior to publication as an
              RFC
 
@@ -552,15 +569,6 @@ Appendix B.  Change History (to be removed prior to publication as an
 
    1.  Added a paragraph about xml/dtd handling with a reference to
        RFC4917
-
-
-
-
-
-Pot & Daboo             Expires December 11, 2015              [Page 10]
-
-Internet-Draft          WebDAV User Notifications              June 2015
-
 
 Authors' Addresses
 
@@ -605,12 +613,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-Pot & Daboo             Expires December 11, 2015              [Page 11]
+Pot & Daboo               Expires July 14, 2016                [Page 11]
