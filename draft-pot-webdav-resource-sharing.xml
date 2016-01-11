@@ -128,7 +128,7 @@
                 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
             </t>
             <t>
-                When XML element types in the namespaces "DAV:" and "urn:ietf:params:xml:ns:caldav" are referenced in this document outside of the context of an XML fragment, the string "DAV:" and "CALDAV:" will be prefixed to the element type names respectively.
+                When XML element types in the namespaces "DAV:" are referenced in this document outside of the context of an XML fragment, the string "DAV:" will be prefixed to the element type names.
             </t>
             <t>Terms Used:
                 <list style='hanging'>
@@ -414,19 +414,8 @@ Content-Length: xxxx
                         fast way to determine who the sharer is. A server's
                         local privacy policy may prevent sharees from
                         knowing about other sharees on a shared calendar.
-                        If that is so server will not include DAV:user XML
+                        If that is so server will not include DAV:sharee XML
                         elements for other sharees.
-                    </t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite (sharee)>
-<!ELEMENT sharee (href, share-access, prop?, principal?, (invite-no-response | invite-accepted | invite-declined | invite-invalid)>
-<!ELEMENT share-access (shared-owner|read-write|read)>
-<!ELEMENT principal (href)>
-<!ELEMENT prop ANY>
-                          ]]></artwork>
-                      </figure>
                     </t>
                   </list>
                 </t>
@@ -442,18 +431,18 @@ Content-Length: xxxx
                   <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in COPY and MOVE operations.</t>
 
                   <t hangText="Description:">
+                    <t>
                       This WebDAV property SHOULD be present on a shared
                       resource. Its content is a single DAV:href element
                       whose value is the URL of the sharer's resource being
                       shared. The property MUST contain a URI that uniquely identifies
                       the original shared resource. The URI MAY refer to a resource
                       hosted on the same server, but MAY also refer to a URN.
-                  </t>
-                  <t hangText="Definition:">
-                    <figure>
-                      <artwork><![CDATA[
-<!ELEMENT sharer-resource-url (DAV:href)>]]></artwork>
-                    </figure>
+                    </t>
+                    <t>
+                      A key requirement is that this URI remains stable during the
+                      life-time of a share.
+                    </t>
                   </t>
                 </list>
               </t>
@@ -461,7 +450,7 @@ Content-Length: xxxx
 
         </section>
 
-        <section title="Handling the share process">
+        <section title="Handling the share process" anchor="handling-share-process">
 
           <t>
             This specification supports two major processes for sharing a resource.
@@ -477,7 +466,7 @@ Content-Length: xxxx
             mechanism for this, but this should not affect clients.
           </t>
 
-          <section title="The invitation process">
+          <section title="The invitation process" anchor="invitation-process">
             <t>
               If the server opts to support the standard invitation process, the
               server MUST support <!-- <xref target="dav-notifcations"-->WebDAV
@@ -505,7 +494,7 @@ Content-Length: xxxx
             </t>
           </section>
 
-          <section title="Instant sharing">
+          <section title="Instant sharing" anchor="instant-sharing">
 
             <t>
               Implementing the invitation process is optional. It's also possible for servers
@@ -587,7 +576,9 @@ Content-Length: xxxx
                   <t>
                     DAV:sharer-resource-uri refers to the DAV:sharer-resource-uri that
                     the shared resource will have, and can be used to identify which
-                    invitation refers to which existing shared resource.
+                    invitation refers to which existing shared resource. The element
+                    MAY refer to the URI of the original shared resource, but may also
+                    be a urn, or any other unique URI.
                   </t>
                   <t>
                     DAV:share-access MUST be one of DAV:read-write, DAV:read or DAV:no-access.
@@ -1182,29 +1173,34 @@ Content-Type: application/davsharing+xml; charset="utf-8"
         </section>
 
         <section title='Security Considerations'>
+          <section title='Forced shares'>
             <t>
-                TBD
+              When this specification is implemented without the use of the notification
+              flow, as described in <xref target="instant-sharing" />, it may be possible
+              that a malicious user can create unwanted resources for a target user.
             </t>
-        </section>
-        <section title='IANA Considerations'>
             <t>
-                This document does not require any actions on the part of IANA.
+              If this is a concern, taking advantage of the notification process is
+              highly recommended.
             </t>
+            <t>
+              Malicious user may also be detected by monitoring malicious behavior,
+              or allowing users to block sharees using out-of-bound method.
+            </t>
+          </section>
+          <section title='Notification spamming'>
+            <t>
+              If a server does deploy the entire notification process, a user
+              with malicious intent may still generate a large amount of notifications
+              targetting other users.
+            </t>
+            <t>
+              Servers SHOULD at the very ensure that multiple share invitations for
+              the same resource are coalesced into a single invitation.
+            </t>
+          </section>
         </section>
-        <section title='Acknowledgments'>
-          <t>
-             The authors would like to thank the members of the Calendaring and
-             Scheduling Consortium's SharingTechnical Committee. In particular,
-             the following individuals have made important contributions to
-             this work: Richard Brigham, John Chaffee, Michael Douglass and
-             Ken Murchison and Dave Thewlis.
-          </t>
-           <t>
-             This specification originated from work at the Calendaring and
-             Scheduling Consortium, which has supported the development and
-             testing of implementations of the specification.
-           </t>
-        </section>
+
         <section title='IANA Considerations'>
             <t>
                 This document defines a MIME media type for XML documents
@@ -1239,6 +1235,20 @@ Content-Type: application/davsharing+xml; charset="utf-8"
               <t hangText="Change Controller">IETF</t>
           </list>
           </t>
+        </section>
+        <section title='Acknowledgments'>
+          <t>
+             The authors would like to thank the members of the Calendaring and
+             Scheduling Consortium's SharingTechnical Committee. In particular,
+             the following individuals have made important contributions to
+             this work: Richard Brigham, John Chaffee, Michael Douglass and
+             Ken Murchison and Dave Thewlis.
+          </t>
+           <t>
+             This specification originated from work at the Calendaring and
+             Scheduling Consortium, which has supported the development and
+             testing of implementations of the specification.
+           </t>
         </section>
     </middle>
     <back>
