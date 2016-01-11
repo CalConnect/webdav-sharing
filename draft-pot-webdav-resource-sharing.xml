@@ -225,7 +225,7 @@ Allow: GET,HEAD,POST,OPTIONS,PROPFIND,PROPPATCH
               specific resources.
             </t>
           </section>
-          <section title="Sharing POST request" anchor="sharing-post-request">
+          <section title="Sharing POST request" anchor="share-post-request">
             <t>
               To share a resource or revoke access to a shared resource, the
               client must issue a POST request to the resource that the user
@@ -281,8 +281,7 @@ Allow: GET,HEAD,POST,OPTIONS,PROPFIND,PROPPATCH
             some information about the intent of the share, for the sharee, this allows the
             sharee to send a short message.
           </t>
-          <t>
-            <section title="Example: Sharing a resource">
+          <section title="Example: Sharing a resource">
               <t>
                 The following example grants read-write access to a resource
                 identified by "/calendars/users/cyrus/shared" to a sharee
@@ -364,7 +363,7 @@ Content-Length: xxxx
             <t>
                 The following new or modified WebDAV properties are defined for resources and used to view or manipulate shared resources features.
             </t>
-            <section title="DAV:share-access Property">
+            <section title="DAV:share-access Property" anchor="share-access-property">
               <t>
                 <list style="hanging">
                   <t hangText="Name:">share-access</t>
@@ -393,7 +392,7 @@ Content-Length: xxxx
                 </list>
               </t>
             </section>
-            <section title="DAV:invite Property" anchor="DAV:invite">
+            <section title="DAV:invite Property" anchor="invite-property">
                 <t>
                   <list style="hanging">
                     <t hangText="Name:">invite</t>
@@ -420,7 +419,7 @@ Content-Length: xxxx
                   </list>
                 </t>
             </section>
-            <section title="DAV:sharer-resource-uri Property" anchor="DAV:sharer-resource-uri">
+            <section title="DAV:sharer-resource-uri Property" anchor="sharer-resource-uri-property">
               <t>
                 <list style="hanging">
                   <t hangText="Name:">sharer-resource-uri</t>
@@ -431,18 +430,14 @@ Content-Length: xxxx
                   <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in COPY and MOVE operations.</t>
 
                   <t hangText="Description:">
-                    <t>
                       This WebDAV property SHOULD be present on a shared
                       resource. Its content is a single DAV:href element
                       whose value is the URL of the sharer's resource being
                       shared. The property MUST contain a URI that uniquely identifies
                       the original shared resource. The URI MAY refer to a resource
                       hosted on the same server, but MAY also refer to a URN.
-                    </t>
-                    <t>
                       A key requirement is that this URI remains stable during the
                       life-time of a share.
-                    </t>
                   </t>
                 </list>
               </t>
@@ -473,8 +468,10 @@ Content-Length: xxxx
               notifications<!-- </xref> -->.
             </t>
             <t>
-              Sharees for a resource MUST appear up in the DAV:invite property.
+              Sharees for a resource MUST appear up in the
+              <xref target="invite-property">DAV:invite</xref> property.
               Each sharee will have one of the following elements:
+
               <list style="hanging">
                 <t hangText="DAV:invite-noresponse">The sharee was invited, but has not yet responded to the invite.</t>
                 <t hangText="DAV:invite-accepted">The sharee has accepted the invite.</t>
@@ -488,7 +485,7 @@ Content-Length: xxxx
               When a sharee's access has been revoked, they will no longer appear in the DAV:invite property.
             </t>
             <t>
-              After any of these mutations, sharees receive an <xref target="invite-notification" /> in their
+              After any of these mutations, sharees receive an <xref target="share-invite-notification" /> in their
               notification collection. After the sharee has accepted or declined the invite, their status
               will reflect this response.
             </t>
@@ -514,7 +511,7 @@ Content-Length: xxxx
                 notifications<!-- </xref> -->, and defines several new notification
                 types.
             </t>
-            <section title="Invite Notification" anchor='invite-notification'>
+            <section title="Invite Notification" anchor='share-invite-notification'>
                 <t>
                     When a sharer adds a new sharee to a resource, or updates
                     a sharee, an invite notification is added to the sharee's
@@ -607,7 +604,7 @@ Content-Length: xxxx
                   </t>
                 </section>
             </section>
-            <section title="Invite Reply" anchor='reply-notification'>
+            <section title="Invite Reply" anchor='share-reply-notification'>
                 <t>
                     After a sharee has accepted or declined an invitation,
                     the sharer receives a share-reply-notification in their notification
@@ -663,12 +660,11 @@ Content-Length: xxxx
         </section>
 
         <section title="Sharee Actions on Shared Resources">
-                <section title="Replying to a Sharing Invite">
+                <section title="Replying to a Sharing Invite" anchor="reply-post-request">
                     <t>
                         When a sharee is invited to a shared resource they
                         can accept or decline the invite by issuing a POST
-                        request to the url specified in the
-                        <xref target="DAV:reply-url">DAV:reply-url</xref> element,
+                        request to the url specified in the DAV:reply-url element,
                         in the invitation notification. The POST request MUST contain
                         an XML document as its body with the root element being
                         <xref target="DAV:invite-reply">DAV:invite-reply</xref>.
@@ -685,10 +681,9 @@ Content-Length: xxxx
                         decline action via the DAV:invite-accepted or
                         DAV:invite-declined elements, and an optional
                         DAV:comment element. IF the invite was accepted, the
-                        body MUST also contain a <xref target="DAV:create-in">
-                        DAV:create-in</xref> element. This element contains a
-                        single DAV:href element, which content is a URI that
-                        will be used as the parent for the new shared resource.
+                        body MUST also contain a DAV:create-in element. This element
+                        contains a single DAV:href element, which content is a URI
+                        that will be used as the parent for the new shared resource.
                     </t>
                     <t>
                         The client MAY also provide a <!--<xref target="DAV:slug">-->
@@ -797,7 +792,8 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                         targeted at the shared resource URI. When such a
                         request is received the server MUST remove the shared
                         collection and automatically update the sharee's
-                        status in the sharer's DAV:invite property.
+                        status in the sharer's
+                        <xref target="invite-property">DAV:invite</xref> property.
                     </t>
                 </section>
             </section>
@@ -876,7 +872,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 <section title="Relationship between sharing access levels and WebDAV ACL">
                    <t>
                     This document describes a way for a user to grant access to
-                    other resources, sidestepping <xref target="RFC3744">WebDAV ACL</a>.
+                    other resources, sidestepping <xref target="RFC3744">WebDAV ACL</xref>.
                   </t>
                   <t>
                     WebDAV ACL is still relevant though. The DAV:share ACL privilege
@@ -930,7 +926,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
               depending on the context in which they appear.
             </t>
 
-            <section title="DAV:share-resource" anchor="DAV:shared-resource">
+            <section title="DAV:share-resource" anchor="DAV:share-resource">
 
               <t>
                 The following section describes the DAV:share-resource element, which
@@ -987,7 +983,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 DAV:share-invite-notification is used within a WebDAV notification
                 to communicate to a sharee that a sharer is sharing a resource, or
                 changing the access level to a resource. DAV-share-invite-notification
-                is defined in <xhref target="share-invite-notification" />
+                is defined in <xref target="share-invite-notification" />
               </t>
               <t>
                 <figure>
@@ -1038,7 +1034,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
               <t>
                 DAV:share-reply-notification is a notification that appears in a sharers notification
                 collection when a sharee responded to an invitation. It is defined in
-                <xhref target="share-reply-notification" />
+                <xref target="share-reply-notification" />
               </t>
               <t>
                 <figure>
@@ -1113,7 +1109,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 </figure>
               </t>
             </section>
-            <section title="DAV:share-access" anchor="DAV:invite">
+            <section title="DAV:share-access" anchor="DAV:share-access">
               <t>
                 DAV:invite is a live WebDAV property, defined in <xref target="share-access-property" />.
                 This property allows sharer or sharee to inspect the sharing
@@ -1139,11 +1135,11 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 </figure>
               </t>
             </section>
-            <section title="DAV:invite-reply" anchor="DAV:share-reply">
+            <section title="DAV:invite-reply" anchor="DAV:invite-reply">
               <t>
                 DAV:invite-reply is the root element of a POST request that a
                 sharee would issue to respond to an invitation. It is defined
-                in <xref target="invite-reply-request" />.
+                in <xref target="reply-post-request" />.
               </t>
               <t>
                 <figure>
@@ -1169,7 +1165,6 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 </figure>
               </t>
             </section>
-        </section>
         </section>
 
         <section title='Security Considerations'>
