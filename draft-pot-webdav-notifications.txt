@@ -10,7 +10,7 @@ Expires: July 14, 2016                                          C. Daboo
 
 
                        WebDAV: User Notifications
-                   draft-pot-webdav-notifications-01
+                   draft-pot-webdav-notifications-02
 
 Abstract
 
