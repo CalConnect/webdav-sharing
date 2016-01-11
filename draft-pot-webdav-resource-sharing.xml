@@ -105,9 +105,9 @@
                 means for a user to invite another user.
             </t>
             <t>
-                HTTP POST operations are used to manage the sharing invitations
-                and replies, and WebDAV properties are used to expose the state
-                of shared resources.
+              In this specification, HTTP POST operations are used to manage
+              the sharing invitations and replies, and WebDAV properties are
+              used to expose the state of shared resources.
             </t>
             <t>
                 This specification uses WebDAV notifications to communicate to
@@ -135,8 +135,8 @@
                 <list style='hanging'>
                     <t hangText='Sharer'>A user who is sharing a resource with other users.</t>
                     <t hangText='Sharee'>A user to whom a resource has been shared.</t>
-                    <t hangText='Sharing Invite'>A message sent by a sharer to a sharee to indicate the status of a shared resource.</t>
-                    <t hangText='Sharing Reply'>A message sent by a sharee to a sharer to indicate the status of a shared resource.</t>
+                    <t hangText='Sharing Invite'>A message sent by a sharer to a sharee to notify a sharee of an invitation or update.</t>
+                    <t hangText='Sharing Reply'>A message sent by a sharee to a sharer to indicate the answer to an invite.</t>
                 </list>
             </t>
             <t>
@@ -210,7 +210,7 @@ Allow: GET,HEAD,POST,OPTIONS,PROPFIND,PROPPATCH
                 </figure>
             </t>
           </section>
-          <section title="Required privileges">
+          <section title="Required privileges" anchor="share-privilege">
             <t>
               A server that supports sharing on a specific resource, MUST
               enforce this using the "DAV:share" privilege. Privileges are
@@ -226,12 +226,13 @@ Allow: GET,HEAD,POST,OPTIONS,PROPFIND,PROPPATCH
               specific resources.
             </t>
           </section>
-          <section title="Sharing POST request">
+          <section title="Sharing POST request" anchor="sharing-post-request">
             <t>
               To share a resource or revoke access to a shared resource, the
               client must issue a POST request to the resource that the user
               wants to share. The POST request MUST contain an XML document as
-              its body, with the root element being <xref target="DAV:share-resource" />
+              its body, with the root element being
+              <xref target="DAV:share-resource">DAV:share-resource</xref>.
             </t>
             <t>
               The POST request MUST contain a Content-Type HTTP header, which
@@ -275,7 +276,13 @@ Allow: GET,HEAD,POST,OPTIONS,PROPFIND,PROPPATCH
                   When present this indicates that access to the resource is revoked for the sharee.
               </t>
             </list>
-            </t>
+          </t>
+          <t>
+            Lastly, you may add the optional DAV:comment element. This element may contain
+            some information about the intent of the share, for the sharee, this allows the
+            sharee to send a short message.
+          </t>
+          <t>
             <section title="Example: Sharing a resource">
               <t>
                 The following example grants read-write access to a resource
@@ -544,7 +551,7 @@ Content-Length: xxxx
 
 <D:notification xmlns:D="DAV:">
     <D:dtstamp>2014-08-05T13:38:02Z</D:dtstamp>
-    <D:invite-notification>
+    <D:share-invite-notification>
         <D:principal>
             <D:href>/principals/users/evert/</D:href>
         </D:principal>
@@ -560,19 +567,19 @@ Content-Length: xxxx
         <D:reply-url>
           <D:href>?invite-reply</D:href>
         </D:reply-url>
-    </D:invite-notification>
+    </D:share-invite-notification>
 </D:notification>
 ]]></artwork>
                     </figure>
                   </t>
                   <t>
                     In this notification, DAV:principal indicates which principal
-                    is the sharer for the resource. The notification MUST contain
+                    is the sharer for the resource.
+                  </t>
+                  <t>The notification MUST contain
                     DAV:invite-accepted or DAV:invite-noresponse
                     to indicate the current invitation status of the sharee in the
                     shared resource.
-                  </t>
-                  <t>
                     New invites to shares would carry the DAV:invite-noresponse status.
                     In case the sharee had accepted an earlier invite, but it's access
                     was changed or revoked, the invitation will have a DAV:invite-accepted
@@ -585,6 +592,8 @@ Content-Length: xxxx
                   </t>
                   <t>
                     DAV:share-access MUST be one of DAV:read-write, DAV:read or DAV:no-access.
+                    This indicates that the invitee either has read-write access, read-only
+                    access or no access at all respectively.
                   </t>
                   <t>
                     DAV:reply-url appears for invitations to new shared resources. The url
@@ -593,12 +602,25 @@ Content-Length: xxxx
                     DAV:invite-noresponse status, and does not appear when DAV:share-access
                     is DAV:no-access.
                   </t>
+                  <t>
+                    The DAV:prop element is optional, and may contain a list of WebDAV
+                    properties associated with the shared resource. Servers SHOULD at least
+                    set the DAV:resourcetype, if available. This will allow a client to
+                    know what kind of resource is being shared. Some clients may only
+                    support responding to invites of certain kinds of resources. For example,
+                    a calendaring user agent may only support CalDAV calendars.
+                  </t>
+                  <t>
+                    The DAV:comment element is also optional, and may return a brief message
+                    from the sharer to the sharee. The sharer is able to specify this in the
+                    original DAV:share-resource POST request.
+                  </t>
                 </section>
             </section>
             <section title="Invite Reply" anchor='reply-notification'>
                 <t>
                     After a sharee has accepted or declined an invitation,
-                    the sharer receives a reply-notification in their notification
+                    the sharer receives a share-reply-notification in their notification
                     collection.
                 </t>
                 <t>
@@ -621,17 +643,30 @@ Content-Length: xxxx
 
 <D:notification xmlns:D="DAV:">
     <D:dtstamp>2014-09-03T02:30:00Z</D:dtstamp>
-    <D:reply-notification>
+    <D:share-reply-notification>
         <D:sharee>
           <D:href>mailto:john@example.org</D:href>
           <D:invite-declined />
         </D:sharee>
         <D:href>/calendars/users/evert/offdays/</D:href>
         <D:comment>Sorry, I'm not interested</D:comment>
-    </D:reply-notification>
+    </D:share-reply-notification>
 </D:notification>
 ]]></artwork>
                     </figure>
+                    </t>
+                    <t>
+                      In this notification, the DAV:sharee element MUST appear
+                      and contains information about the updated status of the
+                      sharee in the shared resource.
+                    </t>
+                    <t>
+                      The DAV:href element MUST appear and refers to the resource
+                      the sharer originally shared.
+                    </t>
+                    <t>
+                      The DAV:comment element is optional, and may contain a message
+                      that the sharee specified when responding to the invite.
                     </t>
                 </section>
             </section>
@@ -643,8 +678,8 @@ Content-Length: xxxx
                         When a sharee is invited to a shared resource they
                         can accept or decline the invite by issuing a POST
                         request to the url specified in the
-                        <xref target="DAV:reply-url" /> element, in the
-                        invitation notification. The POST request MUST contain
+                        <xref target="DAV:reply-url">DAV:reply-url</xref> element,
+                        in the invitation notification. The POST request MUST contain
                         an XML document as its body with the root element being
                         <xref target="DAV:invite-reply">DAV:invite-reply</xref>.
                     </t>
@@ -684,6 +719,11 @@ Content-Length: xxxx
                         WebDAV property.
                     </t>
                     <t>
+                        The client MAY also provide a small comment in the
+                        DAV:comment element. This comment will be sent back to the
+                        sharer. Support for DAV:comment is optional.
+                    </t>
+                    <t>
                         A successful response to an accepted invitation, SHOULD
                         have a HTTP 201 status code, and MUST have a HTTP
                         Location header, containing the full url to the newly
@@ -698,7 +738,7 @@ Content-Length: xxxx
                         SHOULD send a notification to the sharer to update
                         them on the change in the sharee state. This is
                         accomplished by sending a
-                        <xref target="DAV:reply-notification">DAV:reply-notification</xref>
+                        <xref target="DAV:share-reply-notification">DAV:share-reply-notification</xref>
                         notification to the sharer.
                     </t>
                     <t>
@@ -725,6 +765,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
         <D:href>/calendars/users/evert/</D:href>
     </D:create-in>
     <D:slug>Tech meetups</D:slug>
+    <D:comment>Thanks for the share!</D:comment>
 </D:invite-reply>
 ]]></artwork>
                     </figure>
@@ -738,7 +779,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     </t>
                     <t>
                         When the sharee issues a DELETE on an
-                        invite-notification, the server MUST remove the
+                        share-invite-notification, the server MUST remove the
                         notification, and MUST NOT let the sharer know about
                         this.
                     </t>
@@ -772,9 +813,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 </section>
             </section>
             <section title="General Considerations">
-                <section title="Relationship between sharing access levels and WebDAV ACL">
 
-                </section>
                 <section title="Per-instance WebDAV Properties" anchor="per-instance-data">
                     <t>
                         Servers MUST support "per-instance" WebDAV properties
@@ -806,423 +845,267 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                         Servers MUST NOT treat live properties as per-instance.
                     </t>
                 </section>
+
+                <section title="Relationship between sharing access levels and WebDAV ACL">
+                </section>
             </section>
         </section>
 
         <section title='XML Element Definitions'>
-            <section title="DAV:shared-owner" anchor="DAV:shared-owner">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">shared-owner</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Used to indicate that a resource is being shared by the owner.</t>
-                    <t hangText="Description:">This property appears in the DAV:share-mode property on the resource shared by a sharer.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT shared-owner EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:shared" anchor="DAV:shared">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">shared</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Used to indicate that a resources is being shared to a sharee.</t>
-                    <t hangText="Description:">This property appears in the DAV:share-mode property on a resource that is shared to a sharee.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT shared EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:share-mode" anchor="DAV:share-mode">
+
+            <t>
+              The following section contains a definition of all the XML elements
+              used in this document  The definitions are written in the form of a
+              DTD. The DTD itself is strictly informational and is for reference
+              only.
+            </t>
+            <t>
+              It should be noted that several elements in the following sections
+              are repeated, sometimes with slightly different definitions. This is
+              because some of these elements have slightly different definitions
+              depending on the context in which they appear.
+            </t>
+
+            <section title="DAV:share-resource" anchor="DAV:shared-resource">
+
               <t>
-                  <list style="hanging">
-                    <t hangText="Name:">share-mode</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Used to indicate that a resource is being shared.</t>
-                    <t hangText="Description:">This is a WebDAV property that may appear on an instance of a shared resource.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT share-mode (shared | shared-owner)?>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
+                The following section describes the DAV:share-resource element, which
+                is defined in <xref target="share-post-request" />
+              </t>
+
+              <t>
+                <figure>
+                  <artwork><![CDATA[<!ELEMENT share-resource (sharee+)>
+
+<!-- Each sharee represents a sharee -->
+<!ELEMENT sharee (href, share-access, prop?, comment?)>
+
+<!-- The sharee href, can be a mailto:, http: or any supported scheme -->
+<!ELEMENT href (#PCDATA)>
+
+<!-- Describes the access-level the user will get -->
+<!ELEMENT share-access (read, read-write, no-access)>
+
+<!-- Read-only access -->
+<!ELEMENT read EMPTY>
+
+<!-- Read-write access -->
+<!ELEMENT read-write EMPTY>
+
+<!-- Access is revoked -->
+<!ELEMENT no-access EMPTY>
+
+<!-- A list of properties describing the sharee, such as a displayname ->
+<!ELEMENT prop ANY>
+
+<!-- An optional message to the sharee by the sharer -->
+<!ELEMENT comment (#PCDATA)>
+]]></artwork>
+                </figure>
               </t>
             </section>
+
             <section title="DAV:share" anchor="DAV:share">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">share</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">A WebDAV ACL privilege to control sharing.</t>
-                    <t hangText="Description:">
-                        This element represents a <xref target="RFC3744">WebDAV
-                        ACL privilege</xref>, and indicates that the current
-                        principal is allowed to share the resource on which
-                        it is defined.
-                    </t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT share EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
+              <t>
+                The share element is a <xref target="RFC3744">WebDAV ACL</xref>
+                privilege that allows a client to inspect whether a user may be
+                allowed to share a resource. The element is defined in
+                <xref target="share-privilege" />.
+              </t>
+              <t>
+                <figure>
+                  <artwork><![CDATA[<!ELEMENT share EMPTY>]]></artwork>
+                </figure>
+              </t>
             </section>
-            <section title="DAV:user" anchor="DAV:user">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">user</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Used to show status of sharing invites sent to sharees.</t>
-                    <t hangText="Description:">This element provides the "status" of a sharing invite sent to a particular user. See <xref target="DAV:invite"/>.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT user (href, displayname?, (invite-noresponse |
-                invite-accepted | invite-declined | invite-invalid),
-                access, comment?)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
+            <section title="DAV:share-invite-notification" anchor="DAV:share-invite-notification">
+              <t>
+                DAV:share-invite-notification is used within a WebDAV notification
+                to communicate to a sharee that a sharer is sharing a resource, or
+                changing the access level to a resource. DAV-share-invite-notification
+                is defined in <xhref target="share-invite-notification" />
+              </t>
+              <t>
+                <figure>
+                  <artwork><![CDATA[<!-- Every notification has a DAV:notification root element -->
+<!ELEMENT notification (dtstamp, share-invite-notification)>
+
+<!-- This element has all the information about the notification -->
+<!ELEMENT share-invite-notification ((invite-accepted|invite-noresponse),
+    sharer-resource-uri, principal, share-access, prop?, reply-url?, comment?)>;
+
+<!-- Indicates that this was a new invitation -->
+<!ELEMENT invite-noresponse EMPTY>
+
+<!-- Indicates that this was an update to an existing invitation -->
+<!ELEMENT invite-accepted EMPTY>
+
+<!-- A uri that indentifies the original shared resource. -->
+<!ELEMENT sharer-resource-uri (href)>
+
+<!-- Information about the sharer -->
+<!ELEMENT principal (href, prop?)>
+
+<!-- Describes the access-level the user will get -->
+<!ELEMENT share-access (read, read-write, no-access)>
+
+<!-- Read-only access -->
+<!ELEMENT read EMPTY>
+
+<!-- Read-write access -->
+<!ELEMENT read-write EMPTY>
+
+<!-- Access is revoked -->
+<!ELEMENT no-access EMPTY>
+
+<!-- If it was a new share, where to respond to the invitation -->
+<!ELEMENT reply-url (href)>
+
+<!-- An optional comment from the sharer to the sharee -->
+<!ELEMENT comment (#PCDATA)>
+
+<!-- Common elements -->
+<!ELEMENT href (#PCDATA)>
+<!ELEMENT prop ANY>]]></artwork>
+                </figure>
+              </t>
             </section>
-            <section title="DAV:invite-noresponse">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">invite-noresponse</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Sharing invite status.</t>
-                    <t hangText="Description:">When used in a <xref target="DAV:user">DAV:user</xref> element, this element is used to indicate that the sharee has never replied to the corresponding sharing invite. When used in a <xref target="DAV:invite-notification">DAV:invite-notification</xref> element, this element is used to indicate to the sharee that a sharing reply is needed.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite-noresponse EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
+            <section title="DAV:share-reply-notification" anchor="DAV:share-reply-notification">
+              <t>
+                DAV:share-reply-notification is a notification that appears in a sharers notification
+                collection when a sharee responded to an invitation. It is defined in
+                <xhref target="share-reply-notification" />
+              </t>
+              <t>
+                <figure>
+                  <artwork><![CDATA[<!-- Every notification has a DAV:notification root element -->
+<!ELEMENT notification (dtstamp, share-invite-notification)>
+
+<!-- This element has all the information about the notification -->
+<!ELEMENT share-reply-notification (sharee, href, comment?)
+
+<!ELEMENT sharee (href, (invite-accepted|invite-declined), comment?)>
+
+<!-- A reference to the owner's shared resource -->
+<!ELEMENT href (#PCDATA)>
+
+<!-- Indicates that the sharee accepted the invitation -->
+<!ELEMENT invite-accepted EMPTY>
+
+<!-- Indicates that the sharee declined the invitation -->
+<!ELEMENT invite-declined EMPTY>
+
+<!-- An optional comment from the sharer to the sharee -->
+<!ELEMENT comment (#PCDATA)>]]></artwork>
+                </figure>
+              </t>
             </section>
-            <section title="DAV:invite-deleted">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">invite-deleted</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Sharing invite status.</t>
-                    <t hangText="Description:">When used in a <xref target="DAV:invite-notification">DAV:invite-notification</xref> element, this element is used to indicate to the sharee that a shared resource has been unshared by the sharer.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite-deleted EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
+            <section title="DAV:invite" anchor="DAV:invite">
+              <t>
+                DAV:invite is a live WebDAV property, defined in <xref target="invite-property" />.
+                This property allows a sharer or sharee to inspect who has access to a particular
+                resource, their invitation status and access level.
+              </t>
+              <t>
+                <figure>
+                  <artwork><![CDATA[<!-- The invite WebDAV property -->
+<!ELEMENT invite (sharee*)>
+
+<!-- A person with access to the shared resource -->
+<!ELEMENT sharee (href,
+    (invite-accepted|invite-declined|invite-invalid|invite-noresponse),
+    share-access, prop
+)>
+
+<!-- A reference to the user who access access to the share -->
+<!ELEMENT href (#PCDATA)>
+
+<!-- Indicates that the sharee accepted the invitation -->
+<!ELEMENT invite-accepted EMPTY>
+
+<!-- Indicates that the sharee declined the invitation -->
+<!ELEMENT invite-declined EMPTY>
+
+<!-- Indicates that the sharee has not responsed yet -->
+<!ELEMENT invite-noresponse EMPTY>
+
+<!-- Indicates that the server could not deliver the invitation -->
+<!ELEMENT invite-invalid EMPTY>
+
+<!-- The level of access the user has -->
+<!ELEMENT share-access (read|read-write|shared-owner)>
+
+<!-- The user has read access -->
+<!ELEMENT read EMPTY>
+
+<!-- The user has read-write access -->
+<!ELEMENT read-write EMPTY>
+
+<!-- The user is actually the owner of the share -->
+<!ELEMENT shared-owner EMPTY>
+
+<!-- A list of WebDAV properties describing the user. -->
+<!ELEMENT prop ANY>]]></artwork>
+                </figure>
+              </t>
             </section>
-            <section title="DAV:invite-accepted">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">invite-accepted</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Sharing invite status.</t>
-                    <t hangText="Description:">When used in a <xref target="DAV:user">DAV:user</xref> element, this element is used to indicate that the sharee has accepted the corresponding sharing invite. When used in a <xref target="DAV:invite-notification">DAV:invite-notification</xref> element, this element is used to indicate to the sharee that the sharing invite is an update for one they previously accepted.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite-accepted EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
+            <section title="DAV:share-access" anchor="DAV:invite">
+              <t>
+                DAV:invite is a live WebDAV property, defined in <xref target="share-access-property" />.
+                This property allows sharer or sharee to inspect the sharing
+                status of the resource.
+              </t>
+              <t>
+                <figure>
+                  <artwork><![CDATA[<!-- The share-access WebDAV property -->
+<!ELEMENT share-access (read|read-write|shared-owner|not-shared)>
+
+<!-- The current instance is a read-only instance of the share -->
+<!ELEMENT read EMPTY>
+
+<!-- The current instance if a read-write instance of the share -->
+<!ELEMENT read-write EMPTY>
+
+<!-- The current instance if the original instance, owned by the sharee -->
+<!ELEMENT shared-owner EMPTY>
+
+<!-- The current instance is not shared at all -->
+<!ELEMENT not-shared EMPTY>
+]]></artwork>
+                </figure>
+              </t>
             </section>
-            <section title="DAV:invite-declined">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">invite-declined</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Sharing invite status.</t>
-                    <t hangText="Description:">When used in a <xref target="DAV:user">DAV:user</xref> element, this element is used to indicate that the sharee has declined the corresponding sharing invite. When used in a <xref target="DAV:invite-notification">DAV:invite-notification</xref> element, this element is used to indicate to the sharee that the sharing invite is an update for one they previously declined.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite-declined EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
+            <section title="DAV:invite-reply" anchor="DAV:share-reply">
+              <t>
+                DAV:invite-reply is the root element of a POST request that a
+                sharee would issue to respond to an invitation. It is defined
+                in <xref target="invite-reply-request" />.
+              </t>
+              <t>
+                <figure>
+                  <artwork><![CDATA[<!ELEMENT invite-reply ((invite-accepted|invite-declined),
+    create-in?, slug?, comment?)>
+
+<!-- The user is accepting the invite -->
+<!ELEMENT invite-accepted EMPTY>
+
+<!-- The user is declining the invite -->
+<!ELEMENT invite-declined EMPTY>
+
+<!-- When accepting the invite, the collection in which to create the new
+  instance in -->
+<!ELEMENT create-in (href)>
+<!ELEMENT href (#PCDATA)>
+
+<!-- A hint for the server for a new resource name. -->
+<!ELEMENT slug (#PCDATA)>
+
+<!-- A comment by the sharee to the sharer -->
+<!ELEMENT comment (#PCDATA)>]]></artwork>
+                </figure>
+              </t>
             </section>
-            <section title="DAV:invite-invalid">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">invite-invalid</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Sharing invite status.</t>
-                    <t hangText="Description:">When used in a <xref target="DAV:user">DAV:user</xref> element, this element is used to indicate that the corresponding sharee is not a valid user known to the server.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite-invalid EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:access">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">access</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Shared resource access level.</t>
-                    <t hangText="Description:">When used in a <xref target="DAV:user">DAV:user</xref> element, this element is used to indicate the sharing access level granted to the corresponding sharee.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT access (read | read-write)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:read">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">read</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Shared resource access level privilege.</t>
-                    <t hangText="Description:">Indicates that the access level granted only allows sharees to read data in the shared resource (though they can write <xref target="per-instance-data">per-instance data</xref>).</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT read EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:read-write">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">read-write</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Shared resource access level privilege.</t>
-                    <t hangText="Description:">Indicates that the access level granted allows sharees to read and write all data in the resource.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT read-write EMPTY>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:invite-notification" anchor="DAV:invite-notification">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">invite-notification</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">A notification used as a shared resource invite.</t>
-                    <t hangText="Description:">Defines a notification message sent automatically by the server when a sharer adds, changes or removes a sharee from a shared resource. The DAV:href element specifies the URI of the sharee to whom the message was sent.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite-notification (
-            dav:href,
-            (invite-noresponse | invite-deleted |
-            invite-accepted | invite-declined),
-            access, principal, reply-url
-            comment?, prop?
->]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:hosturl">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">hosturl</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Identifies the source URL of a shared resource.</t>
-                    <t hangText="Description:">Contains a single DAV:href element that refers to the source of a shared resource - i.e., the URL of the resource shared by the sharer.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT hosturl (DAV:href)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:organizer">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">organizer</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Identifies the sharer of a shared resource.</t>
-                    <t hangText="Description:">
-                        Contains a single DAV:href element that identifies the
-                        URI of the sharer of a shared resource, and an optional
-                        DAV:displayname element that matches that user.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT organizer (href,
-                     displayname?)?)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:invite-reply" anchor="DAV:invite-reply">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">invite-reply</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Root element for a POST request used to respond to a share invitation.</t>
-                    <t hangText="Description:">When a user responds to an invitation, the user issues a POST request with an xml body. DAV:invite-reply is the root element for this xml document.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite-reply (href,
-                        (invite-accepted | invite-declined),
-                        hosturl, create-in?, comment?>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:reply-notification" anchor="DAV:reply-notification">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">reply-notification</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">A notification used as a reply to a shared resource invite.</t>
-                    <t hangText="Description:">Defines a notification message sent automatically by the server when a sharee replies to a shared resource invite. The DAV:href element specifies the URI of the sharee to whom the original invite message was sent.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite-reply (href,
-                        (invite-accepted | invite-declined),
-                        hosturl, create-in?, comment?>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:reply-url" anchor="DAV:reply-url">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">reply-url</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">The url that must be used to reply to the sharing invitation.</t>
-                    <t hangText="Description:">
-                      When a client receives an invite-notification, the body
-                      of the notifcation contains a reply-url. The client can
-                      respond to the invitation by issuing a POST request on
-                      the target of the reply-url.
-                    </t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT invite-reply (href)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:create-in" anchor="DAV:create-in">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">create-in</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">The target url for the new resource.</t>
-                    <t hangText="Description:">
-                        When a user accepts an invitation to share a resource, this URI will be used to create the new shared resource.
-                    </t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT create-in (DAV:href)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:share-resource" anchor="DAV:share-resource">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">share-resource</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Describes changes to sharees.</t>
-                    <t hangText="Description:">The root element used in POST requests on resources by sharers to manipulate the sharee list of a shared resource.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT share-resource (set-invitee | remove-invitee)*>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:set-invitee" anchor="DAV:set-invitee">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">set-invitee</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Sets access for a sharee.</t>
-                    <t hangText="Description:">Used to add or modify sharee access to a shared resource. The specified access to the shared resource is given to the sharee.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT set-invitee (href, displayname?, comment?,
-               (read | read-write))>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:remove-invitee" anchor="DAV:remove-invitee">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">remove-invitee</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Removes access for a sharee.</t>
-                    <t hangText="Description:">Used to remove sharee access to a shared resource. All access to the shared resource is removed for the sharee.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT remove-invitee (href)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
-            <section title="DAV:shared-as" anchor="DAV:shared-as">
-                <t>
-                  <list style="hanging">
-                    <t hangText="Name:">shared-as</t>
-                    <t hangText="Namespace:">DAV:</t>
-                    <t hangText="Purpose:">Identifies a shared resource.</t>
-                    <t hangText="Description:">Returned by the server for a POST request by a sharee accepting a shared resource invite. The DAV:href element specifies the URI of the resource created by the acceptance.</t>
-                    <t hangText="Definition:">
-                      <figure>
-                        <artwork><![CDATA[
-<!ELEMENT shared-as (DAV:href)>]]></artwork>
-                      </figure>
-                    </t>
-                  </list>
-                </t>
-            </section>
+        </section>
         </section>
 
         <section title='Security Considerations'>
