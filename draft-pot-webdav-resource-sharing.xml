@@ -118,8 +118,7 @@
         <section title="Open Issues">
             <t>
                  <list style="numbers">
-                    <t>Almost everything in XML element definitions is currently wrong.</t>
-                    <t>Talk about relationship to privileges.</t>
+                    <t>...</t>
                  </list>
             </t>
         </section>
@@ -803,8 +802,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                     </t>
                 </section>
                 <section title="Removing a shared resource">
-                    <t>
-                        To remove a shared resource a DELETE request is
+                    <t> To remove a shared resource a DELETE request is
                         targeted at the shared resource URI. When such a
                         request is received the server MUST remove the shared
                         collection and automatically update the sharee's
@@ -845,8 +843,83 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                         Servers MUST NOT treat live properties as per-instance.
                     </t>
                 </section>
+                <section title="Sharees and instances">
+                  <t>
+                    A point that may not be immediately obvious, is that there
+                    is a separation between sharees and shared instances.
+                  </t>
+                  <t>
+                    Sharees (and sharers) are effectively only 'actors' in the
+                    sharing process and allow shared instances to be created and
+                    modified. The sharing "role" or access level that a user has
+                    when performing an opteration on a shared resource, is
+                    dependent on which intance they are accessing, not who the
+                    currently logged in principal is.
+                  </t>
+                  <t>
+                    To illustrate, take the DAV:share-access WebDAV property. This
+                    property should always describe the access-level of the
+                    instance, not the current user accessing the property.
+                  </t>
+                  <t>
+                    An implication is that if an owner of a shared resource also
+                    has direct access to a shared instance of a sharee (via normal
+                    WebDAV ACL controls for example), requesting the share-access
+                    property on that shared resource should always indicate
+                    DAV:read or DAV:read-write, but never DAV:shared-owner.
+                  </t>
+                  <t>
+                    Likewise, if a sharee also has direct access to the original
+                    shared (owner) instance on the same server, the DAV:share-access
+                    property should always return DAV:shared-owner.
+                  </t>
+                  <t>
+                    This philosophy must be considered when designing the
+                    underlying data-model of the server, and every feature in this
+                    specification. That is: the sharing-role a user has
+                    when accessing a shared-resource, is generally dependent on the
+                    resource being accessed, not the current principal.
+                  </t>
+                </section>
 
                 <section title="Relationship between sharing access levels and WebDAV ACL">
+                   <t>
+                    This document describes a way for a user to grant access to
+                    other resources, sidestepping <xref target="RFC3744">WebDAV ACL</a>.
+                  </t>
+                  <t>
+                    WebDAV ACL is still relevant though. The DAV:share ACL privilege
+                    is used to indicate that a user is allowed to share a resource.
+                  </t>
+                  <t>
+                    This specification uses the DAV:read and DAV:read-write
+                    access levels to indicate the access level of the shared resource.
+                  </t>
+                  <t>
+                    These privileges don't directly correlate to ACL privileges. It's
+                    left up to the implementor to decide which ACL privileges are the
+                    most appropriate for both DAV:read and DAV:read-write.
+                  </t>
+                  <t>
+                    The following is a suggestion: Sharees with a DAV:read share-access
+                    level, may typically at least expect DAV:read, DAV:write-properties,
+                    DAV:read-current-user-privilege set.
+                  </t>
+                  <t>
+                    For DAV:read-write, this also includes DAV:write, DAV:write-content,
+                    and if the shared resource is a collection, DAV:bind and DAV:unbind.
+                  </t>
+                  <t>
+                    These privileges are typically applied to the shared resource and
+                    all its child resources (if any).
+                  </t>
+                  <t>
+                    There is no requirement for the shared instance to have a
+                    DAV:owner element that refers to the original sharer. In fact,
+                    it SHOULD probably be the sharee. Likewise, there is also no
+                    requirement for the original sharer to have any privileges
+                    to any of the sharee instances.
+                  </t>
                 </section>
             </section>
         </section>
