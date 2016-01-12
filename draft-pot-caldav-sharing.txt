@@ -4,10 +4,10 @@
 
 Network Working Group                                             E. Pot
 Internet-Draft                                                fruux GmbH
-Expires: June 18, 2015                                          C. Daboo
+Expires: July 14, 2016                                          C. Daboo
                                                                  E. York
                                                               Apple Inc.
-                                                       December 15, 2014
+                                                        January 11, 2016
 
 
                         CalDAV Calendar Sharing
@@ -33,11 +33,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 18, 2015.
+   This Internet-Draft will expire on July 14, 2016.
 
 Copyright Notice
 
-   Copyright (c) 2014 IETF Trust and the persons identified as the
+   Copyright (c) 2016 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Pot, et al.               Expires June 18, 2015                 [Page 1]
+Pot, et al.               Expires July 14, 2016                 [Page 1]
 
-Internet-Draft           CalDAV Calendar Sharing           December 2014
+Internet-Draft           CalDAV Calendar Sharing            January 2016
 
 
 Table of Contents
@@ -66,7 +66,7 @@ Table of Contents
    4.  Calendar sharing  . . . . . . . . . . . . . . . . . . . . . .   3
    5.  Per-instance calendar data  . . . . . . . . . . . . . . . . .   3
    6.  Scheduling  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   7.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
+   7.  Normative References  . . . . . . . . . . . . . . . . . . . .   4
    Appendix A.  Change History . . . . . . . . . . . . . . . . . . .   5
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   5
 
@@ -86,12 +86,10 @@ Table of Contents
 
 2.  Open Issues
 
-   1.  Do we need feature discovery for this spec?
-
-   2.  DAV:owner requirement for scheduling.  I think this is
+   1.  DAV:owner requirement for scheduling.  I think this is
        problematic...
 
-   3.  I don't think we should allow sharees that have access to an
+   2.  I don't think we should allow sharees that have access to an
        invite for which they are the attendee for, via the organizers
        shared calendar, to allow them to make attendee-related changes.
        The entire collection should operate as if the operation is on
@@ -105,21 +103,16 @@ Table of Contents
 
    When XML element types in the namespaces "DAV:" and
    "urn:ietf:params:xml:ns:caldav" are referenced in this document
-
-
-
-
-Pot, et al.               Expires June 18, 2015                 [Page 2]
-
-Internet-Draft           CalDAV Calendar Sharing           December 2014
-
-
    outside of the context of an XML fragment, the string "DAV:" and
    "CALDAV:" will be prefixed to the element type names respectively.
 
-   Terms Used:
 
-   Sharer  ...
+
+
+Pot, et al.               Expires July 14, 2016                 [Page 2]
+
+Internet-Draft           CalDAV Calendar Sharing            January 2016
+
 
 4.  Calendar sharing
 
@@ -155,43 +148,42 @@ Internet-Draft           CalDAV Calendar Sharing           December 2014
    modified or deleted and include "ORGANIZER" and "ATTENDEE" iCalendar
    properties.
 
-   When calendar object resources are created, modified or deleted in
-   shared calendars by sharees, the following restrictions apply:
+   When a user interacts with a shared instance of a calendar, the agent
+   and server must operate as if the operation is done on behalf of the
+   sharee.
 
-   1.  The "ORGANIZER" iCalendar property value in the iCalendar data
-       MUST match a calendar user address of the sharer (owner) of the
-       shared calendar.  The DAV:owner WebDAV property MUST be present
-       on a shared calendar and MUST provide a reference to a principal-
+   That means that if a new scheduling resource is created, the server
+   MUST operate as if the calendar is a normal non-shared calendar owned
+   by the sharee.  This means that when doing scheduling operations on a
+   shared calendar, the agents don't act on behalf of the original
+   instance.
+
+   If a user is creating a new scheduling resource on a shared calendar,
+   and an ATTENDEE listed on the scheduling resource also owns an
+   instance of the shared calendar, the server MAY not create a new
 
 
 
-Pot, et al.               Expires June 18, 2015                 [Page 3]
+
+Pot, et al.               Expires July 14, 2016                 [Page 3]
 
-Internet-Draft           CalDAV Calendar Sharing           December 2014
+Internet-Draft           CalDAV Calendar Sharing            January 2016
 
 
-       URL of the sharer (owner) of the shared calendar.  Clients can
-       use this value to determine what the allowed "ORGANIZER"
-       iCalendar property values are.  The server MUST reject any
-       attempt by a sharee to create an iCalendar component with an
-       "ORGANIZER" property value other than the sharer (owner) of the
-       shared calendar.
+   resource for the ATTENDEE.  This is to avoid events appearing
+   multiple times in a user's calendars.
 
-   2.  The server MUST reject any attempt by a sharee to MOVE a calendar
-       object resource in a shared calendar to some other collection.
+   A shared calendar MAY be specified in a user's CALDAV:schedule-
+   default-calendar-url.
 
-   3.  When a sharee is listed as an Attendee in a calendar object
-       resource in a shared calendar, and write access is granted, the
-       sharee is allowed to change not only iCalendar data related to
-       the Organizer, but also data related to the Attendee. i.e., a
-       sharee can change their own participation status on the
-       "ATTENDEE" iCalendar property referring to them.  Additionally,
-       if the sharee is not listed as an Attendee, and write access is
-       granted, the sharee can add themselves as an Attendee.
-
-   4.  The default calendar collection defined in Section 6.3 of
-       [RFC6638] MUST NOT be a calendar shared to the corresponding
-       calendar user.
+   A user that appears as an ATTENDEE in a calendar object resource in a
+   shared calendar, and DAV:read-write access is granted, the sharee is
+   allowed to change not only iCalendar data related to the Organizer,
+   but also data related to the Attendee. i.e., a sharee can change
+   their own participation status on the "ATTENDEE" iCalendar property
+   referring to them.  Additionally, if the sharee is not listed as an
+   Attendee, and write access is granted, the sharee can add themselves
+   as an Attendee.
 
    Following are additional considerations for scheduling with shared
    calendars:
@@ -217,35 +209,45 @@ Internet-Draft           CalDAV Calendar Sharing           December 2014
        shared calendars do not contribute to the sharee's freebusy time
        until the sharee explicitly requests it.
 
-
-
-
-
-Pot, et al.               Expires June 18, 2015                 [Page 4]
-
-Internet-Draft           CalDAV Calendar Sharing           December 2014
-
-
 7.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, March 1997.
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
+
+
+
+
+
+
+Pot, et al.               Expires July 14, 2016                 [Page 4]
+
+Internet-Draft           CalDAV Calendar Sharing            January 2016
+
 
    [RFC4791]  Daboo, C., Desruisseaux, B., and L. Dusseault,
               "Calendaring Extensions to WebDAV (CalDAV)", RFC 4791,
-              March 2007.
+              DOI 10.17487/RFC4791, March 2007,
+              <http://www.rfc-editor.org/info/rfc4791>.
 
-   [RFC4918]  Dusseault, L., "HTTP Extensions for Web Distributed
-              Authoring and Versioning (WebDAV)", RFC 4918, June 2007.
+   [RFC4918]  Dusseault, L., Ed., "HTTP Extensions for Web Distributed
+              Authoring and Versioning (WebDAV)", RFC 4918,
+              DOI 10.17487/RFC4918, June 2007,
+              <http://www.rfc-editor.org/info/rfc4918>.
 
    [RFC6352]  Daboo, C., "CardDAV: vCard Extensions to Web Distributed
-              Authoring and Versioning (WebDAV)", RFC 6352, August 2011.
+              Authoring and Versioning (WebDAV)", RFC 6352,
+              DOI 10.17487/RFC6352, August 2011,
+              <http://www.rfc-editor.org/info/rfc6352>.
 
    [RFC6638]  Daboo, C. and B. Desruisseaux, "Scheduling Extensions to
-              CalDAV", RFC 6638, June 2012.
+              CalDAV", RFC 6638, DOI 10.17487/RFC6638, June 2012,
+              <http://www.rfc-editor.org/info/rfc6638>.
 
    [RFC7303]  Thompson, H. and C. Lilley, "XML Media Types", RFC 7303,
-              July 2014.
+              DOI 10.17487/RFC7303, July 2014,
+              <http://www.rfc-editor.org/info/rfc7303>.
 
 Appendix A.  Change History
 
@@ -275,11 +277,9 @@ Authors' Addresses
 
 
 
-
-
-Pot, et al.               Expires June 18, 2015                 [Page 5]
+Pot, et al.               Expires July 14, 2016                 [Page 5]
 
-Internet-Draft           CalDAV Calendar Sharing           December 2014
+Internet-Draft           CalDAV Calendar Sharing            January 2016
 
 
    Eric York
@@ -333,4 +333,4 @@ Internet-Draft           CalDAV Calendar Sharing           December 2014
 
 
 
-Pot, et al.               Expires June 18, 2015                 [Page 6]
+Pot, et al.               Expires July 14, 2016                 [Page 6]

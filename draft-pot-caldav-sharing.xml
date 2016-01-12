@@ -99,7 +99,6 @@
         <section title="Open Issues">
             <t>
                 <list style="numbers">
-                    <t>Do we need feature discovery for this spec?</t>
                     <t>DAV:owner requirement for scheduling. I think this is problematic...</t>
                     <t>I don't think we should allow sharees that have access to an invite for which they are the attendee for, via the organizers shared calendar, to allow them to make attendee-related changes. The entire collection should operate as if the operation is on behalf of the organizer.</t>
                  </list>
@@ -112,12 +111,13 @@
             </t>
             <t>
                 When XML element types in the namespaces "DAV:" and "urn:ietf:params:xml:ns:caldav" are referenced in this document outside of the context of an XML fragment, the string "DAV:" and "CALDAV:" will be prefixed to the element type names respectively.
-            </t>
+              </t>
+              <!--
             <t>Terms Used:
                 <list style='hanging'>
                     <t hangText='Sharer'>...</t>
                 </list>
-            </t>
+            </t>-->
         </section>
 
         <section title="Calendar sharing" anchor="calendar-sharing">
@@ -163,46 +163,38 @@
                 "ORGANIZER" and "ATTENDEE" iCalendar properties.
             </t>
             <t>
-               When calendar object resources are created, modified or deleted in
-               shared calendars by sharees, the following restrictions apply:
+              When a user interacts with a shared instance of a calendar, the
+              agent and server must operate as if the operation is done on
+              behalf of the sharee.
             </t>
             <t>
-              <list style="numbers">
-                <t>
-                    The "ORGANIZER" iCalendar property value in the iCalendar
-                    data MUST match a calendar user address of the sharer
-                    (owner) of the shared calendar.  The DAV:owner WebDAV
-                    property MUST be present on a shared calendar and MUST
-                    provide a reference to a principal- URL of the sharer
-                    (owner) of the shared calendar.  Clients can use this value
-                    to determine what the allowed "ORGANIZER" iCalendar property
-                    values are. The server MUST reject any attempt by a sharee
-                    to create an iCalendar component with an "ORGANIZER"
-                    property value other than the sharer (owner) of the shared
-                    calendar.
-                </t>
-                <t>
-                    The server MUST reject any attempt by a sharee to MOVE a
-                    calendar object resource in a shared calendar to some other
-                    collection.
-                </t>
-                <t>
-                    When a sharee is listed as an Attendee in a calendar object
-                    resource in a shared calendar, and write access is granted,
-                    the sharee is allowed to change not only iCalendar data
-                    related to the Organizer, but also data related to the
-                    Attendee. i.e., a sharee can change their own participation
-                    status on the "ATTENDEE" iCalendar property referring to
-                    them.  Additionally, if the sharee is not listed as an
-                    Attendee, and write access is granted, the sharee can add
-                    themselves as an Attendee.
-                </t>
-                <t>
-                    The default calendar collection defined in Section 6.3 of
-                    <xref target="RFC6638" /> MUST NOT be a calendar shared to
-                    the corresponding calendar user.
-                </t>
-              </list>
+              That means that if a new scheduling resource is created, the
+              server MUST operate as if the calendar is a normal non-shared
+              calendar owned by the sharee. This means that when doing
+              scheduling operations on a shared calendar, the agents don't
+              act on behalf of the original instance.
+            </t>
+            <t>
+              If a user is creating a new scheduling resource on a shared
+              calendar, and an ATTENDEE listed on the scheduling resource
+              also owns an instance of the shared calendar, the server MAY
+              not create a new resource for the ATTENDEE. This is to avoid
+              events appearing multiple times in a user's calendars.
+            </t>
+            <t>
+              A shared calendar MAY be specified in a user's
+              CALDAV:schedule-default-calendar-url.
+            </t>
+            <t>
+              A user that appears as an ATTENDEE in a calendar object resource
+              in a shared calendar, and DAV:read-write access is granted,
+              the sharee is allowed to change not only iCalendar data
+              related to the Organizer, but also data related to the
+              Attendee. i.e., a sharee can change their own participation
+              status on the "ATTENDEE" iCalendar property referring to
+              them.  Additionally, if the sharee is not listed as an
+              Attendee, and write access is granted, the sharee can add
+              themselves as an Attendee.
             </t>
             <t>
                 Following are additional considerations for scheduling with
