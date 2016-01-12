@@ -916,14 +916,13 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             <t>
               The following section contains a definition of all the XML elements
               used in this document  The definitions are written in the form of a
-              DTD. The DTD itself is strictly informational and is for reference
-              only.
+              DTD. The DTD itself non-normative and for reference only.
             </t>
             <t>
               It should be noted that several elements in the following sections
-              are repeated, sometimes with slightly different definitions. This is
+              are repeated, sometimes with varying definitions. This is
               because some of these elements have slightly different definitions
-              depending on the context in which they appear.
+              depending on the context in which they appear in.
             </t>
 
             <section title="DAV:share-resource" anchor="DAV:share-resource">
@@ -1178,10 +1177,6 @@ Content-Type: application/davsharing+xml; charset="utf-8"
               If this is a concern, taking advantage of the notification process is
               highly recommended.
             </t>
-            <t>
-              Malicious user may also be detected by monitoring malicious behavior,
-              or allowing users to block sharees using out-of-bound method.
-            </t>
           </section>
           <section title='Notification spamming'>
             <t>
@@ -1190,7 +1185,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
               targetting other users.
             </t>
             <t>
-              Servers SHOULD at the very ensure that multiple share invitations for
+              Servers SHOULD at the very least ensure that multiple share invitations for
               the same resource are coalesced into a single invitation.
             </t>
           </section>
