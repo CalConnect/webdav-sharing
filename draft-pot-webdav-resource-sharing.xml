@@ -235,7 +235,7 @@ Allow: GET,HEAD,POST,OPTIONS,PROPFIND,PROPPATCH
             </t>
             <t>
               The POST request MUST contain a Content-Type HTTP header, which
-              MUST contain "application/davshare+xml" as its value. Servers
+              MUST contain "application/davsharing+xml" as its value. Servers
               SHOULD reject the request if this is not the case.
             </t>
             <t>
@@ -671,7 +671,7 @@ Content-Length: xxxx
                     </t>
                     <t>
                         The POST request MUST contain a Content-Type HTTP
-                        header, which MUST contain "application/davshare+xml"
+                        header, which MUST contain "application/davsharing+xml"
                         as its value. Servers SHOULD reject the request if
                         this is not the case.
                     </t>
@@ -1276,6 +1276,11 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             </t>
         </section>
         <section title='Change History (to be removed prior to publication as an RFC'>
+            <t>Changes in -04:
+                <list style='numbers'>
+                  <t>Corrected the application/davsharing+xml mimetype where it was misspelled.</t>
+                </list>
+            </t>
             <t>Changes in -03:
                 <list style='numbers'>
                   <t>A major rewrite, making many xml elements self-consistent and with other WebDAV specifications.</t>
