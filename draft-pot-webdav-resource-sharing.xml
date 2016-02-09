@@ -17,7 +17,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" docName='draft-pot-webdav-resource-sharing-03'>
+<rfc ipr="trust200902" docName='draft-pot-webdav-resource-sharing-04'>
     <front>
         <title abbrev="WebDAV Resource Sharing">WebDAV Resource Sharing</title>
         <author initials="E." surname="Pot" fullname="Evert Pot">
@@ -140,7 +140,8 @@
             </t>
             <t>
               The DTD samples used in this document are for illustrative
-              purposes only. The conventions and restrictions described in
+              purposes only. All XML documents in this document follow
+              the conventions and restrictions described in
               <xref target="RFC4918" /> section 17.
             </t>
         </section>

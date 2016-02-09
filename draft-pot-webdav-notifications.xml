@@ -18,7 +18,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" docName='draft-pot-webdav-notifications-02'>
+<rfc ipr="trust200902" docName='draft-pot-webdav-notifications-03'>
     <front>
         <title abbrev="WebDAV User Notifications">WebDAV: User Notifications</title>
         <author initials="E." surname="Pot" fullname="Evert Pot">
@@ -64,7 +64,7 @@
         <section title='Introduction'>
             <t>
                 It is often useful for servers to communicate arbitrary
-                information to the end-users for a WebDAV system, such as a
+                information to the end-users of a WebDAV system, such as a
                 system status, message of the day or to notify users of
                 changes that were made to shared resources by other users.
            </t>
@@ -82,13 +82,14 @@
              The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
            </t>
            <t>
-             When XML element types in the namespaces "DAV:" is referenced
+             When XML element types in the namespace "DAV:" is referenced
              in this document outside of the context of an XML fragment,
              the string "DAV:" will be prefixed to the element type name.
            </t>
             <t>
               The DTD samples used in this document are for illustrative
-              purposes only. The conventions and restrictions described in
+              purposes only. All XML documents in this document follow
+              the conventions and restrictions described in
               <xref target="RFC4918" /> section 17.
             </t>
         </section>
@@ -100,7 +101,8 @@
             </t>
             <t>
                 WebDAV notifications also defines new properties on principal
-                resources, which are defined in <xref target="RFC3744">RFC3744</xref>.
+                resources (<xref target="RFC3744">RFC3744</xref>), which is
+                defined in Section 4.2.1.
             </t>
         </section>
 
@@ -349,12 +351,12 @@
             &rfc2119;
             &rfc3339;
             &rfc4918;
-            &rfc6352;
             &rfc7303;
         </references>
         <references title='Informative References'>
             &rfc3744;
             &rfc4791;
+            &rfc6352;
         </references>
         <section title='Backwards-compatibility with earlier drafts'>
             <t>
@@ -362,7 +364,7 @@
                 deployed among both servers and clients.
             </t>
             <t>
-                This specification, informally known as 'caldav-notifications'
+                That draft, informally known as 'caldav-notifications'
                 largely uses the same structure as this specification, but
                 where the "DAV:" xml namespace is used in this specification,
                 the earlier draft uses "http://calendarserver.org/ns/".
@@ -377,6 +379,16 @@
             </t>
         </section>
         <section title='Change History (to be removed prior to publication as an RFC'>
+            <t>Changes in -03:
+                <list style='numbers'>
+                  <t>Fixed a number of spelling / language issues..</t>
+                </list>
+            </t>
+            <t>Changes in -02:
+                <list style='numbers'>
+                    <t>No significant changes.</t>
+                </list>
+            </t>
             <t>Changes in -01:
                 <list style='numbers'>
                     <t>Added a paragraph about xml/dtd handling with a reference to RFC4917</t>
