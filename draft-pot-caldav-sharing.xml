@@ -17,7 +17,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc ipr="trust200902" docName='draft-pot-caldav-sharing-00'>
+<rfc ipr="trust200902" docName='draft-pot-caldav-sharing-01'>
     <front>
         <title abbrev="CalDAV Calendar Sharing">CalDAV Calendar Sharing</title>
         <author initials="E." surname="Pot" fullname="Evert Pot">
