@@ -97,7 +97,7 @@
             <t>
                 There are existing mechanism that address similar use-cases,
                 such as using <xref target='RFC3744'>WebDAV ACL</xref> for
-                fine-grained access control. Experiences has shown that client
+                fine-grained access control. Experience has shown that client
                 developers are averse to using it due its complexity. Many
                 implementations have chosen to only use WebDAV ACL for
                 communicating access control information to clients, but not
@@ -128,7 +128,7 @@
                 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
             </t>
             <t>
-                When XML element types in the namespaces "DAV:" are referenced in this document outside of the context of an XML fragment, the string "DAV:" will be prefixed to the element type names.
+                When XML element types in the namespace "DAV:" are referenced in this document outside of the context of an XML fragment, the string "DAV:" will be prefixed to the element type names.
             </t>
             <t>Terms Used:
                 <list style='hanging'>
@@ -162,7 +162,7 @@
                 resource being shared to them.
             </t>
             <t>
-                The sharer's client will show the notification to the sharee
+                The sharee's client will show the notification to the sharee
                 and present them with the choice to accept or decline the
                 invitation to the shared collection. If the sharee chooses to
                 decline, then nothing changes for that sharee. If the sharee
@@ -217,7 +217,7 @@ Allow: GET,HEAD,POST,OPTIONS,PROPFIND,PROPPATCH
               defined in <xref target="RFC3744" />.
             </t>
             <t>
-              The privilege MUST be non-abstract and MAY be protected. This
+              The privilege MAY be abstract and MAY be protected. This
               privilege MUST appear in the DAV:supported-privilege-set
               property for resources that may be shared. In addition, it MUST
               appear in the DAV:current-user-privilege-set property, if the
@@ -246,7 +246,7 @@ Allow: GET,HEAD,POST,OPTIONS,PROPFIND,PROPPATCH
             </t>
             <t>
               The URI in DAV:href may be a principal-URL referring to a
-              sharee host on the same server, an email address or any other URI
+              sharee hosted on the same server, an email address or any other URI
               identifying a user. In the case of the latter two, the sharee might not
               be a user on the same server - though in that case how invitations are
               sent or access is enabled is out of scope for this specification.
@@ -329,7 +329,7 @@ Date: Sat, 11 Nov 2006 09:32:12 GMT]]></artwork>
                 This example shows how multiple sharee's can be
                 manipulated in a single request. The sharee with email
                 address "mailto:eric@example.com" has their access
-                downgraded to CS:read, whilst another sharee is
+                downgraded to DAV:read, whilst another sharee is
                 removed from the access list entirely.
               </t>
               <t>
@@ -375,20 +375,14 @@ Content-Length: xxxx
                   <t hangText="COPY/MOVE behavior:">This property value MUST be preserved in MOVE operations, but MUST NOT be preserved in COPY operations.</t>
 
                   <t hangText="Description:">
-                    Resources that are shared must have a DAV:share-mode property. It's value
-                    should be one of two elements:
+                    Resources that are shared must have a DAV:share-access property. It's value
+                    should be one of four elements:
                       <list style="symbols">
                           <t>DAV:not-shared: Used to indicate that the resource is not shared. This is the default, which means that if the DAV:share-access is omitted, this value is implied.</t>
                           <t>DAV:shared-owner: used to indicate that the resource is owned by the current user and is being shared by them.</t>
-                          <t>DAV:read-write>: used to indicate that the resource is shared, and the current instance is the 'shared instance' which has read-write access.</t>
+                          <t>DAV:read-write: used to indicate that the resource is shared, and the current instance is the 'shared instance' which has read-write access.</t>
                           <t>DAV:read: used to indicate that the resource is shared, and the current instance is the 'shared instance', and only read access is provided.</t>
                       </list>
-                  </t>
-                  <t hangText="Definition:">
-                    <figure>
-                      <artwork><![CDATA[
-<!ELEMENT share-access (not-shared|shared-owner|read-write|read)>]]></artwork>
-                    </figure>
                   </t>
                 </list>
               </t>
@@ -414,8 +408,8 @@ Content-Length: xxxx
                         fast way to determine who the sharer is. A server's
                         local privacy policy may prevent sharees from
                         knowing about other sharees on a shared calendar.
-                        If that is so server will not include DAV:sharee XML
-                        elements for other sharees.
+                        In those cases a server may hide information about
+                        other sharees.
                     </t>
                   </list>
                 </t>
@@ -486,7 +480,8 @@ Content-Length: xxxx
               When a sharee's access has been revoked, they will no longer appear in the DAV:invite property.
             </t>
             <t>
-              After any of these mutations, sharees receive an <xref target="share-invite-notification" /> in their
+              After any of these mutations, sharees receive an
+              <xref target="share-invite-notification">share-invite-notification</xref> in their
               notification collection. After the sharee has accepted or declined the invite, their status
               will reflect this response.
             </t>
@@ -525,7 +520,7 @@ Content-Length: xxxx
                 <section title="Example: An invite notification">
                     <t>
                         This is an example of a response to a GET request on a
-                        correct invite notification. Note that several HTTP
+                        correct reply invite notification. Note that several HTTP
                         response headers have been removed for brevity.
                     </t>
                     <t>
@@ -991,8 +986,8 @@ Content-Type: application/davsharing+xml; charset="utf-8"
 <!ELEMENT notification (dtstamp, share-invite-notification)>
 
 <!-- This element has all the information about the notification -->
-<!ELEMENT share-invite-notification ((invite-accepted|invite-noresponse),
-    sharer-resource-uri, principal, share-access, prop?, reply-url?, comment?)>;
+<!ELEMENT share-invite-notification (principal, (invite-accepted|invite-noresponse),
+    sharer-resource-uri, share-access, prop?, reply-url?, comment?)>
 
 <!-- Indicates that this was a new invitation -->
 <!ELEMENT invite-noresponse EMPTY>
@@ -1280,6 +1275,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
             <t>Changes in -04:
                 <list style='numbers'>
                   <t>Corrected the application/davsharing+xml mimetype where it was misspelled.</t>
+                  <t>Lots of small spelling/english fixes.</t>
                 </list>
             </t>
             <t>Changes in -03:
