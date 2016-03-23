@@ -414,10 +414,10 @@ Content-Length: xxxx
                   </list>
                 </t>
             </section>
-            <section title="DAV:sharer-resource-uri Property" anchor="sharer-resource-uri-property">
+            <section title="DAV:share-resource-uri Property" anchor="share-resource-uri-property">
               <t>
                 <list style="hanging">
-                  <t hangText="Name:">sharer-resource-uri</t>
+                  <t hangText="Name:">share-resource-uri</t>
                   <t hangText="Namespace:">DAV:</t>
                   <t hangText="Purpose:">A unique URI that identifies the shared resource.</t>
                   <t hangText="Protected:">This property MUST be protected.</t>
@@ -1276,6 +1276,7 @@ Content-Type: application/davsharing+xml; charset="utf-8"
                 <list style='numbers'>
                   <t>Corrected the application/davsharing+xml mimetype where it was misspelled.</t>
                   <t>Lots of small spelling/english fixes.</t>
+                  <t>Changed sharer-resource-uri into share-resource-uri. This new uri makes a bit more sense.</t>
                 </list>
             </t>
             <t>Changes in -03:

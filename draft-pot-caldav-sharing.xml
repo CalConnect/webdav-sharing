@@ -165,7 +165,7 @@
             <t>
               When a user interacts with a shared instance of a calendar, the
               agent and server must operate as if the operation is done on
-              behalf of the sharee.
+              behalf of the original sharer of the calendar. 
             </t>
             <t>
               That means that if a new scheduling resource is created, the
