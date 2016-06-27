@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="rfc2629.xslt"?>
+<!DOCTYPE rfc SYSTEM 'rfc2629.dtd' [
+<!ENTITY rfc2119 PUBLIC '' 'bibxml/reference.RFC.2119.xml'>
+<!ENTITY rfc4791 PUBLIC '' 'bibxml/reference.RFC.4791.xml'>
+<!ENTITY rfc6352 PUBLIC '' 'bibxml/reference.RFC.6352.xml'>
+<!ENTITY rfc7303 PUBLIC '' 'bibxml/reference.RFC.7303.xml'>
+]>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc strict="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc ipr="trust200902" docName='draft-pot-carddav-sharing-00'>
+    <front>
+        <title abbrev="CardDAV Address Book Sharing">CardDAV Address Book Sharing</title>
+        <author initials="E." surname="Pot" fullname="Evert Pot">
+            <organization abbrev="fruux GmbH">
+                fruux GmbH
+            </organization>
+            <address>
+                <postal>
+                    <street>Koenigsstrasse 32</street>
+                    <city>Muenster</city>
+                    <region>NRW</region>
+                    <code>48143</code>
+                    <country>Germany</country>
+                </postal>
+                <email>me@evertpot.com</email>
+                <uri>https://fruux.com/</uri>
+            </address>
+        </author>
+        <date/>
+        <abstract>
+            <t>
+                This specification defines sharing address books between users on
+                a CardDAV server.
+            </t>
+        </abstract>
+    </front>
+    <middle>
+        <section title='Introduction'>
+
+            <t>
+                Users of <xref target="RFC6352">CardDAV</xref> often require a
+                mechanism to share an address book with other users.
+            </t>
+            <t>
+                Sharing address books is for the most part completely implemented
+                using <!--<xref target="-->draft-pot-webdav-resource-sharing<!--" />-->,
+                but there are a few considerations specific to CardDAV to ensure
+                that certain mechanisms still behaves as expected.
+            </t>
+        </section>
+
+        <section title='Conventions Used in This Document'>
+            <t>
+                The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
+            </t>
+            <t>
+                When XML element types in the namespaces "DAV:" and "urn:ietf:params:xml:ns:caldav" are referenced in this document outside of the context of an XML fragment, the string "DAV:" and "CALDAV:" will be prefixed to the element type names respectively.
+              </t>
+              <!--
+            <t>Terms Used:
+                <list style='hanging'>
+                    <t hangText='Sharer'>...</t>
+                </list>
+            </t>-->
+        </section>
+
+        <section title="Address book sharing" anchor="addressbook-sharing">
+            <t>
+              While the <!--<xref target="-->draft-pot-webdav-resource-sharing<!--" />-->
+              specification allows sharing of potentially any resource on a
+              server, this specification only concerns itself with sharing
+              address book collections, as defined in <xref target="RFC6352">CardDAV</xref>.
+            </t>
+            <t>
+                Sharing of resources other than address book collections is not
+                addressed in this specification.
+            </t>
+        </section>
+
+        <section title="Handling multiple copies of a contact">
+
+          <t>
+            vCard are often distributed via email, and two users of a CardDAV
+            might have a copy of the same vCard.
+          </t>
+          <t>
+            When those two users now share an addressbook, they might end up
+            with two vCards that describe the same person.
+          </t>
+          <t>
+            Some address book user agents coalesce two vCards from different
+            addressbooks to show up as one (merged) vCard to an end user.
+            These clients SHOULD ensure that when an update is made to a merged
+            vCard, all instances of that vCard are updated if the user agent
+            has read-write access.
+          </t>
+          <t>
+            In case two vCards have conflicting information, the information
+            from the vCard with the highest value for the REV property should
+            be used.
+          </t>
+        </section>
+
+    </middle>
+    <back>
+        <references title='Normative References'>
+            &rfc2119;
+            &rfc4791;
+            &rfc6352;
+            &rfc7303;
+        </references>
+<!--
+<references title='Informative References'>
+</references>
+-->
+<!--
+        <section title='Change History'>
+            <t>Changes in -01:
+              <list style='numbers'>
+                    <t>Added support for CALDAV:calendar-user-address-set on calendars.</t>
+                    <t>Add a large amount of detailed information about scheduling-related behavior.</t>
+                </list>
+            </t>
+        </section>
+-->
+    </back>
+</rfc>
