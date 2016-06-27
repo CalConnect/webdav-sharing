@@ -96,15 +96,6 @@
             </t>
         </section>
 
-        <section title="Open Issues">
-            <t>
-                <list style="numbers">
-                    <t>DAV:owner requirement for scheduling. I think this is problematic...</t>
-                    <t>I don't think we should allow sharees that have access to an invite for which they are the attendee for, via the organizers shared calendar, to allow them to make attendee-related changes. The entire collection should operate as if the operation is on behalf of the organizer.</t>
-                 </list>
-            </t>
-        </section>
-
         <section title='Conventions Used in This Document'>
             <t>
                 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119' />.
@@ -163,73 +154,183 @@
                 "ORGANIZER" and "ATTENDEE" iCalendar properties.
             </t>
             <t>
-              When a user interacts with a shared instance of a calendar, the
-              agent and server must operate as if the operation is done on
-              behalf of the original sharer of the calendar. 
+              Normally when a server schedules events, the server will
+              determine the intent of the user and the action to take by
+              inspecting the "ATTENDEE" and "ORGANIZER" properties, and
+              comparing this to the values of the CALDAV:calendar-user-address-set
+              property defined on the principal resource of the user who owns
+              the calendar-home in which the relevant calendar is contained.
+              However, this can be problematic when a calendar is shared, and
+              appears in multiple calendar collections.
             </t>
             <t>
-              That means that if a new scheduling resource is created, the
-              server MUST operate as if the calendar is a normal non-shared
-              calendar owned by the sharee. This means that when doing
-              scheduling operations on a shared calendar, the agents don't
-              act on behalf of the original instance.
+              For example, if both sharer and sharee appear as an ORGANIZER of
+              an event, a HTTP DELETE might either cause an event to be
+              cancelled for everyone, or just DECLINED by an attendee depending
+              on who is considered to be the relevant principal performing the
+              action.
             </t>
             <t>
-              If a user is creating a new scheduling resource on a shared
-              calendar, and an ATTENDEE listed on the scheduling resource
-              also owns an instance of the shared calendar, the server MAY
-              not create a new resource for the ATTENDEE. This is to avoid
-              events appearing multiple times in a user's calendars.
+              This issue can be described more precisely as follows: if a user
+              performs a scheduling operation on a scheduled calendar object,
+              does the user act on behalf of theirselves, or on behalf of the
+              sharer of the calendar?
             </t>
             <t>
-              A shared calendar MAY be specified in a user's
-              CALDAV:schedule-default-calendar-url.
+              We've identified that there's some use-cases where you'd want the
+              user to act on behalf of theirselves, and some where the action
+              should be on behalf of the owner. This specification supports both
+              use-cases.
             </t>
-            <t>
-              A user that appears as an ATTENDEE in a calendar object resource
-              in a shared calendar, and DAV:read-write access is granted,
-              the sharee is allowed to change not only iCalendar data
-              related to the Organizer, but also data related to the
-              Attendee. i.e., a sharee can change their own participation
-              status on the "ATTENDEE" iCalendar property referring to
-              them.  Additionally, if the sharee is not listed as an
-              Attendee, and write access is granted, the sharee can add
-              themselves as an Attendee.
-            </t>
-            <t>
-                Following are additional considerations for scheduling with
-                shared calendars:
-            </t>
-            <t>
-              <list style="numbers">
+            <section title="The CALDAV:calendar-user-address-set WebDAV property" anchor="CALDAV:calendar-user-address-set">
                 <t>
-                    A scheduled iCalendar component could appear in more than
-                    one calendar collection within a sharee's calendar home if
-                    the sharee is an Attendee and the Organizer or other
-                    Attendees have shared a calendar with the sharee that
-                    includes their copies of the iCalendar component. It is
-                    important to note that the scheduled component in the
-                    shared calendar could have different access rights than
-                    the one in the sharee's owned calendar.
+                  Section 2.4.1 of <xref target="RFC6638"/> describes a
+                  CALDAV:calendar-user-address-set WebDAV property defined on
+                  WebDAV principals.
                 </t>
                 <t>
-                    A scheduled iCalendar component appearing in a sharee's
-                    shared calendar could include the sharee as an Attendee. 
-                    For recurring events, it is possible for the sharee to
-                    only be listed as an Attendee in some instances, as opposed
-                    to all.  Clients will need to be aware of this when
-                    allowing sharee's to set their own participation status.
+                  This specification extends its usage and allows it to also
+                  be defined on individual calendars.
                 </t>
                 <t>
-                    In addition, when a shared calendar is first accepted by a
-                    sharee, the server SHOULD set the
-                    CALDAV:schedule-calendar-transp property to the value
-                    CALDAV:transparent to ensure newly accepted shared
-                    calendars do not contribute to the sharee's freebusy time
-                    until the sharee explicitly requests it.
+                  Clients conforming to this specification should inspect
+                  every calendar for the existance of this property before
+                  doing scheduling operations, whether the calendar is
+                  shared or not. Only if the property is not defined on a
+                  calendar, it should fall back to the
+                  "CALDAV:calendar-user-address-set" property defined on the principal
+                  which owns the calendar-home in which the calendar is
+                  contained in.
                 </t>
-              </list>
-            </t>
+                <t>
+                  This allows a CalDAV server to indicate to clients on behalf
+                  of whom the user-agent should perform scheduling operations.
+                </t>
+            </section>
+            <section title="Scheduling on read-only calendars">
+               <t>
+                 Clients and Servers should NOT allow a user to perform
+                 scheduling operations on calendar objects appearing in
+                 calendars for which they were not granted read-write
+                 access.
+               </t>
+            </section>
+            <section title='Example use-case: a secretary' anchor="secretary-usecase">
+              <t>
+                A user might need a different user on a calendaring system to
+                manage his or her calendars. This person might be a secretary
+                acting on behalf of a busy individual.
+              </t>
+              <t>
+                In this particular use-case, when the secretary creates an event,
+                or accepts an invitation, the action must be taken on behalf of
+                the owner of the calendar.
+              </t>
+              <t>
+                Therefore, the CalDAV server should provide a
+                CALDAV:calendar-user-address-set property on the sharee's instance of
+                the calendar. This property should contain the same value as the
+                CALDAV:calendar-user-address-set property set on the sharer's principal
+                resource.
+              </t>
+            </section>
+            <section title='Example use-case: a team calendar' anchor="team-usecase">
+              <t>
+                On a calendaring server, there might be a calendar containing
+                events which is shared to an team of several people.
+              </t>
+              <t>
+                This calendar might contain regular meetings for various members
+                in the team. The team calendar is shared to everyone to keep
+                people in the loop with who is meeting who.
+              </t>
+              <t>
+                When a new scheduling object is created by a user, and this user
+                invites several attendees who are also members of the team, these
+                members need to be able to update their attendence status.
+                In this scenario, every sharee acts on behalf of theirselves in
+                the context of the team calendar.
+              </t>
+              <t>
+                Therefore, the CALDAV:calendar-user-address-set property should for
+                every instance of the shared calendar either be omitted, or match
+                the sharee principal's value for CALDAV:calendar-user-address-set.
+              </t>
+            </section>
+            <section title="Effects on schedule-default-calendar-url">
+               <t>
+                 The schedule-default-calendar-url WebDAV property, which is
+                 defined in Section 9.2 of <xref target="RFC6638"/> defines in
+                 which CalDAV calendar new invitations should be delivered.
+               </t>
+               <t>
+                 This specification restricts this property further. The value
+                 of schedule-default-calendar-url MUST NOT point to a calendar
+                 for which the CALDAV:calendar-user-address-set property is defined and
+                 does not match the value of the principal
+                 schedule-default-calendar-url is pointing to.
+               </t>
+             </section>
+             <section title="Effects on items delivered to the scheduling inbox">
+               <t>
+                 RFC6638 defines a "Scheduling Inbox Collection". This
+                 collection contains notifications of scheduling messages.
+               </t>
+               <t>
+                 If a user is performing scheduling operations on behalf of
+                 another user, a CalDAV server MAY also choose to deliver
+                 scheduling notifications to sharees for calendars owned by
+                 a different user.
+               </t>
+               <t>
+                 If a CalDAV server implements this, the CalDAV server MUST
+                 only deliver scheduling messages that relate to scheduling
+                 objects that appear on shared calendars.
+               </t>
+             </section>
+             <section title="Calendar objects appearing more than once in a calendar-home">
+               <t>
+                 Implementors of this specification should be aware a calendar
+                 object with a particular UID might appear more than once
+                 in a single users' calendar home.
+               </t>
+               <t>
+                 An example of this is a situation where a user invites a user
+                 to an event, and then also invites the same user to share
+                 the calendar where the invitiation was created.
+               </t>
+               <t>
+                 The event might also contain vastly different information. The
+                 user might for example only have been invited to a single
+                 instance of a recurring event.
+               </t>
+               <t>
+                 Calendaring user agents MAY coelesce events that appear on
+                 multiple calendars via their user interface.
+               </t>
+               <t>
+                 A server MUST NOT de-duplicate events.
+               </t>
+             </section>
+             <section title="Contribution towards free-busy">
+                <t>
+                  When calculating free-busy information, the
+                  CALDAV:calendar-user-address-set property must be considered.
+                </t>
+                <t>
+                  The implication is that if the CALDAV:calendar-user-address-set is
+                  set on a calendar, and it doesn't match the
+                  CALDAV:calendar-user-address-set for whom the freebusy report is
+                  requested, then the CALDAV:calendar-user-address-set set on the
+                  calendar MUST be used to calculate the report.
+                </t>
+                <t>
+                  However, generally shared calendars in which you schedule
+                  on behalf of a different user should not be considered,
+                  because they SHOULD have a "CALDAV:schedule-calendar-transp"
+                  property set with a value of "CALDAV:transparent".
+                </t>
+             </section>
         </section>
     </middle>
     <back>
@@ -246,6 +347,12 @@
 </references>
 -->
         <section title='Change History'>
+            <t>Changes in -01:
+              <list style='numbers'>
+                    <t>Added support for CALDAV:calendar-user-address-set on calendars.</t>
+                    <t>Add a large amount of detailed information about scheduling-related behavior.</t>
+                </list>
+            </t>
         </section>
     </back>
 </rfc>

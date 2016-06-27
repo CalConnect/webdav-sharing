@@ -4,14 +4,14 @@
 
 Network Working Group                                             E. Pot
 Internet-Draft                                                fruux GmbH
-Expires: July 14, 2016                                          C. Daboo
+Expires: December 29, 2016                                      C. Daboo
                                                                  E. York
                                                               Apple Inc.
-                                                        January 11, 2016
+                                                           June 27, 2016
 
 
                         CalDAV Calendar Sharing
-                      draft-pot-caldav-sharing-00
+                      draft-pot-caldav-sharing-01
 
 Abstract
 
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 14, 2016.
+   This Internet-Draft will expire on December 29, 2016.
 
 Copyright Notice
 
@@ -53,22 +53,30 @@ Copyright Notice
 
 
 
-Pot, et al.               Expires July 14, 2016                 [Page 1]
+Pot, et al.             Expires December 29, 2016               [Page 1]
 
-Internet-Draft           CalDAV Calendar Sharing            January 2016
+Internet-Draft           CalDAV Calendar Sharing               June 2016
 
 
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Open Issues . . . . . . . . . . . . . . . . . . . . . . . . .   2
-   3.  Conventions Used in This Document . . . . . . . . . . . . . .   2
-   4.  Calendar sharing  . . . . . . . . . . . . . . . . . . . . . .   3
-   5.  Per-instance calendar data  . . . . . . . . . . . . . . . . .   3
-   6.  Scheduling  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   7.  Normative References  . . . . . . . . . . . . . . . . . . . .   4
-   Appendix A.  Change History . . . . . . . . . . . . . . . . . . .   5
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   5
+   2.  Conventions Used in This Document . . . . . . . . . . . . . .   2
+   3.  Calendar sharing  . . . . . . . . . . . . . . . . . . . . . .   3
+   4.  Per-instance calendar data  . . . . . . . . . . . . . . . . .   3
+   5.  Scheduling  . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     5.1.  The CALDAV:calendar-user-address-set WebDAV property  . .   4
+     5.2.  Scheduling on read-only calendars . . . . . . . . . . . .   4
+     5.3.  Example use-case: a secretary . . . . . . . . . . . . . .   4
+     5.4.  Example use-case: a team calendar . . . . . . . . . . . .   5
+     5.5.  Effects on schedule-default-calendar-url  . . . . . . . .   5
+     5.6.  Effects on items delivered to the scheduling inbox  . . .   5
+     5.7.  Calendar objects appearing more than once in a calendar-
+           home  . . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     5.8.  Contribution towards free-busy  . . . . . . . . . . . . .   6
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   6
+   Appendix A.  Change History . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -84,18 +92,7 @@ Table of Contents
    specific to CalDAV to ensure that mechanisms such as scheduling still
    behaves as expected.
 
-2.  Open Issues
-
-   1.  DAV:owner requirement for scheduling.  I think this is
-       problematic...
-
-   2.  I don't think we should allow sharees that have access to an
-       invite for which they are the attendee for, via the organizers
-       shared calendar, to allow them to make attendee-related changes.
-       The entire collection should operate as if the operation is on
-       behalf of the organizer.
-
-3.  Conventions Used in This Document
+2.  Conventions Used in This Document
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
@@ -109,12 +106,15 @@ Table of Contents
 
 
 
-Pot, et al.               Expires July 14, 2016                 [Page 2]
+
+
+
+Pot, et al.             Expires December 29, 2016               [Page 2]
 
-Internet-Draft           CalDAV Calendar Sharing            January 2016
+Internet-Draft           CalDAV Calendar Sharing               June 2016
 
 
-4.  Calendar sharing
+3.  Calendar sharing
 
    While the draft-pot-webdav-resource-sharing specification allows
    sharing of potentially any resource on a server, this specification
@@ -124,7 +124,7 @@ Internet-Draft           CalDAV Calendar Sharing            January 2016
    Sharing of resources other than calendar collections is not addressed
    in this specification.
 
-5.  Per-instance calendar data
+4.  Per-instance calendar data
 
    Servers that support calendar sharing MUST support "per-instance"
    calendar data in calendar object resources stored in shared
@@ -141,95 +141,202 @@ Internet-Draft           CalDAV Calendar Sharing            January 2016
 
       VALARM component
 
-6.  Scheduling
+5.  Scheduling
 
    CalDAV Scheduling [RFC6638] defines how a CalDAV server carries out
    scheduling operations when calendar object resources are created,
    modified or deleted and include "ORGANIZER" and "ATTENDEE" iCalendar
    properties.
 
-   When a user interacts with a shared instance of a calendar, the agent
-   and server must operate as if the operation is done on behalf of the
-   sharee.
+   Normally when a server schedules events, the server will determine
+   the intent of the user and the action to take by inspecting the
+   "ATTENDEE" and "ORGANIZER" properties, and comparing this to the
+   values of the CALDAV:calendar-user-address-set property defined on
+   the principal resource of the user who owns the calendar-home in
+   which the relevant calendar is contained.  However, this can be
+   problematic when a calendar is shared, and appears in multiple
+   calendar collections.
 
-   That means that if a new scheduling resource is created, the server
-   MUST operate as if the calendar is a normal non-shared calendar owned
-   by the sharee.  This means that when doing scheduling operations on a
-   shared calendar, the agents don't act on behalf of the original
-   instance.
-
-   If a user is creating a new scheduling resource on a shared calendar,
-   and an ATTENDEE listed on the scheduling resource also owns an
-   instance of the shared calendar, the server MAY not create a new
-
-
+   For example, if both sharer and sharee appear as an ORGANIZER of an
+   event, a HTTP DELETE might either cause an event to be cancelled for
+   everyone, or just DECLINED by an attendee depending on who is
+   considered to be the relevant principal performing the action.
 
 
-Pot, et al.               Expires July 14, 2016                 [Page 3]
+
+
+Pot, et al.             Expires December 29, 2016               [Page 3]
 
-Internet-Draft           CalDAV Calendar Sharing            January 2016
+Internet-Draft           CalDAV Calendar Sharing               June 2016
 
 
-   resource for the ATTENDEE.  This is to avoid events appearing
-   multiple times in a user's calendars.
+   This issue can be described more precisely as follows: if a user
+   performs a scheduling operation on a scheduled calendar object, does
+   the user act on behalf of theirselves, or on behalf of the sharer of
+   the calendar?
 
-   A shared calendar MAY be specified in a user's CALDAV:schedule-
-   default-calendar-url.
+   We've identified that there's some use-cases where you'd want the
+   user to act on behalf of theirselves, and some where the action
+   should be on behalf of the owner.  This specification supports both
+   use-cases.
 
-   A user that appears as an ATTENDEE in a calendar object resource in a
-   shared calendar, and DAV:read-write access is granted, the sharee is
-   allowed to change not only iCalendar data related to the Organizer,
-   but also data related to the Attendee. i.e., a sharee can change
-   their own participation status on the "ATTENDEE" iCalendar property
-   referring to them.  Additionally, if the sharee is not listed as an
-   Attendee, and write access is granted, the sharee can add themselves
-   as an Attendee.
+5.1.  The CALDAV:calendar-user-address-set WebDAV property
 
-   Following are additional considerations for scheduling with shared
-   calendars:
+   Section 2.4.1 of [RFC6638] describes a CALDAV:calendar-user-address-
+   set WebDAV property defined on WebDAV principals.
 
-   1.  A scheduled iCalendar component could appear in more than one
-       calendar collection within a sharee's calendar home if the sharee
-       is an Attendee and the Organizer or other Attendees have shared a
-       calendar with the sharee that includes their copies of the
-       iCalendar component.  It is important to note that the scheduled
-       component in the shared calendar could have different access
-       rights than the one in the sharee's owned calendar.
+   This specification extends its usage and allows it to also be defined
+   on individual calendars.
 
-   2.  A scheduled iCalendar component appearing in a sharee's shared
-       calendar could include the sharee as an Attendee.  For recurring
-       events, it is possible for the sharee to only be listed as an
-       Attendee in some instances, as opposed to all.  Clients will need
-       to be aware of this when allowing sharee's to set their own
-       participation status.
+   Clients conforming to this specification should inspect every
+   calendar for the existance of this property before doing scheduling
+   operations, whether the calendar is shared or not.  Only if the
+   property is not defined on a calendar, it should fall back to the
+   "CALDAV:calendar-user-address-set" property defined on the principal
+   which owns the calendar-home in which the calendar is contained in.
 
-   3.  In addition, when a shared calendar is first accepted by a
-       sharee, the server SHOULD set the CALDAV:schedule-calendar-transp
-       property to the value CALDAV:transparent to ensure newly accepted
-       shared calendars do not contribute to the sharee's freebusy time
-       until the sharee explicitly requests it.
+   This allows a CalDAV server to indicate to clients on behalf of whom
+   the user-agent should perform scheduling operations.
 
-7.  Normative References
+5.2.  Scheduling on read-only calendars
+
+   Clients and Servers should NOT allow a user to perform scheduling
+   operations on calendar objects appearing in calendars for which they
+   were not granted read-write access.
+
+5.3.  Example use-case: a secretary
+
+   A user might need a different user on a calendaring system to manage
+   his or her calendars.  This person might be a secretary acting on
+   behalf of a busy individual.
+
+   In this particular use-case, when the secretary creates an event, or
+   accepts an invitation, the action must be taken on behalf of the
+   owner of the calendar.
+
+   Therefore, the CalDAV server should provide a CALDAV:calendar-user-
+   address-set property on the sharee's instance of the calendar.  This
+   property should contain the same value as the CALDAV:calendar-user-
+   address-set property set on the sharer's principal resource.
+
+
+
+Pot, et al.             Expires December 29, 2016               [Page 4]
+
+Internet-Draft           CalDAV Calendar Sharing               June 2016
+
+
+5.4.  Example use-case: a team calendar
+
+   On a calendaring server, there might be a calendar containing events
+   which is shared to an team of several people.
+
+   This calendar might contain regular meetings for various members in
+   the team.  The team calendar is shared to everyone to keep people in
+   the loop with who is meeting who.
+
+   When a new scheduling object is created by a user, and this user
+   invites several attendees who are also members of the team, these
+   members need to be able to update their attendence status.  In this
+   scenario, every sharee acts on behalf of theirselves in the context
+   of the team calendar.
+
+   Therefore, the CALDAV:calendar-user-address-set property should for
+   every instance of the shared calendar either be omitted, or match the
+   sharee principal's value for CALDAV:calendar-user-address-set.
+
+5.5.  Effects on schedule-default-calendar-url
+
+   The schedule-default-calendar-url WebDAV property, which is defined
+   in Section 9.2 of [RFC6638] defines in which CalDAV calendar new
+   invitations should be delivered.
+
+   This specification restricts this property further.  The value of
+   schedule-default-calendar-url MUST NOT point to a calendar for which
+   the CALDAV:calendar-user-address-set property is defined and does not
+   match the value of the principal schedule-default-calendar-url is
+   pointing to.
+
+5.6.  Effects on items delivered to the scheduling inbox
+
+   RFC6638 defines a "Scheduling Inbox Collection".  This collection
+   contains notifications of scheduling messages.
+
+   If a user is performing scheduling operations on behalf of another
+   user, a CalDAV server MAY also choose to deliver scheduling
+   notifications to sharees for calendars owned by a different user.
+
+   If a CalDAV server implements this, the CalDAV server MUST only
+   deliver scheduling messages that relate to scheduling objects that
+   appear on shared calendars.
+
+
+
+
+
+
+
+
+Pot, et al.             Expires December 29, 2016               [Page 5]
+
+Internet-Draft           CalDAV Calendar Sharing               June 2016
+
+
+5.7.  Calendar objects appearing more than once in a calendar-home
+
+   Implementors of this specification should be aware a calendar object
+   with a particular UID might appear more than once in a single users'
+   calendar home.
+
+   An example of this is a situation where a user invites a user to an
+   event, and then also invites the same user to share the calendar
+   where the invitiation was created.
+
+   The event might also contain vastly different information.  The user
+   might for example only have been invited to a single instance of a
+   recurring event.
+
+   Calendaring user agents MAY coelesce events that appear on multiple
+   calendars via their user interface.
+
+   A server MUST NOT de-duplicate events.
+
+5.8.  Contribution towards free-busy
+
+   When calculating free-busy information, the CALDAV:calendar-user-
+   address-set property must be considered.
+
+   The implication is that if the CALDAV:calendar-user-address-set is
+   set on a calendar, and it doesn't match the CALDAV:calendar-user-
+   address-set for whom the freebusy report is requested, then the
+   CALDAV:calendar-user-address-set set on the calendar MUST be used to
+   calculate the report.
+
+   However, generally shared calendars in which you schedule on behalf
+   of a different user should not be considered, because they SHOULD
+   have a "CALDAV:schedule-calendar-transp" property set with a value of
+   "CALDAV:transparent".
+
+6.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
-
-
-
-
-
-Pot, et al.               Expires July 14, 2016                 [Page 4]
-
-Internet-Draft           CalDAV Calendar Sharing            January 2016
-
-
    [RFC4791]  Daboo, C., Desruisseaux, B., and L. Dusseault,
               "Calendaring Extensions to WebDAV (CalDAV)", RFC 4791,
               DOI 10.17487/RFC4791, March 2007,
               <http://www.rfc-editor.org/info/rfc4791>.
+
+
+
+
+
+Pot, et al.             Expires December 29, 2016               [Page 6]
+
+Internet-Draft           CalDAV Calendar Sharing               June 2016
+
 
    [RFC4918]  Dusseault, L., Ed., "HTTP Extensions for Web Distributed
               Authoring and Versioning (WebDAV)", RFC 4918,
@@ -250,6 +357,13 @@ Internet-Draft           CalDAV Calendar Sharing            January 2016
               <http://www.rfc-editor.org/info/rfc7303>.
 
 Appendix A.  Change History
+
+   Changes in -01:
+
+   1.  Added support for CALDAV:calendar-user-address-set on calendars.
+
+   2.  Add a large amount of detailed information about scheduling-
+       related behavior.
 
 Authors' Addresses
 
@@ -275,11 +389,9 @@ Authors' Addresses
 
 
 
-
-
-Pot, et al.               Expires July 14, 2016                 [Page 5]
+Pot, et al.             Expires December 29, 2016               [Page 7]
 
-Internet-Draft           CalDAV Calendar Sharing            January 2016
+Internet-Draft           CalDAV Calendar Sharing               June 2016
 
 
    Eric York
@@ -333,4 +445,4 @@ Internet-Draft           CalDAV Calendar Sharing            January 2016
 
 
 
-Pot, et al.               Expires July 14, 2016                 [Page 6]
+Pot, et al.             Expires December 29, 2016               [Page 8]
